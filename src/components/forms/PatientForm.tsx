@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FieldGroup } from "../ui/field";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
+import SubmitButton from "../SubmitButton";
 export default function PatientForm() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,9 +67,9 @@ export default function PatientForm() {
             control={form.control}
             name="email"
             label="Email"
-            placeholder="John Doe"
+            placeholder="johndoe@gmail.com"
             iconSrc="/assets/icons/email.svg"
-            iconAlt="Email"
+            iconAlt="email"
           />
 
           <CustomFormField
@@ -79,6 +80,8 @@ export default function PatientForm() {
             placeholder="(555) 123-4567"
           />
         </FieldGroup>
+
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </div>
   );

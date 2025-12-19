@@ -80,17 +80,15 @@ const RenderInput = ({
       return <div>Textarea</div>;
     case FormFieldType.PHONE_INPUT:
       return (
-        <div>
-          <PhoneInput
-            defaultCountry="US"
-            placeholder={props.placeholder}
-            international
-            withCountryCallingCode
-            value={field.value}
-            onChange={field.onChange}
-            className="input-phone"
-          />
-        </div>
+        <PhoneInput
+          defaultCountry="US"
+          placeholder={props.placeholder}
+          international
+          withCountryCallingCode
+          value={field.value}
+          onChange={field.onChange}
+          className="input-phone"
+        />
       );
     case FormFieldType.CHECKBOX:
       return <div>Checkbox</div>;
@@ -122,7 +120,9 @@ export default function CustomFormField(props: CustomProps) {
 
           <RenderInput field={field} fieldState={fieldState} props={props} />
 
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          {fieldState.invalid && (
+            <FieldError errors={[fieldState.error]} className="shad-error" />
+          )}
         </Field>
       )}
     />
