@@ -28,15 +28,15 @@ function HomePage() {
         </div>
       </section>
 
-      {/* <Image
+      <Image
         src="/assets/images/onboarding-img.png"
         height={1000}
         width={1000}
         alt="patient"
         className="side-img max-w-[50%]"
-      /> */}
+      />
 
-      <div className="relative h-full w-full">
+      {/* <div className="side-img relative h-full max-w-[50%]">
         <Image
           src="/assets/images/onboarding-img.png"
           alt="patient"
@@ -44,7 +44,7 @@ function HomePage() {
           sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

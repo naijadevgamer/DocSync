@@ -13,6 +13,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "./ui/input";
+import PhoneInput from "react-phone-number-input";
+
+// import PhoneInput from "react-phone-number-input/react-native-input";
+// import { E164Number } from "libphonenumber-js/core";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -75,7 +79,19 @@ const RenderInput = ({
     case FormFieldType.TEXTAREA:
       return <div>Textarea</div>;
     case FormFieldType.PHONE_INPUT:
-      return <div>Phone Input</div>;
+      return (
+        <div>
+          <PhoneInput
+            defaultCountry="US"
+            placeholder={props.placeholder}
+            international
+            withCountryCallingCode
+            value={field.value}
+            onChange={field.onChange}
+            className="input-phone"
+          />
+        </div>
+      );
     case FormFieldType.CHECKBOX:
       return <div>Checkbox</div>;
     case FormFieldType.DATE_PICKER:

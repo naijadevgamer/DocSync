@@ -1,0 +1,284 @@
+/* === ADMIN */
+@utility admin-header {
+  @apply bg-dark-200 sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl px-[5%] py-5 shadow-lg xl:px-12;
+}
+@utility admin-main {
+  @apply flex flex-col items-center space-y-6 px-[5%] pb-12 xl:space-y-12 xl:px-12;
+}
+@utility admin-stat {
+  @apply flex w-full flex-col justify-between gap-5 sm:flex-row xl:gap-10;
+}
+
+/* === ALIGNMENTS */
+@utility flex-between {
+  @apply flex items-center justify-between;
+}
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
+
+/* === BACKGROUND */
+/* @utility bg-image {
+  @apply bg-dark-900 bg-light-rays bg-cover bg-no-repeat;
+} */
+
+/* === CLIP / TEXT */
+@utility clip-text {
+  @apply bg-clip-text text-transparent;
+}
+
+/* === CONTAINERS */
+@utility container {
+  @apply relative flex-1 overflow-y-auto px-[5%];
+}
+@utility sub-container {
+  @apply mx-auto flex size-full flex-col py-10;
+}
+
+/* === COPYRIGHT */
+@utility copyright {
+  @apply text-14-regular text-dark-600 justify-items-end text-center xl:text-left;
+}
+
+/* === DATA TABLE */
+@utility data-table {
+  @apply border-dark-400 z-10 w-full overflow-hidden rounded-lg border shadow-lg;
+}
+@utility table-actions {
+  @apply flex w-full items-center justify-between space-x-2 p-4;
+}
+
+/* === DATE / PHONE INPUT */
+@utility date-picker {
+  @apply placeholder:text-dark-600 text-14-medium h-11 w-full overflow-hidden rounded-md border-transparent px-3 outline-none;
+}
+@utility input-phone {
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 mt-2 h-11 rounded-md border px-3 text-sm;
+}
+
+/* === FILE UPLOAD */
+@utility file-upload {
+  @apply text-12-regular border-dark-500 bg-dark-400 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-md border border-dashed p-5;
+}
+@utility file-upload_label {
+  @apply text-dark-600 flex flex-col justify-center gap-2 text-center;
+}
+
+/* === FORM */
+@utility checkbox-label {
+  @apply text-dark-700 cursor-pointer text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 md:leading-none;
+}
+@utility radio-group {
+  @apply border-dark-500 bg-dark-400 flex h-full flex-1 items-center gap-2 rounded-md border border-dashed p-3;
+}
+
+/* === HEADER */
+@utility header {
+  @apply text-32-bold md:text-36-bold;
+}
+@utility sub-header {
+  @apply text-18-bold md:text-24-bold;
+}
+
+/* === IMAGES */
+@utility side-img {
+  @apply hidden h-full object-cover md:block;
+}
+@utility success-img {
+  @apply m-auto flex flex-1 flex-col items-center justify-between gap-10 py-10;
+}
+
+/* === REQUEST */
+@utility request-details {
+  @apply border-dark-400 flex w-full flex-col items-center gap-8 border-y-2 py-8 md:w-fit md:flex-row;
+}
+
+/* === SHADCN OVERRIDES */
+@utility shad-alert-dialog {
+  @apply bg-dark-400 border-dark-500 space-y-5 outline-none;
+}
+@utility shad-combobox-item {
+  @apply data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50;
+}
+@utility shad-combobox-trigger {
+  @apply h-11;
+}
+@utility shad-danger-btn {
+  @apply bg-red-700 text-white;
+}
+@utility shad-dialog {
+  @apply bg-dark-400 border-dark-500;
+}
+@utility shad-dialog-button {
+  @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:outline-none;
+}
+@utility shad-error {
+  @apply text-red-400;
+}
+@utility shad-gray-btn {
+  @apply border-dark-500 bg-dark-400 cursor-pointer border text-white;
+}
+
+@utility shad-input {
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0 focus-visible:ring-offset-0;
+}
+@utility shad-input-icon {
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0 focus-visible:ring-offset-0;
+}
+
+@utility shad-input-label {
+  @apply text-14-medium text-dark-700;
+}
+@utility shad-otp {
+  @apply flex w-full justify-between;
+}
+@utility shad-otp-slot {
+  @apply text-36-bold border-dark-500 flex size-16 justify-center gap-4 rounded-lg border;
+}
+@utility shad-primary-btn {
+  @apply bg-green-500 text-white;
+}
+@utility shad-select-content {
+  @apply bg-dark-400 border-dark-500;
+}
+@utility shad-select-trigger {
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus:ring-0 focus:ring-offset-0;
+}
+@utility shad-sheet-content-button {
+  @apply top-2 focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:outline-none;
+}
+@utility shad-table {
+  @apply overflow-hidden rounded-lg;
+}
+@utility shad-table-row {
+  @apply border-dark-400 text-light-200 border-b;
+}
+@utility shad-table-row-header {
+  @apply border-dark-400 text-light-200 border-b hover:bg-transparent;
+}
+@utility shad-textArea {
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0;
+}
+
+/* === SIDEBARS */
+@utility left-sidebar {
+  @apply hidden lg:flex;
+}
+@utility right-sidebar {
+  @apply hidden xl:flex;
+}
+/* @utility sidebar {
+  @apply remove-scrollbar bg-dark-800 w-full max-w-72 flex-col overflow-auto px-7 py-10;
+} */
+
+/* === STAT / STATUS */
+@utility stat-card {
+  @apply flex flex-1 flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg;
+}
+@utility status-badge {
+  @apply flex w-fit items-center gap-2 rounded-full px-4 py-2;
+}
+
+/* === TYPOGRAPHY */
+@utility text-12-regular {
+  @apply text-[12px] leading-4 font-normal;
+}
+@utility text-12-semibold {
+  @apply text-[12px] leading-4 font-semibold;
+}
+@utility text-14-medium {
+  @apply text-[14px] leading-[18px] font-medium;
+}
+@utility text-14-regular {
+  @apply text-[14px] leading-[18px] font-normal;
+}
+@utility text-16-regular {
+  @apply text-[16px] leading-5 font-normal;
+}
+@utility text-16-semibold {
+  @apply text-[16px] leading-5 font-semibold;
+}
+@utility text-18-bold {
+  @apply text-[18px] leading-6 font-bold;
+}
+@utility text-24-bold {
+  @apply text-[24px] leading-7 font-bold;
+}
+@utility text-32-bold {
+  @apply text-[32px] leading-9 font-bold;
+}
+@utility text-36-bold {
+  @apply text-[36px] leading-10 font-bold;
+}
+
+/* =====  REACT-DATEPICKER OVERRIDES */
+.react-datepicker-wrapper.date-picker {
+  display: flex;
+  align-items: center;
+}
+
+.react-datepicker,
+.react-datepicker__time,
+.react-datepicker__header,
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker-time__header {
+  background-color: #1a1d21 !important;
+  border-color: #363a3d !important;
+  color: #abb8c4 !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker-time__header {
+  color: #ffffff !important;
+}
+
+.react-datepicker__triangle {
+  fill: #1a1d21 !important;
+  color: #1a1d21 !important;
+  stroke: #1a1d21 !important;
+}
+
+.react-datepicker__time-list-item:hover {
+  background-color: #363a3d !important;
+}
+
+.react-datepicker__input-container input {
+  background-color: #1a1d21 !important;
+  width: 100%;
+  outline: none;
+}
+
+.react-datepicker__day--selected {
+  background-color: #24ae7c !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}
+
+.react-datepicker__time-list-item--selected {
+  background-color: #24ae7c !important;
+}
+
+.react-datepicker__time-container {
+  border-left: 1px solid #363a3d !important;
+}
+
+.react-datepicker__time-list-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* =====  REACT PHONE NUMBER INPUT OVERRIDES */
+.PhoneInputInput {
+  outline: none;
+  margin-left: 4px;
+  background: #1a1d21;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.PhoneInputInput::placeholder {
+  color: #1a1d21;
+}
