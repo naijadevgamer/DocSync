@@ -1,3 +1,4 @@
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import Image from "next/image";
 import {
   Control,
@@ -5,17 +6,10 @@ import {
   ControllerFieldState,
   ControllerRenderProps,
 } from "react-hook-form";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "./ui/input";
 import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { Input } from "./ui/input";
 
-// import PhoneInput from "react-phone-number-input/react-native-input";
 // import { E164Number } from "libphonenumber-js/core";
 
 export enum FormFieldType {
@@ -81,7 +75,7 @@ const RenderInput = ({
     case FormFieldType.PHONE_INPUT:
       return (
         <PhoneInput
-          defaultCountry="US"
+          defaultCountry="NG"
           placeholder={props.placeholder}
           international
           withCountryCallingCode
