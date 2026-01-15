@@ -84,6 +84,7 @@
 @utility side-img {
   @apply hidden h-full object-cover md:block;
 }
+
 @utility success-img {
   @apply m-auto flex flex-1 flex-col items-center justify-between gap-10 py-10;
 }
@@ -120,10 +121,7 @@
 }
 
 @utility shad-input {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0 focus-visible:ring-offset-0;
-}
-@utility shad-input-icon {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0 focus-visible:ring-offset-0;
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0! focus-visible:ring-offset-0!;
 }
 
 @utility shad-input-label {
@@ -187,10 +185,10 @@
   @apply text-[12px] leading-4 font-semibold;
 }
 @utility text-14-medium {
-  @apply text-[14px] leading-[18px] font-medium;
+  @apply text-[14px] leading-4.5 font-medium;
 }
 @utility text-14-regular {
-  @apply text-[14px] leading-[18px] font-normal;
+  @apply text-[14px] leading-4.5 font-normal;
 }
 @utility text-16-regular {
   @apply text-[16px] leading-5 font-normal;
@@ -277,8 +275,13 @@
   background: #1a1d21;
   font-size: 14px;
   font-weight: 500;
+  height: 100%;
 }
 
 .PhoneInputInput::placeholder {
   color: #1a1d21;
+}
+
+.PhoneInputCountrySelect {
+  @apply bg-dark-400;
 }
