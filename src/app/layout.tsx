@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -31,9 +33,9 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        {/* <ThemeProvider attribute="class" defaultTheme="dark"> */}
-        {children}
-        {/* </ThemeProvider> */}
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
