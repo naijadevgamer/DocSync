@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   /* Colors */
@@ -106,3 +106,38 @@
 @utility animate-caret-blink {
   animation: caret-blink 1.25s ease-out infinite;
 }
+
+button {
+  cursor: pointer;
+}
+
+/* I dont get interviews with my cv. i dont know why then i realised the cv might be very wrong. I want to apply for a frontend role. I would tell you everything and my experiences. 
+
+i studied computer science in unilorin. i completed my NYSC the following year. 
+
+My experiences.
+
+When i was in 300 lvl second semester i did my IT or internship at a company in ilorin. Softrays information technology. Before the internship. I only know about html and css. But during the intership. I got to learn about html css js bootstrap react and i buit tons of mini project during the time. I also learn backend node express mongo  towards the end of the internship i also learnt more things but those are the basics. Its ons site 
+
+i got back to school i continued to build side project during my leisure periods and i continue to learn and grow in skills. 
+
+I got a job at devwyre after graduation in 2024 where i was the one that was spearheading the frontend. i helped built the vendavault ecommerce website, translation of the figma to a functional and exact ui with nexjs, typescript, and tailwind. i apply best practices ever just to keep it modular readable scalable maintainable and fast. I made components that are reusable reusable, DRY principle throughout, Commented code in order to be easier for other developers that will join, Performance optimization with Memo, useMemo and useCallback where necessary for best performance, Rest api.  Use of bitbucket for the codebase and collaboration, used jira where thiket was usually assigned to me. Tried out Docker for containerization. And many other things. I am still there up till now. although i am looking for better opportunities. The vendavault eccommerce website is on production although not completed yet. I would i buit 85% of the ui for the site.the job is fully remote.
+
+While the workload was very light i got another job which i did for four months, A frontend job at voltis labs. There i started and contributed to a lots of projects, Projects contributed to includes their main website, spinnersonnic and afrogarm. Projects i started from scratch includes productivity toolkit, and voltis labs academy and many more. I grow in experience here. i learn to deliver features at very quick speed. The basic stacks used includes react Nextjs typescript tailwind graphql and much more. All the projects i contributed to are all on production and contributed immensely on some of the projects. i also collaborated with other frontend developers, backend developer, QA, PM, CEO and the designer. So I gained a massive amount of collaboration experinence and also improve generally in skills and other things. Also the workload is massive. Although its a remote work but it was simulated like an office work where we must stay on call for at least 10 hrs a day. some days we take up to 14 hours on call. 
+
+After four month i still remain at devwryre and the workload is very light. Is as if i am doning nothing but i am investing time in improving myself learning and building personal projects. 
+
+So thats the basics about me. 
+
+
+Now unto the personal projects i have built and the incoming personal projects, for the one that are ready i have, pdfsense, nexora, forkify. More details about them can be found in the cv you will update. 
+
+For the ones that are on the way. they include voyageX: a tour booking platform stack with features both for frontend and backend perfect to showcase fullstack skills. DocSync: A healthcare patient management System designed to streamline patient registration, appointment scheduling, and medical records management for healthcare providers although i will be using nextjs and some other tools for now that are not traditional backend for now but i will later use traditional backend for it later same for pdfsence. 
+
+Please update my cv to reflect all these experiences and make it very attractive to recruiters. I want to get interviews and job offers. Also most of the companies i apply to tends to use AI. So please make it compatible. You will create fro frontend developer role and full stack developer role. Select the best three project suited for each of the roles in the project section. Make sure the cv is very professional and attractive. Use action words and make it very impressive. Also the projects too make them look like something very great without lying of course make them appear as a very potfolio worthy project to impress recruiters. Also let it be ATS compliant. And the detail under let it be like what ats expect, you know people do say we dont put what we do in each. instead we put acheivement. I hope you get what i mean. 
+
+lastly please, make the two CVs formidable across any jobs in the frontend developmet and the fullstack. Please AI is being used a lot to check the best applicant among thounsands of application. Make sure i am the best applicant AI is gonna choose anythime anyday. And the same for human viewers too. 
+
+i will provide my current cv below to help you with the update. Its in code i can to the compiler so the result should also be in code. remenber two differnt cv targeting their specific role. I believe skills listed should suffice. Add testing with jest, playwright and nest js too. 
+
+*/
