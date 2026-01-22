@@ -11,9 +11,6 @@ const {
   NEXT_PUBLIC_ENDPOINT: ENDPOINT,
 } = process.env;
 
-console.log({ ENDPOINT, PROJECT_ID, API_KEY });
-console.log(typeof ENDPOINT, ENDPOINT);
-
 const client = new sdk.Client();
 
 client
