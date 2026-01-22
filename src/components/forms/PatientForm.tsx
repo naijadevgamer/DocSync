@@ -8,7 +8,10 @@ import { z } from "zod";
 import { FieldGroup } from "../ui/field";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
+import { createUser } from "@/lib/actions/patient.actions";
+import { useRouter } from "next/navigation";
 export default function PatientForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof UserFormValidation>>({
@@ -32,11 +35,13 @@ export default function PatientForm() {
 
       console.log("User data submitted:", user);
 
-      // const newUser = await createUser(user);
+      const newUser = await createUser(user);
 
-      // if (newUser) {
-      //   router.push(`/patients/${newUser.$id}/register`);
-      // }
+      console.log("New User: ", newUser);
+
+      if (newUser) {
+        router.push(`/patients/${newUser.$id}/register`);
+      }
     } catch (error) {
       console.log(error);
     }
