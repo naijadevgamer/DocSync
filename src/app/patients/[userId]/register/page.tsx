@@ -75,13 +75,23 @@ export default function Register() {
         </div>
       </section>
 
-      <Image
+      {/* <Image
         src="/assets/images/register-img.png"
         height={1000}
         width={1000}
         alt="patient"
         className="side-img max-w-97.5"
-      />
+      /> */}
+
+      <div className="side-img relative h-full w-[30%]">
+        <Image
+          src="/assets/images/register-img.png"
+          alt="patient"
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+        />
+      </div>
     </div>
   );
 }
