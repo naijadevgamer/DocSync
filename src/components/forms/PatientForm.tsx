@@ -10,6 +10,7 @@ import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { createUser } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
+
 export default function PatientForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
