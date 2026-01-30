@@ -46,3 +46,12 @@ export const createUser = async (user: CreateUserParams) => {
     console.error("An error occurred while creating a new user:", error);
   }
 };
+
+export const getUserById = async (userId: string) => {
+  try {
+    const user = await users.get({ userId });
+    return parseStringify(user);
+  } catch (error) {
+    console.error("An error occurred while fetching the user:", error);
+  }
+};
