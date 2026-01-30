@@ -17,9 +17,9 @@ function HomePage() {
 
           <PatientForm />
 
-          <div className="text-14-regular mt-20 flex justify-between pb-10">
+          <div className="text-14-regular flex justify-between py-12">
             <p className="text-dark-600 justify-items-end xl:text-left">
-              © {new Date().getFullYear()} CarePluse
+              © {new Date().getFullYear()} DocSync
             </p>
             <Link href="/?admin=true" className="text-green-500">
               Admin
