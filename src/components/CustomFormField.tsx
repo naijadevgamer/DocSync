@@ -9,6 +9,10 @@ import {
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { Input } from "./ui/input";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 
 // import { E164Number } from "libphonenumber-js/core";
 
@@ -29,11 +33,11 @@ interface CustomProps {
   placeholder?: string;
   iconSrc?: string;
   iconAlt?: string;
-  // disabled?: boolean;
-  // dateFormat?: string;
-  // showTimeSelect?: boolean;
-  // children?: React.ReactNode;
-  // renderSkeleton?: (field: any) => React.ReactNode;
+  disabled?: boolean;
+  dateFormat?: string;
+  showTimeSelect?: boolean;
+  children?: React.ReactNode;
+  renderSkeleton?: (field: any) => React.ReactNode;
   fieldType: FormFieldType;
 }
 
@@ -71,7 +75,14 @@ const RenderInput = ({
         </div>
       );
     case FormFieldType.TEXTAREA:
-      return <div>Textarea</div>;
+      return (
+        <Textarea
+          placeholder={props.placeholder}
+          {...field}
+          className="shad-textArea"
+          disabled={props.disabled}
+        />
+      );
     case FormFieldType.PHONE_INPUT:
       return (
         <PhoneInput
@@ -87,11 +98,41 @@ const RenderInput = ({
     case FormFieldType.CHECKBOX:
       return <div>Checkbox</div>;
     case FormFieldType.DATE_PICKER:
-      return <div>Date Picker</div>;
+      return (
+        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
+          {props.iconSrc && (
+            <Image
+              src={props.iconSrc}
+              height={24}
+              width={24}
+              alt={props.iconAlt || "icon"}
+              className="ml-2"
+            />
+          )}
+          <ReactDatePicker
+            showTimeSelect={props.showTimeSelect ?? false}
+            selected={field.value}
+            placeholderText={props.placeholder}
+            onChange={(date: any) => field.onChange(date)}
+            timeInputLabel="Time:"
+            dateFormat={props.dateFormat ?? "MM/dd/yyyy"}
+            wrapperClassName="date-picker"
+          />
+        </div>
+      );
     case FormFieldType.SELECT:
-      return <div>Select</div>;
+      return (
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger className="shad-select-trigger">
+            <SelectValue placeholder={props.placeholder} />
+          </SelectTrigger>
+          <SelectContent className="shad-select-content">
+            {props.children}
+          </SelectContent>
+        </Select>
+      );
     case FormFieldType.SKELETON:
-      return <div>Skeleton</div>;
+      return props.renderSkeleton ? props.renderSkeleton(field) : null;
     default:
       return null;
   }
