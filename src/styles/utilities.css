@@ -50,10 +50,11 @@
 
 /* === DATE / PHONE INPUT */
 @utility date-picker {
-  @apply placeholder:text-dark-600 text-14-medium h-11 w-full overflow-hidden rounded-md border-transparent px-3 outline-none;
+  @apply placeholder:text-dark-600 text-14-medium h-11 w-full overflow-hidden rounded-md border-transparent px-3! outline-none;
 }
+
 @utility input-phone {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 mt-2 h-11 rounded-md border px-3 text-sm;
+  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 rounded-md border px-3 text-sm;
 }
 
 /* === FILE UPLOAD */
@@ -96,66 +97,66 @@
 
 /* === SHADCN OVERRIDES */
 @utility shad-alert-dialog {
-  @apply bg-dark-400 border-dark-500 space-y-5 outline-none;
+  @apply bg-dark-400! border-dark-500! space-y-5! outline-none!;
 }
 @utility shad-combobox-item {
-  @apply data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50;
+  @apply data-[disabled=true]:pointer-events-none! data-[disabled=true]:opacity-50!;
 }
 @utility shad-combobox-trigger {
-  @apply h-11;
+  @apply h-11!;
 }
 @utility shad-danger-btn {
-  @apply bg-red-700 text-white;
+  @apply bg-red-700! text-white!;
 }
 @utility shad-dialog {
-  @apply bg-dark-400 border-dark-500;
+  @apply bg-dark-400! border-dark-500!;
 }
 @utility shad-dialog-button {
-  @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:outline-none;
+  @apply focus:ring-0! focus:ring-offset-0! focus-visible:border-none! focus-visible:ring-transparent! focus-visible:ring-offset-0! focus-visible:outline-none!;
 }
 @utility shad-error {
-  @apply text-red-400;
+  @apply text-red-400!;
 }
 @utility shad-gray-btn {
-  @apply border-dark-500 bg-dark-400 cursor-pointer border text-white;
+  @apply border-dark-500! bg-dark-400! cursor-pointer! border! text-white!;
 }
 
 @utility shad-input {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0! focus-visible:ring-offset-0!;
+  @apply bg-dark-400! placeholder:text-dark-600! border-dark-500 h-11! focus-visible:ring-0! focus-visible:ring-offset-0!;
 }
 
 @utility shad-input-label {
-  @apply text-14-medium text-dark-700;
+  @apply text-14-medium! text-dark-700!;
 }
 @utility shad-otp {
-  @apply flex w-full justify-between;
+  @apply flex! w-full! justify-between!;
 }
 @utility shad-otp-slot {
-  @apply text-36-bold border-dark-500 flex size-16 justify-center gap-4 rounded-lg border;
+  @apply text-36-bold! border-dark-500! flex! size-16! justify-center! gap-4! rounded-lg! border!;
 }
 @utility shad-primary-btn {
-  @apply bg-green-500 text-white;
+  @apply bg-green-500! text-white!;
 }
 @utility shad-select-content {
-  @apply bg-dark-400 border-dark-500;
+  @apply bg-dark-400! border-dark-500!;
 }
 @utility shad-select-trigger {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus:ring-0 focus:ring-offset-0;
+  @apply bg-dark-400! placeholder:text-dark-600! border-dark-500! h-11! focus:ring-0! focus:ring-offset-0!;
 }
 @utility shad-sheet-content-button {
-  @apply top-2 focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:outline-none;
+  @apply top-2! focus:ring-0! focus:ring-offset-0! focus-visible:border-none! focus-visible:ring-transparent! focus-visible:ring-offset-0! focus-visible:outline-none!;
 }
 @utility shad-table {
-  @apply overflow-hidden rounded-lg;
+  @apply overflow-hidden! rounded-lg!;
 }
 @utility shad-table-row {
-  @apply border-dark-400 text-light-200 border-b;
+  @apply border-dark-400! text-light-200 border-b!;
 }
 @utility shad-table-row-header {
-  @apply border-dark-400 text-light-200 border-b hover:bg-transparent;
+  @apply border-dark-400! text-light-200! border-b! hover:bg-transparent!;
 }
 @utility shad-textArea {
-  @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0;
+  @apply bg-dark-400! placeholder:text-dark-600! border-dark-500! focus-visible:ring-0! focus-visible:ring-offset-0!;
 }
 
 /* === SIDEBARS */
