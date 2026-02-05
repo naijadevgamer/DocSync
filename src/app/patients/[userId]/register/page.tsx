@@ -3,9 +3,15 @@ import { getUserById } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 
 export default async function Register({
-  params: { userId },
-}: SearchParamProps) {
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
+  const { userId } = await params;
+  console.log("User id:", userId);
+
   const user = await getUserById(userId);
+
   return (
     <div className="flex h-screen">
       <section className="remove-scrollbar container">
