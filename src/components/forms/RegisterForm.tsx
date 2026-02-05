@@ -19,9 +19,14 @@ import {
 import Image from "next/image";
 import { SelectItem } from "../ui/select";
 import { FileUploader } from "../FileUploader";
+import { useRouter } from "next/navigation";
+import { registerPatient } from "@/lib/actions/patient.actions";
 
 export default function RegisterForm({ user }: { user: User }) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log("User:", user);
 
   const form = useForm<z.infer<typeof PatientFormValidation>>({
     resolver: zodResolver(PatientFormValidation) as any,
@@ -31,24 +36,72 @@ export default function RegisterForm({ user }: { user: User }) {
   const onSubmit = async (data: z.infer<typeof PatientFormValidation>) => {
     setIsLoading(true);
 
+    setIsLoading(true);
+
+    // Store file info in form data as
+    // let formData;
+    // if (
+    //   data.identificationDocument &&
+    //   data.identificationDocument?.length > 0
+    // ) {
+    //   const blobFile = new Blob([data.identificationDocument[0]], {
+    //     type: data.identificationDocument[0].type,
+    //   });
+
+    //   formData = new FormData();
+    //   formData.append("blobFile", blobFile);
+    //   formData.append("fileName", data.identificationDocument[0].name);
+    // }
+
+    const formData = new FormData();
+    const file = data.identificationDocument?.[0];
+    if (!file) throw new Error("No file selected");
+
+    formData.append("blobFile", file);
+    formData.append("fileName", file.name);
+    formData.append("fileType", file.type);
+
     try {
-      // const user = {
-      //   name: data.name,
-      //   email: data.email,
-      //   phone: data.phone,
-      // };
-      // console.log("User data submitted:", user);
-      // const newUser = await createUser(user);
-      // console.log("New User: ", newUser);
-      // if (newUser) {
-      //   router.push(`/patients/${newUser.$id}/register`);
-      // }
+      const patient = {
+        userId: user.$id,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        birthDate: new Date(data.birthDate),
+        gender: data.gender,
+        address: data.address,
+        occupation: data.occupation,
+        emergencyContactName: data.emergencyContactName,
+        emergencyContactNumber: data.emergencyContactNumber,
+        primaryPhysician: data.primaryPhysician,
+        insuranceProvider: data.insuranceProvider,
+        insurancePolicyNumber: data.insurancePolicyNumber,
+        allergies: data.allergies,
+        currentMedication: data.currentMedication,
+        familyMedicalHistory: data.familyMedicalHistory,
+        pastMedicalHistory: data.pastMedicalHistory,
+        identificationType: data.identificationType,
+        identificationNumber: data.identificationNumber,
+        identificationDocument: data.identificationDocument
+          ? formData
+          : undefined,
+        privacyConsent: data.privacyConsent,
+        treatmentConsent: data.treatmentConsent,
+        disclosureConsent: data.disclosureConsent,
+      };
+
+      const newPatient = await registerPatient(patient);
+
+      if (newPatient) {
+        router.push(`/patients/${user.$id}/new-appointment`);
+      }
     } catch (error) {
       console.log(error);
     }
 
     setIsLoading(false);
   };
+
   return (
     <div>
       <form

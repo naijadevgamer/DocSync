@@ -1,8 +1,23 @@
 "use server";
 
 import { ID, Query } from "node-appwrite";
-import { users } from "../appwrite.config";
+
+import { InputFile } from "node-appwrite/file";
+
+import {
+  BUCKET_ID,
+  DATABASE_ID,
+  databases,
+  ENDPOINT,
+  PATIENT_TABLE_ID,
+  permissions,
+  PROJECT_ID,
+  storage,
+  tablesDB,
+  users,
+} from "../appwrite.config";
 import { parseStringify } from "../utils";
+import { log } from "console";
 
 // const result = await users.create(
 //   "<USER_ID>", // userId
@@ -53,5 +68,71 @@ export const getUserById = async (userId: string) => {
     return parseStringify(user);
   } catch (error) {
     console.error("An error occurred while fetching the user:", error);
+  }
+};
+
+// REGISTER PATIENT
+export const registerPatient = async ({
+  identificationDocument,
+  ...patient
+}: RegisterUserParams) => {
+  try {
+    let file;
+    if (identificationDocument) {
+      const inputFile =
+        identificationDocument &&
+        InputFile.fromBuffer(
+          identificationDocument?.get("blobFile") as Blob,
+          identificationDocument?.get("fileName") as string,
+        );
+
+      console.log("Input file:", inputFile);
+
+      // file = await storage.createFile({
+      //   bucketId: BUCKET_ID!,
+      //   fileId: ID.unique(),
+      //   file: inputFile,
+      //   // permissions: ['read("*" )'],
+      //   permissions: [permissions],
+      // });
+    }
+
+    // const result = storage.getFileDownload({
+    //   bucketId: BUCKET_ID!,
+    //   fileId: file?.$id || "",
+    // });
+
+    // console.log(result); // Resource URL
+
+    // const newPatient = await databases.createDocument({
+    //   databaseId: DATABASE_ID!,
+    //   collectionId: PATIENT_TABLE_ID!,
+    //   documentId: ID.unique(),
+    //   data: {
+    //     identificationDocumentId: file?.$id ? file.$id : null,
+    //     identificationDocumentUrl: file?.$id
+    //       ? // ?  `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
+    //         result
+    //       : null,
+    //     ...patient,
+    //   },
+    //   permissions: [permissions],
+    // });
+
+    // const newPatient = await tablesDB.createRow({
+    //   databaseId: DATABASE_ID!,
+    //   tableId: PATIENT_TABLE_ID!,
+    //   rowId: ID.unique(),
+    //   data: {
+    //     identificationDocumentId: file?.$id ?? null,
+    //     identificationDocumentUrl: file?.$id ? result : null,
+    //     ...patient,
+    //   },
+    //   permissions: [permissions], // optional
+    // });
+
+    return parseStringify(false);
+  } catch (error) {
+    console.error("An error occurred while creating a new patient:", error);
   }
 };
