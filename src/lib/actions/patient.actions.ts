@@ -17,7 +17,6 @@ import {
   users,
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
-import { log } from "console";
 
 // const result = await users.create(
 //   "<USER_ID>", // userId
