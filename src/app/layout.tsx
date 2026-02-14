@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 import { cn } from "@/lib/utils";
 
@@ -26,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" style={{ colorScheme: "dark" }}>
       <body
         className={cn(
           "bg-dark-300 min-h-screen font-sans antialiased",
@@ -34,11 +35,12 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider
-          defaultTheme="dark"
-          enableSystem={false}
-          forcedTheme="dark"
+        // defaultTheme="dark"
+        // enableSystem={false}
+        // forcedTheme="dark"
         >
-          {children}
+          <main>{children}</main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
