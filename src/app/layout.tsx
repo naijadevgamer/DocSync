@@ -35,9 +35,9 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider
-        // defaultTheme="dark"
-        // enableSystem={false}
-        // forcedTheme="dark"
+          defaultTheme="dark"
+          enableSystem={false}
+          forcedTheme="dark"
         >
           <main>{children}</main>
           <Toaster />
