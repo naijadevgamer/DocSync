@@ -1,6 +1,7 @@
 import RegisterForm from "@/components/forms/RegisterForm";
 import { getUserById } from "@/lib/actions/patient.actions";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default async function Register({
   params,
@@ -8,9 +9,16 @@ export default async function Register({
   params: Promise<{ userId: string }>;
 }) {
   const { userId } = await params;
-  console.log("User id:", userId);
+  let user;
 
-  const user = await getUserById(userId);
+  try {
+    user = await getUserById(userId);
+  } catch (err: any) {
+    console.error("Error fetching user:", err);
+    throw err; // Let Next.js handle the error and show the error page
+  }
+
+  if (!user) notFound(); // must be outside the try/catch
 
   return (
     <div className="flex h-screen">
