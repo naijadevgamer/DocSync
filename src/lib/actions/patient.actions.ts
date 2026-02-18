@@ -1,6 +1,6 @@
 "use server";
 
-import { ID, Query } from "node-appwrite";
+import { AppwriteException, ID, Query } from "node-appwrite";
 
 import { InputFile } from "node-appwrite/file";
 
@@ -65,8 +65,12 @@ export const getUserById = async (userId: string) => {
   try {
     const user = await users.get({ userId });
     return parseStringify(user);
-  } catch (error) {
-    console.error("An error occurred while fetching the user:", error);
+  } catch (error: any) {
+    if (error.code === 404) {
+      // Expected "not found" case
+      return null;
+    }
+    throw error; // Unexpected server crash or network error
   }
 };
 
@@ -76,62 +80,36 @@ export const registerPatient = async ({
   ...patient
 }: RegisterUserParams) => {
   try {
-    let file;
-    if (identificationDocument) {
-      const inputFile =
-        identificationDocument &&
-        InputFile.fromBuffer(
-          identificationDocument?.get("blobFile") as Blob,
-          identificationDocument?.get("fileName") as string,
-        );
-
-      console.log("Input file:", inputFile);
-
-      // file = await storage.createFile({
-      //   bucketId: BUCKET_ID!,
-      //   fileId: ID.unique(),
-      //   file: inputFile,
-      //   // permissions: ['read("*" )'],
-      //   permissions: [permissions],
-      // });
-    }
-
-    // const result = storage.getFileDownload({
-    //   bucketId: BUCKET_ID!,
-    //   fileId: file?.$id || "",
-    // });
-
-    // console.log(result); // Resource URL
+    const fileId = identificationDocument?.get("fileId") as string;
+    const fileUrl = identificationDocument?.get("fileUrl") as string;
 
     // const newPatient = await databases.createDocument({
     //   databaseId: DATABASE_ID!,
     //   collectionId: PATIENT_TABLE_ID!,
     //   documentId: ID.unique(),
     //   data: {
-    //     identificationDocumentId: file?.$id ? file.$id : null,
-    //     identificationDocumentUrl: file?.$id
-    //       ? // ?  `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
-    //         result
-    //       : null,
+    //     identificationDocumentId: fileId ?? null,
+    //     identificationDocumentUrl: fileUrl ?? null,
     //     ...patient,
     //   },
     //   permissions: [permissions],
     // });
 
-    // const newPatient = await tablesDB.createRow({
-    //   databaseId: DATABASE_ID!,
-    //   tableId: PATIENT_TABLE_ID!,
-    //   rowId: ID.unique(),
-    //   data: {
-    //     identificationDocumentId: file?.$id ?? null,
-    //     identificationDocumentUrl: file?.$id ? result : null,
-    //     ...patient,
-    //   },
-    //   permissions: [permissions], // optional
-    // });
+    const newPatient = await tablesDB.createRow({
+      databaseId: DATABASE_ID!,
+      tableId: PATIENT_TABLE_ID!,
+      rowId: ID.unique(),
+      data: {
+        identificationDocumentId: fileId ?? null,
+        identificationDocumentUrl: fileUrl ?? null,
+        ...patient,
+      },
+      permissions: [permissions],
+    });
 
-    return parseStringify(false);
-  } catch (error) {
+    return parseStringify(newPatient);
+  } catch (error: any) {
+    console.error("Error code", error.code);
     console.error("An error occurred while creating a new patient:", error);
   }
 };
