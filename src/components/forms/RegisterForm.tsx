@@ -1,32 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import CustomFormField, { FormFieldType } from "../CustomFormField";
-import { FieldGroup } from "../ui/field";
-import { PatientFormValidation, UserFormValidation } from "@/lib/validation";
-import z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import SubmitButton from "../SubmitButton";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
 import {
   Doctors,
   GenderOptions,
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/constants";
-import Image from "next/image";
-import { SelectItem } from "../ui/select";
-import { FileUploader } from "../FileUploader";
-import { useRouter } from "next/navigation";
 import { registerPatient } from "@/lib/actions/patient.actions";
+import { storage } from "@/lib/appwrite.client"; // adjust import path
+import { PatientFormValidation } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ID, Permission, Role } from "appwrite";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+import CustomFormField, { FormFieldType } from "../CustomFormField";
+import { FileUploader } from "../FileUploader";
+import SubmitButton from "../SubmitButton";
+import { FieldGroup } from "../ui/field";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { SelectItem } from "../ui/select";
 
 export default function RegisterForm({ user }: { user: User }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log("User:", user);
 
   const form = useForm<z.infer<typeof PatientFormValidation>>({
     resolver: zodResolver(PatientFormValidation) as any,
@@ -34,34 +35,32 @@ export default function RegisterForm({ user }: { user: User }) {
   });
 
   const onSubmit = async (data: z.infer<typeof PatientFormValidation>) => {
+    console.log("Form data:", data);
     setIsLoading(true);
-
-    setIsLoading(true);
-
-    // Store file info in form data as
-    // let formData;
-    // if (
-    //   data.identificationDocument &&
-    //   data.identificationDocument?.length > 0
-    // ) {
-    //   const blobFile = new Blob([data.identificationDocument[0]], {
-    //     type: data.identificationDocument[0].type,
-    //   });
-
-    //   formData = new FormData();
-    //   formData.append("blobFile", blobFile);
-    //   formData.append("fileName", data.identificationDocument[0].name);
-    // }
-
     const formData = new FormData();
-    const file = data.identificationDocument?.[0];
-    if (!file) throw new Error("No file selected");
-
-    formData.append("blobFile", file);
-    formData.append("fileName", file.name);
-    formData.append("fileType", file.type);
 
     try {
+      const file = data.identificationDocument?.[0];
+      if (!file) throw new Error("No file selected");
+
+      const uploadedFile = await storage.createFile({
+        bucketId: process.env.NEXT_PUBLIC_BUCKET_ID!,
+        fileId: ID.unique(),
+        file: file,
+        permissions: [Permission.read(Role.any())],
+      });
+
+      const uploadedFileUrl = storage.getFileView({
+        bucketId: uploadedFile.bucketId,
+        fileId: uploadedFile.$id,
+      });
+
+      console.log("Uploaded file:", uploadedFileUrl);
+
+      formData.append("fileId", uploadedFile.$id);
+      formData.append("fileUrl", uploadedFileUrl);
+      console.log("View URL:", uploadedFileUrl);
+
       const patient = {
         userId: user.$id,
         name: data.name,
@@ -95,8 +94,12 @@ export default function RegisterForm({ user }: { user: User }) {
       if (newPatient) {
         router.push(`/patients/${user.$id}/new-appointment`);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error(
+        error.message ||
+          "An error occurred while registering. Please try again.",
+      );
     }
 
     setIsLoading(false);
@@ -180,7 +183,7 @@ export default function RegisterForm({ user }: { user: User }) {
                       <div key={option + i} className="radio-group">
                         <RadioGroupItem value={option} id={option} />
                         <Label htmlFor={option} className="cursor-pointer">
-                          {option}
+                          {option.charAt(0).toUpperCase() + option.slice(1)}
                         </Label>
                       </div>
                     ))}
