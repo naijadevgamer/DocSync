@@ -113,3 +113,22 @@ export const registerPatient = async ({
     console.error("An error occurred while creating a new patient:", error);
   }
 };
+
+// GET PATIENT
+export const getPatientById = async (userId: string) => {
+  try {
+    const patient = await tablesDB.listRows({
+      databaseId: DATABASE_ID!,
+      tableId: PATIENT_TABLE_ID!,
+      queries: [Query.equal("userId", [userId])],
+    });
+
+    return parseStringify(patient.rows[0] || null);
+  } catch (error: any) {
+    if (error.code === 404) {
+      // Expected "not found" case
+      return null;
+    }
+    throw error;
+  }
+};
