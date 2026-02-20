@@ -116,7 +116,7 @@ export default function RegisterForm({ user }: { user: User }) {
           <p className="text-dark-700">Let us know more about yourself.</p>
         </section>
 
-        <FieldGroup className="space-y-8">
+        <FieldGroup className="gap-8">
           <section className="space-y-6">
             <div className="mb-9 space-y-1">
               <h2 className="sub-header">Personal Information</h2>
