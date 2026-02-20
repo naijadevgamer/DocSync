@@ -57,7 +57,8 @@ export default function PatientForm() {
           <h1 className="header">Hi there 👋</h1>
           <p className="text-dark-700">Get started with appointments.</p>
         </section>
-        <FieldGroup>
+
+        <FieldGroup className="gap-6">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
