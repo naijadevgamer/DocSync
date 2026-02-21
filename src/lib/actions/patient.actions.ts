@@ -115,7 +115,7 @@ export const registerPatient = async ({
 };
 
 // GET PATIENT
-export const getPatientById = async (userId: string) => {
+export const getPatient = async (userId: string) => {
   try {
     const patient = await tablesDB.listRows({
       databaseId: DATABASE_ID!,
