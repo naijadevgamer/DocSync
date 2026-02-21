@@ -1,14 +1,11 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import RegisterForm from "@/components/forms/RegisterForm";
+import FullLogo from "@/components/FullLogo";
 import { getPatient, getUserById } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export default async function Appointment({
-  params,
-}: {
-  params: Promise<{ userId: string }>;
-}) {
+export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;
   let patient;
 
@@ -26,13 +23,9 @@ export default async function Appointment({
     <div className="flex h-screen">
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-215 flex-1 flex-col py-10">
-          <Image
-            src="/assets/icons/logo-full.svg"
-            height={38}
-            width={164}
-            alt="DocSync Logo"
-            className="mb-12 h-10 w-fit"
-          />
+          <div className="mb-12">
+            <FullLogo />
+          </div>
 
           <AppointmentForm
             patientId={patient?.$id}

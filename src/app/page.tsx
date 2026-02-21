@@ -1,19 +1,22 @@
 import PatientForm from "@/components/forms/PatientForm";
+import FullLogo from "@/components/FullLogo";
+import PassKeyModal from "@/components/PassKeyModal";
 import Image from "next/image";
 import Link from "next/link";
 
-function HomePage() {
+export default async function HomePage({ searchParams }: SearchParamProps) {
+  const { admin } = await searchParams;
+  const isAdmin = admin === "true";
+
   return (
     <div className="flex h-screen">
+      {isAdmin && <PassKeyModal />}
+
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
-          <Image
-            src="/assets/icons/logo-full.svg"
-            height={38}
-            width={164}
-            alt="Docsync Logo"
-            className="mb-12 h-10 w-fit"
-          />
+          <div className="mb-12">
+            <FullLogo />
+          </div>
 
           <PatientForm />
 
@@ -40,5 +43,3 @@ function HomePage() {
     </div>
   );
 }
-
-export default HomePage;

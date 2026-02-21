@@ -3,18 +3,15 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
-// import { getAppointment } from "@/lib/actions/appointment.actions";
 import { formatDateTime } from "@/lib/utils";
 import { getAppointmentById } from "@/lib/actions/appointment.action";
 import { notFound } from "next/navigation";
+import FullLogo from "@/components/FullLogo";
 
 export default async function RequestSuccess({
   params,
   searchParams,
-}: {
-  params: Promise<{ userId: string }>;
-  searchParams: Promise<{ appointmentId?: string }>;
-}) {
+}: SearchParamProps) {
   const { userId } = await params;
   console.log(params); // should log { userId: "697354460029a83470dc" }
   console.log(searchParams); // should log { appointmentId: "69989adf000fc708a6dc" }
@@ -34,13 +31,7 @@ export default async function RequestSuccess({
     <div className="flex h-screen max-h-screen px-[5%]">
       <div className="success-img">
         <Link href="/">
-          <Image
-            src="/assets/icons/logo-full.svg"
-            height={38}
-            width={164}
-            alt="DocSync Logo"
-            className="h-10 w-fit"
-          />
+          <FullLogo />
         </Link>
 
         <section className="flex flex-col items-center">
@@ -91,4 +82,3 @@ export default async function RequestSuccess({
     </div>
   );
 }
-
