@@ -5,11 +5,13 @@ import {
   APPOINTMENT_TABLE_ID,
   DATABASE_ID,
   databases,
+  PATIENT_TABLE_ID,
   permissions,
   tablesDB,
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
 import { Appointment } from "../../../types/appwrite.types";
+import { revalidatePath } from "next/cache";
 
 // Create Appointment
 export const createAppointment = async (
@@ -51,19 +53,51 @@ export const getAppointmentById = async (appointmentId: string) => {
 
 export const getRecentAppointmentList = async () => {
   try {
-    const appointments = await tablesDB.listRows({
+    // Step 1: Fetch all appointments
+    const appointments = (await tablesDB.listRows({
       databaseId: DATABASE_ID!,
       tableId: APPOINTMENT_TABLE_ID!,
       queries: [Query.orderDesc("$createdAt")],
-    });
+    })) as any;
 
+    // Step 2: Extract unique patient IDs
+    const patientIds = [
+      ...new Set(appointments.rows.map((a: any) => a.patient).filter(Boolean)),
+    ];
+
+    // Step 3: Fetch all patients in parallel
+    const patientDocs = await Promise.all(
+      patientIds.map(
+        (id: any) =>
+          tablesDB
+            .getRow({
+              databaseId: DATABASE_ID!,
+              tableId: PATIENT_TABLE_ID!,
+              rowId: id,
+            })
+            .catch(() => null), // in case a patient was deleted or missing
+      ),
+    );
+
+    // Step 4: Convert to lookup map for O(1) access
+    const patientMap = Object.fromEntries(
+      patientDocs.filter(Boolean).map((p) => [p?.$id, p]),
+    );
+
+    // Step 5: Merge patient data into each appointment
+    const enrichedAppointments = appointments.rows.map((a: any) => ({
+      ...a,
+      patient: patientMap[a.patient] || null,
+    }));
+
+    // Step 6: Count by status
     const initialCounts = {
       scheduledCount: 0,
       pendingCount: 0,
       cancelledCount: 0,
     };
 
-    const counts = appointments.rows.reduce((acc, appointment) => {
+    const counts = enrichedAppointments.reduce((acc: any, appointment: any) => {
       switch (appointment.status) {
         case "scheduled":
           acc.scheduledCount++;
@@ -78,15 +112,39 @@ export const getRecentAppointmentList = async () => {
       return acc;
     }, initialCounts);
 
+    // Step 7: Return parsed data
     const data = {
       totalCount: appointments.total,
       ...counts,
-      documents: appointments.rows,
+      documents: enrichedAppointments,
     };
 
     return parseStringify(data);
   } catch (error: any) {
     console.error("An error occurred while fetching appointments:", error);
+    throw error;
+  }
+};
+
+export const updateAppointment = async ({
+  userId,
+  appointmentId,
+  appointment,
+  type,
+}: UpdateAppointmentParams) => {
+  try {
+    const updatedAppointment = await tablesDB.updateRow({
+      databaseId: DATABASE_ID!,
+      tableId: APPOINTMENT_TABLE_ID!,
+      rowId: appointmentId,
+      data: appointment,
+      permissions: [permissions],
+    });
+
+    revalidatePath("/admin");
+    return parseStringify(updatedAppointment);
+  } catch (error: any) {
+    console.error("Error updating appointment:", error);
     throw error;
   }
 };
