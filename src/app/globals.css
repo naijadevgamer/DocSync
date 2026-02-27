@@ -27,9 +27,9 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* Background Images */
-  --background-appointments: url("/assets/images/appointments-bg.png");
-  --background-pending: url("/assets/images/pending-bg.png");
-  --background-cancelled: url("/assets/images/cancelled-bg.png");
+  --background-image-appointments: url("/assets/images/appointments-bg.png");
+  --background-image-pending: url("/assets/images/pending-bg.png");
+  --background-image-cancelled: url("/assets/images/cancelled-bg.png");
 }
 
 @layer base {
