@@ -5,11 +5,12 @@ import {
   APPOINTMENT_TABLE_ID,
   DATABASE_ID,
   databases,
+  messaging,
   PATIENT_TABLE_ID,
   permissions,
   tablesDB,
 } from "../appwrite.config";
-import { parseStringify } from "../utils";
+import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "../../../types/appwrite.types";
 import { revalidatePath } from "next/cache";
 
@@ -126,11 +127,30 @@ export const getRecentAppointmentList = async () => {
   }
 };
 
+//  SEND SMS NOTIFICATION
+export const sendSMSNotification = async (userId: string, content: string) => {
+  try {
+    const message = await messaging.createSMS({
+      messageId: ID.unique(), // auto-generate unique ID
+      content: content, // SMS body
+      topics: [], // optional
+      users: [userId], // optional
+      // targets: [], // optional
+      // draft: false, // optional
+      // scheduledAt: "", // optional
+    });
+    return parseStringify(message);
+  } catch (error) {
+    console.error("An error occurred while sending sms:", error);
+  }
+};
+
 export const updateAppointment = async ({
   userId,
   appointmentId,
   appointment,
   type,
+  timeZone,
 }: UpdateAppointmentParams) => {
   try {
     const updatedAppointment = await tablesDB.updateRow({
@@ -140,6 +160,11 @@ export const updateAppointment = async ({
       data: appointment,
       permissions: [permissions],
     });
+
+    if (!updatedAppointment) throw Error;
+
+    const smsMessage = `Greetings from DocSync. ${type === "schedule" ? `Your appointment is confirmed for ${formatDateTime(appointment.schedule!, timeZone).dateTime} with Dr. ${appointment.primaryPhysician}` : `We regret to inform that your appointment for ${formatDateTime(appointment.schedule!, timeZone).dateTime} is cancelled. Reason:  ${appointment.cancellationReason}`}.`;
+    await sendSMSNotification(userId, smsMessage);
 
     revalidatePath("/admin");
     return parseStringify(updatedAppointment);
