@@ -11,7 +11,7 @@ export default async function Appointment({ params }: SearchParamProps) {
 
   try {
     patient = await getPatient(userId);
-    console.log("Patient is what: ", patient);
+    // console.log("Patient is what: ", patient);
   } catch (err: any) {
     console.error("Error fetching user:", err);
     throw err; // Let Next.js handle the error and show the error page
