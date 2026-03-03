@@ -13,12 +13,12 @@ export default async function RequestSuccess({
   searchParams,
 }: SearchParamProps) {
   const { userId } = await params;
-  console.log(params); // should log { userId: "697354460029a83470dc" }
-  console.log(searchParams); // should log { appointmentId: "69989adf000fc708a6dc" }
+  // console.log(params); // should log { userId: "697354460029a83470dc" }
+  // console.log(searchParams); // should log { appointmentId: "69989adf000fc708a6dc" }
 
   const { appointmentId } = (await searchParams) || {};
 
-  console.log("Appointment ID from search params:", appointmentId);
+  // console.log("Appointment ID from search params:", appointmentId);
   const appointment = await getAppointmentById(appointmentId as string);
 
   if (!appointment) notFound();
