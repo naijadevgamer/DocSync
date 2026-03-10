@@ -18,23 +18,8 @@ import {
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
 
-// const result = await users.create(
-//   "<USER_ID>", // userId
-//   "email@example.com", // email (optional)
-//   "+12065550100", // phone (optional)
-//   "", // password (optional)
-//   "<NAME>", // name (optional)
-// );
-
 export const createUser = async (user: CreateUserParams) => {
   try {
-    // const newuser = await users.create(
-    //   ID.unique(),
-    //   user.email,
-    //   user.phone,
-    //   undefined,
-    //   user.name,
-    // );
     const newUser = await users.create({
       userId: ID.unique(),
       email: user.email,
@@ -47,10 +32,6 @@ export const createUser = async (user: CreateUserParams) => {
   } catch (error: any) {
     // Check existing user
     if (error && error?.code === 409) {
-      // const existingUser = await users.list([
-      //   Query.equal("email", [user.email]),
-      // ]);
-
       const existingUser = await users.list({
         queries: [Query.equal("email", [user.email])],
       });
@@ -83,18 +64,6 @@ export const registerPatient = async ({
     const fileId = identificationDocument?.get("fileId") as string;
     const fileUrl = identificationDocument?.get("fileUrl") as string;
 
-    // const newPatient = await databases.createDocument({
-    //   databaseId: DATABASE_ID!,
-    //   collectionId: PATIENT_TABLE_ID!,
-    //   documentId: ID.unique(),
-    //   data: {
-    //     identificationDocumentId: fileId ?? null,
-    //     identificationDocumentUrl: fileUrl ?? null,
-    //     ...patient,
-    //   },
-    //   permissions: [permissions],
-    // });
-
     const newPatient = await tablesDB.createRow({
       databaseId: DATABASE_ID!,
       tableId: PATIENT_TABLE_ID!,
@@ -126,7 +95,6 @@ export const getPatient = async (userId: string) => {
     return parseStringify(patient.rows[0] || null);
   } catch (error: any) {
     if (error.code === 404) {
-      // Expected "not found" case
       return null;
     }
     throw error;

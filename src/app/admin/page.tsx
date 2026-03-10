@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default async function page() {
   const appointments = await getRecentAppointmentList();
-  // console.log("Appointments in admin dashboard: ", appointments);
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">
@@ -15,7 +14,7 @@ export default async function page() {
           <FullLogo />
         </Link>
 
-        <p className="text-16-semibold">Admin Dashboard</p>
+        <p className="text-16-semibold">Admin</p>
       </header>
 
       <main className="admin-main">
