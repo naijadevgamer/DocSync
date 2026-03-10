@@ -60,10 +60,10 @@
 }
 
 /* Container */
-@utility container {
-  @apply mx-auto w-full px-8;
+/* @utility container {
+  @apply mx-auto w-full px-4 md:px-8;
   max-width: 1400px;
-}
+} */
 
 @import "../styles/utilities";
 
