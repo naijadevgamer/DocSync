@@ -21,6 +21,7 @@ export default function PatientForm() {
       name: "",
       email: "",
       phone: "",
+      password: "",
     },
   });
 
@@ -32,6 +33,7 @@ export default function PatientForm() {
         name: data.name,
         email: data.email,
         phone: data.phone,
+        password: data.password,
       };
 
       console.log("User data submitted:", user);
@@ -85,6 +87,14 @@ export default function PatientForm() {
             name="phone"
             label="Phone number"
             placeholder="(555) 123-4567"
+          />
+
+          <CustomFormField
+            fieldType={FormFieldType.PASSWORD_INPUT}
+            control={form.control}
+            name="password"
+            label="Password"
+            placeholder="••••••••"
           />
         </FieldGroup>
 

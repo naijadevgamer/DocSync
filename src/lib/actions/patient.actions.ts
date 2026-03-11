@@ -25,7 +25,7 @@ export const createUser = async (user: CreateUserParams) => {
       email: user.email,
       phone: user.phone,
       name: user.name,
-      // password: "optional", // only if you want to set one
+      password: user.password, // only if you want to set one
     });
 
     return parseStringify(newUser);
