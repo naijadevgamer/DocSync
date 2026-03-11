@@ -14,6 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
+import { IoIosLock } from "react-icons/io";
 
 // import { E164Number } from "libphonenumber-js/core";
 
@@ -21,6 +22,7 @@ export enum FormFieldType {
   INPUT = "input",
   TEXTAREA = "textarea",
   PHONE_INPUT = "phoneInput",
+  PASSWORD_INPUT = "passwordInput",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
   SELECT = "select",
@@ -75,6 +77,26 @@ const RenderInput = ({
           />
         </div>
       );
+
+    case FormFieldType.PASSWORD_INPUT:
+      return (
+        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
+          <div className="ml-2 flex items-center justify-center">
+            <IoIosLock size={24} className="text-dark-700" />
+          </div>
+
+          <Input
+            {...field}
+            id={field.name}
+            placeholder={props.placeholder}
+            aria-invalid={fieldState.invalid}
+            className="shad-input border-0"
+            autoComplete="off"
+            type="password"
+          />
+        </div>
+      );
+
     case FormFieldType.TEXTAREA:
       return (
         <Textarea
