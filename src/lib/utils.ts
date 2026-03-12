@@ -82,3 +82,15 @@ export function encryptKey(passkey: string) {
 export function decryptKey(passkey: string) {
   return atob(passkey);
 }
+
+export function parseCookieHeader(cookieHeader: string) {
+  return cookieHeader
+    .split(";")
+    .map((c) => c.trim())
+    .reduce<Record<string, string>>((acc, c) => {
+      const [key, ...v] = c.split("=");
+      if (!key) return acc;
+      acc[key] = decodeURIComponent(v.join("="));
+      return acc;
+    }, {});
+}
