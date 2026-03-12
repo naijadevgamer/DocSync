@@ -38,7 +38,9 @@ export default function PatientForm() {
 
       console.log("User data submitted:", user);
 
+      console.log("Creating user with data:", user);
       const newUser = await createUser(user);
+      console.log("User creation response:");
 
       console.log("New User: ", newUser);
 
