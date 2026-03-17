@@ -38,6 +38,54 @@ export function handleError(error: unknown): ActionResult {
     };
   }
 
+  //  Network/Connection errors
+  if (
+    error instanceof Error &&
+    (error.message.includes("fetch failed") ||
+      error.message.includes("Connect Timeout") ||
+      (error as any)?.cause?.code === "UND_ERR_CONNECT_TIMEOUT")
+  ) {
+    return {
+      success: false,
+      error: {
+        message: "Network error. Please check your connection and try again.",
+        code: "NETWORK_ERROR",
+        details: error.cause || error,
+      },
+    };
+  }
+
+  // // Network/Connection errors (like ConnectTimeoutError)
+  // if (
+  //   error &&
+  //   typeof error === "object" &&
+  //   "code" in error &&
+  //   error.code === "UND_ERR_CONNECT_TIMEOUT"
+  // ) {
+  //   return {
+  //     success: false,
+  //     error: {
+  //       message:
+  //         "Network connection timeout. Please check your internet connection and try again.",
+  //       code: "NETWORK_TIMEOUT",
+  //       details: error,
+  //     },
+  //   };
+  // }
+
+  // // Fetch errors (network issues)
+  // if (error instanceof TypeError && error.message === "fetch failed") {
+  //   return {
+  //     success: false,
+  //     error: {
+  //       message:
+  //         "Unable to connect to the server. Please check your internet connection.",
+  //       code: "NETWORK_ERROR",
+  //       details: error.cause || error,
+  //     },
+  //   };
+  // }
+
   // Generic errors
   if (error instanceof Error) {
     return {

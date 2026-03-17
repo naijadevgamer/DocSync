@@ -1,30 +1,39 @@
 import { Client, Account, Databases, Storage, Users } from "node-appwrite";
 import { parseCookieHeader } from "../utils";
+import { createBaseClient } from "./config";
 
-export const createAdminClient = async () => {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_ENDPOINT!)
-    .setProject(process.env.NEXT_PUBLIC_PROJECT_ID!)
-    .setKey(process.env.API_KEY!);
-
+export const createAdminClient = () => {
+  const client = createBaseClient().setKey(process.env.API_KEY!);
   return {
-    account: new Account(client),
+    users: new Users(client),
     databases: new Databases(client),
     storage: new Storage(client),
-    users: new Users(client),
   };
 };
 
-export const createSessionClient = (cookieHeader?: string) => {
+export const createSessionClient = ({
+  sessionSecret,
+  cookieHeader,
+}: {
+  sessionSecret?: string;
+  cookieHeader?: string;
+}) => {
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_PROJECT_ID!);
 
+  // Server actions
+  if (sessionSecret) {
+    client.setSession(sessionSecret);
+  }
+
+  // Middleware / edge runtime
   if (cookieHeader) {
     const cookies = parseCookieHeader(cookieHeader);
     const sessionKey = `a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}`;
+
     if (cookies[sessionKey]) {
-      client.headers["x-appwrite-session"] = cookies[sessionKey];
+      client.setSession(cookies[sessionKey]);
     }
   }
 
