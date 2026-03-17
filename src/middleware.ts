@@ -54,7 +54,7 @@ async function getSession(request: NextRequest) {
   try {
     const cookieHeader = request.headers.get("cookie") || "";
 
-    const client = createSessionClient(cookieHeader);
+    const client = createSessionClient({ cookieHeader });
     const { account } = client;
 
     return await account.get();

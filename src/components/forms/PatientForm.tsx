@@ -8,8 +8,12 @@ import { z } from "zod";
 import { FieldGroup } from "../ui/field";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { createUser } from "@/lib/actions/patient.actions";
+// import { createUser } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
+import { createAdminClient } from "@/lib/appwrite/server";
+import { createUser } from "@/lib/actions/auth.actions";
+import { ActionResult } from "@/lib/errors";
+import { toast } from "sonner";
 
 export default function PatientForm() {
   const router = useRouter();
@@ -28,29 +32,24 @@ export default function PatientForm() {
   const onSubmit = async (data: z.infer<typeof UserFormValidation>) => {
     setIsLoading(true);
 
-    try {
-      const user = {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-      };
+    const user = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      password: data.password,
+    };
 
-      console.log("User data submitted:", user);
+    const result = await createUser(user);
 
-      console.log("Creating user with data:", user);
-      const newUser = await createUser(user);
-      console.log("User creation response:");
-
-      console.log("New User: ", newUser);
-
-      if (newUser) {
-        router.push(`/patients/${newUser.$id}/register`);
-      }
-    } catch (error) {
-      console.log(error);
+    if (!result.success) {
+      console.error("Error creating user:", result.error);
+      toast.error(result.error?.message || "Registration failed");
+      setIsLoading(false);
+      return;
     }
 
+    toast.success("Account created successfully!");
+    router.push("/verify");
     setIsLoading(false);
   };
 
