@@ -15,6 +15,14 @@ export const UserFormValidation = z.object({
     .max(100, "Password must be at most 100 characters"),
 });
 
+export const LoginFormValidation = z.object({
+  email: z.email("Invalid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password must be at most 100 characters"),
+});
+
 export const PatientFormValidation = z.object({
   name: z
     .string()
