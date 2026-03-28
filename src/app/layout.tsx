@@ -40,7 +40,7 @@ export default function RootLayout({
           forcedTheme="dark"
         >
           <main>{children}</main>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>
