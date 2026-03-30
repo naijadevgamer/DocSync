@@ -74,6 +74,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/appwrite/client";
+import { createSessionClient } from "@/lib/appwrite/server";
 
 export default function VerifyForm() {
   const params = useSearchParams();
@@ -95,7 +96,8 @@ export default function VerifyForm() {
       try {
         setStatus("verifying");
 
-        const { account } = createBrowserClient();
+        // const { account } = createBrowserClient();
+        const { account } = createSessionClient({ });
 
         await account.updateEmailVerification({
           userId,
@@ -105,7 +107,7 @@ export default function VerifyForm() {
         setStatus("success");
 
         setTimeout(() => {
-          router.push("/patients/dashboard");
+          router.push(`/patients/${.$id}/personal-info`);
         }, 2000);
       } catch (err) {
         console.error(err);
