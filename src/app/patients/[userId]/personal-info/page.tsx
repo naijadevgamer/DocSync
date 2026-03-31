@@ -4,7 +4,7 @@ import { getUserById } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export default async function Register({ params }: SearchParamProps) {
+export default async function Page({ params }: SearchParamProps) {
   const { userId } = await params;
   let user;
 
