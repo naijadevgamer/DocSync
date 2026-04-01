@@ -1,5 +1,5 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
-import RegisterForm from "@/components/forms/RegisterForm";
+import RegisterForm from "@/components/forms/PatientInfoForm";
 import FullLogo from "@/components/FullLogo";
 import { getPatient, getUserById } from "@/lib/actions/patient.actions";
 import Image from "next/image";

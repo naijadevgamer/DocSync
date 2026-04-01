@@ -21,7 +21,8 @@ export function handleError(error: unknown): ActionResult {
       error: {
         message: getAppwriteErrorMessage(error),
         code: error.code?.toString(),
-        details: error.response,
+        details:
+          process.env.NODE_ENV === "development" ? error.response : undefined,
       },
     };
   }
@@ -33,7 +34,7 @@ export function handleError(error: unknown): ActionResult {
       error: {
         message: "Validation failed",
         code: "VALIDATION_ERROR",
-        details: error,
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
     };
   }
@@ -50,49 +51,59 @@ export function handleError(error: unknown): ActionResult {
       error: {
         message: "Network error. Please check your connection and try again.",
         code: "NETWORK_ERROR",
-        details: error.cause || error,
+        details:
+          process.env.NODE_ENV === "development"
+            ? error.cause || error
+            : undefined,
       },
     };
   }
 
-  // // Network/Connection errors (like ConnectTimeoutError)
-  // if (
-  //   error &&
-  //   typeof error === "object" &&
-  //   "code" in error &&
-  //   error.code === "UND_ERR_CONNECT_TIMEOUT"
-  // ) {
-  //   return {
-  //     success: false,
-  //     error: {
-  //       message:
-  //         "Network connection timeout. Please check your internet connection and try again.",
-  //       code: "NETWORK_TIMEOUT",
-  //       details: error,
-  //     },
-  //   };
-  // }
+  // Network/Connection errors (like ConnectTimeoutError)
+  if (
+    error &&
+    typeof error === "object" &&
+    "code" in error &&
+    error.code === "UND_ERR_CONNECT_TIMEOUT"
+  ) {
+    return {
+      success: false,
+      error: {
+        message:
+          "Network connection timeout. Please check your internet connection and try again.",
+        code: "NETWORK_TIMEOUT",
+        details: process.env.NODE_ENV === "development" ? error : undefined,
+      },
+    };
+  }
 
-  // // Fetch errors (network issues)
-  // if (error instanceof TypeError && error.message === "fetch failed") {
-  //   return {
-  //     success: false,
-  //     error: {
-  //       message:
-  //         "Unable to connect to the server. Please check your internet connection.",
-  //       code: "NETWORK_ERROR",
-  //       details: error.cause || error,
-  //     },
-  //   };
-  // }
+  // Fetch errors (network issues)
+  if (error instanceof TypeError && error.message === "fetch failed") {
+    return {
+      success: false,
+      error: {
+        message:
+          "Unable to connect to the server. Please check your internet connection.",
+        code: "NETWORK_ERROR",
+        details:
+          process.env.NODE_ENV === "development"
+            ? error.cause || error
+            : undefined,
+      },
+    };
+  }
 
   // Generic errors
   if (error instanceof Error) {
     return {
       success: false,
       error: {
-        message: error.message,
+        message:
+          process.env.NODE_ENV === "development"
+            ? error.message
+            : "An unexpected error occurred",
         code: "UNKNOWN_ERROR",
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
     };
   }
@@ -102,6 +113,7 @@ export function handleError(error: unknown): ActionResult {
     error: {
       message: "An unexpected server error occurred",
       code: "UNKNOWN_ERROR",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
     },
   };
 }
@@ -123,6 +135,8 @@ function getAppwriteErrorMessage(error: AppwriteException): string {
     case 500:
       return "Server error. Please try again later";
     default:
-      return error.message || "Something went wrong";
+      return process.env.NODE_ENV === "development"
+        ? error.message
+        : "Something went wrong";
   }
 }

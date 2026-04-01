@@ -7,7 +7,7 @@ import {
 } from "@/lib/actions/auth.actions";
 import { LoginFormValidation, UserFormValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,7 +42,16 @@ export default function LoginForm() {
 
     if (!result.success) {
       console.error("Error logging user in:", result.error);
-      toast.error(result.error?.message || "Login failed");
+      switch (result.error?.code) {
+        case "401":
+          form.setError("email", { message: "Invalid email or password" });
+          form.setError("password", { message: "Invalid email or password" });
+          toast.error("Invalid email or password");
+          break;
+
+        default:
+          toast.error(result.error?.message || "Login failed");
+      }
       setIsLoading(false);
       return;
     }
@@ -58,7 +67,7 @@ export default function LoginForm() {
     // Redirect based on role and personal info
     if (isAdmin) {
       // Admin users go to admin dashboard
-      router.push("/admin/dashboard");
+      router.push("/admin");
     } else if (hasPersonalInfo) {
       // Regular users with personal info go to appointments
       router.push(`/patients/${loggedInUser.$id}/new-appointment`);

@@ -1,6 +1,4 @@
 import LoginForm from "@/components/forms/LoginForm";
-import RegisterForm from "@/components/forms/RegisterForm";
-import PatientForm from "@/components/forms/RegisterForm";
 import FullLogo from "@/components/FullLogo";
 import PassKeyModal from "@/components/PassKeyModal";
 import Image from "next/image";

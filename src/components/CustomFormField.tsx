@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
 import { IoIosLock } from "react-icons/io";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { useState } from "react";
 
 // import { E164Number } from "libphonenumber-js/core";
 
@@ -34,8 +36,7 @@ interface CustomProps {
   name: string;
   label?: string;
   placeholder?: string;
-  iconSrc?: string;
-  iconAlt?: string;
+  icon?: React.ReactNode;
   disabled?: boolean;
   dateFormat?: string;
   showTimeSelect?: boolean;
@@ -53,18 +54,16 @@ const RenderInput = ({
   fieldState: ControllerFieldState;
   props: CustomProps;
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   switch (props.fieldType) {
     case FormFieldType.INPUT:
       return (
         <div className="border-dark-500 bg-dark-400 flex rounded-md border">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
+          {props.icon && (
+            <div className="ml-2 flex items-center justify-center text-[#CDE9DF]">
+              {props.icon}
+            </div>
           )}
 
           <Input
@@ -80,9 +79,9 @@ const RenderInput = ({
 
     case FormFieldType.PASSWORD_INPUT:
       return (
-        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
-          <div className="ml-2 flex items-center justify-center">
-            <IoIosLock size={24} className="text-dark-700" />
+        <div className="border-dark-500 bg-dark-400 flex items-center rounded-md border">
+          <div className="ml-2 flex items-center justify-center text-[#CDE9DF]">
+            <IoIosLock size={22} className="" />
           </div>
 
           <Input
@@ -90,10 +89,22 @@ const RenderInput = ({
             id={field.name}
             placeholder={props.placeholder}
             aria-invalid={fieldState.invalid}
-            className="shad-input border-0"
+            className="shad-input flex-1 border-0"
             autoComplete="off"
-            type="password"
+            type={showPassword ? "text" : "password"} // ✅ toggle
           />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="mr-3 flex items-center"
+          >
+            {!showPassword ? (
+              <IoEyeOffOutline size={22} className="text-[#CDE9DF]" />
+            ) : (
+              <IoEyeOutline size={22} className="text-[#CDE9DF]" />
+            )}
+          </button>
         </div>
       );
 
@@ -106,6 +117,7 @@ const RenderInput = ({
           disabled={props.disabled}
         />
       );
+
     case FormFieldType.PHONE_INPUT:
       return (
         <PhoneInput
@@ -118,6 +130,7 @@ const RenderInput = ({
           className="input-phone"
         />
       );
+
     case FormFieldType.CHECKBOX:
       return (
         <div className="flex items-center gap-4">
@@ -131,18 +144,16 @@ const RenderInput = ({
           </FieldLabel>
         </div>
       );
+
     case FormFieldType.DATE_PICKER:
       return (
         <div className="border-dark-500 bg-dark-400 flex rounded-md border">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
+          {props.icon && (
+            <div className="ml-2 flex items-center justify-center text-[#CDE9DF]">
+              {props.icon}
+            </div>
           )}
+
           <ReactDatePicker
             showTimeSelect={props.showTimeSelect ?? false}
             selected={field.value}
@@ -155,6 +166,7 @@ const RenderInput = ({
           />
         </div>
       );
+
     case FormFieldType.SELECT:
       return (
         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -169,6 +181,7 @@ const RenderInput = ({
           </SelectContent>
         </Select>
       );
+
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
     default:
