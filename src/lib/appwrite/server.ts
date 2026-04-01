@@ -1,44 +1,63 @@
-import { Client, Account, Databases, Storage, Users } from "node-appwrite";
+import { cookies } from "next/headers";
+import { Account, Databases, Storage, TablesDB, Users } from "node-appwrite";
 import { parseCookieHeader } from "../utils";
 import { createBaseClient } from "./config";
+import { cache } from "react";
 
-export const createAdminClient = () => {
+export const createServerClient = () => {
   const client = createBaseClient().setKey(process.env.API_KEY!);
   return {
+    account: new Account(client),
     users: new Users(client),
     databases: new Databases(client),
     storage: new Storage(client),
   };
 };
 
-export const createSessionClient = ({
-  sessionSecret,
-  cookieHeader,
-}: {
-  sessionSecret?: string;
-  cookieHeader?: string;
-}) => {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_ENDPOINT!)
-    .setProject(process.env.NEXT_PUBLIC_PROJECT_ID!);
+export const createSessionClient = async () => {
+  const client = createBaseClient();
 
-  // Server actions
-  if (sessionSecret) {
-    client.setSession(sessionSecret);
+  // 🔑 This is the important part
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("my-custom-session");
+
+  if (!sessionCookie) {
+    throw new Error("No session cookie found");
   }
 
-  // Middleware / edge runtime
-  if (cookieHeader) {
-    const cookies = parseCookieHeader(cookieHeader);
-    const sessionKey = `a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}`;
-
-    if (cookies[sessionKey]) {
-      client.setSession(cookies[sessionKey]);
-    }
-  }
+  // Inject session into Appwrite client
+  client.setSession(sessionCookie.value);
 
   return {
     account: new Account(client),
     databases: new Databases(client),
+    tablesDB: new TablesDB(client),
   };
 };
+
+export const createSessionClientFromMiddleware = (cookieHeader: string) => {
+  const client = createBaseClient();
+
+  const cookies = parseCookieHeader(cookieHeader);
+
+  const session = cookies["my-custom-session"];
+
+  if (!session) {
+    throw new Error("No session found");
+  }
+
+  client.setSession(session);
+
+  return {
+    account: new Account(client),
+  };
+};
+
+export const getCurrentUser = cache(async () => {
+  try {
+    const { account } = await createSessionClient();
+    return await account.get();
+  } catch {
+    return null;
+  }
+});
