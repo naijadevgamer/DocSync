@@ -1,21 +1,12 @@
 import PatientForm from "@/components/forms/PatientInfoForm";
 import FullLogo from "@/components/FullLogo";
-import { getUserById } from "@/lib/actions/patient.actions";
+import { getAuthorizedUser } from "@/lib/actions/auth.actions";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 
 export default async function Page({ params }: SearchParamProps) {
   const { userId } = await params;
-  let user;
 
-  try {
-    user = await getUserById(userId);
-  } catch (err: any) {
-    console.error("Error fetching user:", err);
-    throw err; // Let Next.js handle the error and show the error page
-  }
-
-  if (!user) notFound(); // must be outside the try/catch
+  const user = (await getAuthorizedUser(userId)) as User;
 
   return (
     <div className="flex h-screen">

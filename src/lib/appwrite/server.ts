@@ -1,8 +1,19 @@
 import { cookies } from "next/headers";
-import { Account, Databases, Storage, TablesDB, Users } from "node-appwrite";
+import {
+  Account,
+  Databases,
+  Messaging,
+  Permission,
+  Role,
+  Storage,
+  TablesDB,
+  Users,
+} from "node-appwrite";
 import { parseCookieHeader } from "../utils";
 import { createBaseClient } from "./config";
 import { cache } from "react";
+import { permissions } from "../appwrite.client";
+import { messaging } from "../appwrite.config";
 
 export const createServerClient = () => {
   const client = createBaseClient().setKey(process.env.API_KEY!);
@@ -32,6 +43,8 @@ export const createSessionClient = async () => {
     account: new Account(client),
     databases: new Databases(client),
     tablesDB: new TablesDB(client),
+    messaging: new Messaging(client),
+    permissions: Permission.read(Role.any()),
   };
 };
 
