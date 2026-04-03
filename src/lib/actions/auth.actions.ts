@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ID, Query } from "node-appwrite";
 import {
   createServerClient,
@@ -225,3 +225,43 @@ export const checkPersonalInfo = async () => {
     return handleError(error);
   }
 };
+
+// lib/auth/guards.ts
+// import { redirect, notFound } from "next/navigation";
+// import { getCurrentUser } from "@/lib/appwrite/server";
+
+// 🔐 Require logged-in user
+// export async function requireUser() {
+//   return user;
+// }
+
+// 🔐 Require specific user (ownership check)
+export async function getAuthorizedUser(userId: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    notFound();
+    // redirect("/login");
+  }
+
+  if (user.$id !== userId) {
+    notFound(); // hide resource
+  }
+
+  return user;
+}
+
+// 🔐 Require admin
+export async function getAuthorizedAdmin() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (!user.labels?.includes("admin")) {
+    notFound(); // or redirect("/unauthorized")
+  }
+
+  return user;
+}
