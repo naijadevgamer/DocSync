@@ -73,6 +73,7 @@ const RenderInput = ({
             aria-invalid={fieldState.invalid}
             className="shad-input border-0"
             autoComplete="off"
+            disabled={props.disabled}
           />
         </div>
       );
@@ -190,7 +191,7 @@ const RenderInput = ({
 };
 
 export default function CustomFormField(props: CustomProps) {
-  const { control, name, label } = props;
+  const { control, name, label, disabled } = props;
 
   return (
     <Controller

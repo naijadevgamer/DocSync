@@ -1,23 +1,21 @@
 "use client";
-
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: Error;
   reset: () => void;
 }) {
-  useEffect(() => {
-    console.error("Application error:", error);
-  }, [error]);
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h2 className="header mb-4">Something went wrong!</h2>
-      <Button onClick={reset}>Try again</Button>
+    <div className="flex h-screen flex-col items-center justify-center">
+      <h1 className="text-xl font-semibold text-red-500">Server Error</h1>
+      <p>{error.message}</p>
+      <button
+        onClick={() => reset()}
+        className="bg-dark-600 mt-4 rounded px-4 py-2 text-white"
+      >
+        Try again
+      </button>
     </div>
   );
 }
