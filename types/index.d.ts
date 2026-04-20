@@ -12,7 +12,7 @@ declare interface CreateUserParams {
   name: string;
   email: string;
   phone: string;
-  password: string;
+  password?: string;
 }
 
 declare interface CreateLoginParams {
@@ -45,6 +45,31 @@ declare interface RegisterUserParams extends CreateUserParams {
   privacyConsent: boolean;
 }
 
+declare type PatientData = {
+  patient: {
+    $id: string;
+    userId: string;
+    birthDate: Date;
+    gender: Gender;
+    address: string;
+    occupation: string;
+    emergencyContactName: string;
+    emergencyContactNumber: string;
+    primaryPhysician: string;
+    insuranceProvider: string;
+    insurancePolicyNumber: string;
+    allergies: string | undefined;
+    currentMedication: string | undefined;
+    familyMedicalHistory: string | undefined;
+    pastMedicalHistory: string | undefined;
+    identificationType: string | undefined;
+    identificationNumber: string | undefined;
+    identificationDocument: FormData | undefined;
+    privacyConsent: boolean;
+    // add only what you need
+  } | null;
+};
+
 declare type CreateAppointmentParams = {
   userId: string;
   patient: string;
@@ -53,6 +78,7 @@ declare type CreateAppointmentParams = {
   schedule: Date;
   status: Status;
   note: string | undefined;
+  timeZone?: string;
 };
 
 declare type UpdateAppointmentParams = {
@@ -61,4 +87,22 @@ declare type UpdateAppointmentParams = {
   timeZone?: string;
   appointment: Appointment;
   type: string;
+  patientGender?: "male" | "female" | "other";
+  patientName?: string;
+};
+
+declare type AppointmentData = {
+  appointment: {
+    $id: string;
+    userId: string;
+    patient: string;
+    primaryPhysician: string;
+    reason: string;
+    schedule: Date;
+    status: Status;
+    note: string | undefined;
+    cancellationReason: string | undefined;
+
+    // add only what you need
+  } | null;
 };
