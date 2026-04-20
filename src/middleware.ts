@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
   // }
 
   // ✅ You now trust this
-  const userRole = payload?.role;
+  const userId = payload?.userId;
 
   console.log("Middleware - Path:", pathname);
   console.log("Middleware - Has auth cookie:", isLoggedIn);
@@ -37,7 +37,9 @@ export async function middleware(request: NextRequest) {
     isLoggedIn &&
     (pathname.startsWith("/login") || pathname.startsWith("/register"))
   ) {
-    return NextResponse.redirect(new URL("/patients/dashboard", request.url));
+    return NextResponse.redirect(
+      new URL(`/patients/${userId}/dashboard`, request.url),
+    );
   }
 
   if (!isLoggedIn && pathname.startsWith("/verify")) {
@@ -65,7 +67,9 @@ export async function middleware(request: NextRequest) {
     const session = await getSession(request);
     console.log("Session user:", session);
     if (!session?.labels?.includes("admin")) {
-      return NextResponse.redirect(new URL("/patients/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(`/patients/${session?.$id}/dashboard`, request.url),
+      );
     }
   }
 
