@@ -14,6 +14,7 @@ import { createBaseClient } from "./config";
 import { cache } from "react";
 import { permissions } from "../appwrite.client";
 import { messaging } from "../appwrite.config";
+import { handleError } from "../errors";
 
 export const createServerClient = () => {
   const client = createBaseClient().setKey(process.env.API_KEY!);
@@ -22,6 +23,7 @@ export const createServerClient = () => {
     users: new Users(client),
     databases: new Databases(client),
     storage: new Storage(client),
+    messaging: new Messaging(client),
   };
 };
 
@@ -43,7 +45,7 @@ export const createSessionClient = async () => {
     account: new Account(client),
     databases: new Databases(client),
     tablesDB: new TablesDB(client),
-    messaging: new Messaging(client),
+
     permissions: Permission.read(Role.any()),
   };
 };
@@ -69,8 +71,9 @@ export const createSessionClientFromMiddleware = (cookieHeader: string) => {
 export const getCurrentUser = cache(async () => {
   try {
     const { account } = await createSessionClient();
-    return await account.get();
-  } catch {
-    return null;
+    const user = await account.get();
+    return { success: true, data: { user } };
+  } catch (error: any) {
+    return handleError(error);
   }
 });
