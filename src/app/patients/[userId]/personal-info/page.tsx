@@ -3,7 +3,7 @@ import FullLogo from "@/components/FullLogo";
 import { getAuthorizedUser } from "@/lib/actions/auth.actions";
 import Image from "next/image";
 
-export default async function Page({ params }: SearchParamProps) {
+export default async function PersonalInfo({ params }: SearchParamProps) {
   const { userId } = await params;
 
   const user = (await getAuthorizedUser(userId)) as User;
