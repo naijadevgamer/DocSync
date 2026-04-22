@@ -1,23 +1,30 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
-import RegisterForm from "@/components/forms/PatientInfoForm";
 import FullLogo from "@/components/FullLogo";
-import { getPatient, getUserById } from "@/lib/actions/patient.actions";
+import { getAuthorizedUser } from "@/lib/actions/auth.actions";
+import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { toast } from "sonner";
+import { Patient } from "../../../../../types/appwrite.types";
 
 export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;
-  let patient;
 
-  try {
-    patient = await getPatient(userId);
-    // console.log("Patient is what: ", patient);
-  } catch (err: any) {
-    console.error("Error fetching user:", err);
-    throw err; // Let Next.js handle the error and show the error page
+  const user = await getAuthorizedUser(userId);
+  const patientResult = await getPatient(user.$id);
+
+  console.log("Patient resulttttttttt:", patientResult);
+
+  if (!patientResult.success) {
+    console.error(
+      "Error fetching patient:",
+      patientResult.error?.details || patientResult.error,
+    );
+
+    if (patientResult.error?.code === "404") notFound();
+
+    toast.error(patientResult.error?.message || "Failed to fetch patient data");
   }
-
-  if (!patient) notFound(); // must be outside the try/catch
 
   return (
     <div className="flex h-screen">
@@ -28,8 +35,9 @@ export default async function Appointment({ params }: SearchParamProps) {
           </div>
 
           <AppointmentForm
-            patientId={patient?.$id}
-            userId={userId}
+            patient={patientResult.data?.patient as Patient}
+            userId={user.$id}
+            userName={user.name}
             type="create"
           />
 

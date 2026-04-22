@@ -1,30 +1,41 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import FullLogo from "@/components/FullLogo";
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
 import { getAppointmentById } from "@/lib/actions/appointment.action";
+import { formatDateTime } from "@/lib/utils";
 import { notFound } from "next/navigation";
-import FullLogo from "@/components/FullLogo";
+import { getAuthorizedUser } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
 
 export default async function RequestSuccess({
   params,
   searchParams,
 }: SearchParamProps) {
   const { userId } = await params;
-  // console.log(params); // should log { userId: "697354460029a83470dc" }
-  // console.log(searchParams); // should log { appointmentId: "69989adf000fc708a6dc" }
 
-  const { appointmentId } = (await searchParams) || {};
+  const { appointmentId } = await searchParams;
+
+  if (!appointmentId || Array.isArray(appointmentId)) {
+    throw new Error("Invalid appointment ID");
+  }
+
+  const user = await getAuthorizedUser(userId);
 
   // console.log("Appointment ID from search params:", appointmentId);
-  const appointment = await getAppointmentById(appointmentId as string);
+  const result = await getAppointmentById(appointmentId);
 
-  if (!appointment) notFound();
+  if (!result.success) {
+    console.error(result.error?.details || result.error);
+    if (result.error?.code === "404") notFound();
+
+    toast.error(result.error?.message || "Something went wrong");
+  }
 
   const doctor = Doctors.find(
-    (doctor) => doctor.name === appointment.primaryPhysician,
+    (doctor) => doctor.name === result.data?.appointment?.primaryPhysician,
   );
 
   return (
@@ -67,12 +78,18 @@ export default async function RequestSuccess({
               width={24}
               alt="calendar"
             />
-            <p> {formatDateTime(appointment.schedule).dateTime}</p>
+            <p>
+              {" "}
+              {
+                formatDateTime(result.data?.appointment?.schedule || new Date())
+                  .dateTime
+              }
+            </p>
           </div>
         </section>
 
         <Button className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>
+          <Link href={`/patients/${user.$id}/new-appointment`}>
             New Appointment
           </Link>
         </Button>

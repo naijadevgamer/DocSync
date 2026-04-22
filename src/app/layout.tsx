@@ -1,8 +1,8 @@
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 
 import { cn } from "@/lib/utils";
 

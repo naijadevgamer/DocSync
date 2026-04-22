@@ -1,18 +1,13 @@
 import RegisterForm from "@/components/forms/RegisterForm";
-import PatientForm from "@/components/forms/RegisterForm";
 import FullLogo from "@/components/FullLogo";
-import PassKeyModal from "@/components/PassKeyModal";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function RegisterPage({ searchParams }: SearchParamProps) {
   const { admin } = await searchParams;
-  const isAdmin = admin === "true";
 
   return (
     <div className="flex h-screen">
-      {isAdmin && <PassKeyModal />}
-
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
           <div className="mb-12">
