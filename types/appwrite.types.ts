@@ -1,4 +1,5 @@
 import { Models } from "node-appwrite";
+import { string } from "zod";
 
 export interface Patient extends Models.Document {
   userId: string;
@@ -24,7 +25,18 @@ export interface Patient extends Models.Document {
   privacyConsent: boolean;
 }
 
-export interface Appointment extends Models.Document {
+export interface AppointmentDB extends Models.Document {
+  patient: string;
+  schedule: Date;
+  status: Status;
+  primaryPhysician: string;
+  reason: string;
+  note: string;
+  userId: string;
+  cancellationReason?: string;
+}
+
+export interface AppointmentUI extends Models.Document {
   patient: Patient;
   schedule: Date;
   status: Status;

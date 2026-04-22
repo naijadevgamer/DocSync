@@ -26,15 +26,13 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { SelectItem } from "../ui/select";
 
 import {
-  HiOutlineUser,
-  HiOutlineMail,
-  HiOutlinePhone,
-  HiOutlineCalendar,
-  HiOutlineHome,
   HiOutlineBriefcase,
-  HiOutlineIdentification,
+  HiOutlineCalendar,
   HiOutlineDocumentText,
+  HiOutlineHome,
+  HiOutlineIdentification,
   HiOutlineShieldCheck,
+  HiOutlineUser,
 } from "react-icons/hi";
 
 import { MdHealthAndSafety, MdMedication } from "react-icons/md";

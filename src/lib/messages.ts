@@ -1,6 +1,6 @@
 // emails/pending.email.ts
 
-import { Appointment } from "../../types/appwrite.types";
+import { AppointmentDB, Patient } from "../../types/appwrite.types";
 import { formatDateTime } from "./utils";
 import { getBaseStyles } from "./emailStyles";
 import { generateCalendarLinks } from "./calenderUtils";
@@ -9,20 +9,18 @@ import { getDirectionsLink } from "./locationUtils";
 const LOGO_URL = process.env.NEXT_PUBLIC_LOGO_URL;
 
 interface EmailProps {
-  patientName: string;
-  patientGender: "male" | "female" | "other";
-  appointment: Appointment;
+  appointment: AppointmentDB;
   timeZone: string;
+  patient: Patient;
 }
 
 export const getPendingEmailHTML = ({
-  patientName,
-  patientGender,
   appointment,
   timeZone,
+  patient,
 }: EmailProps): string => {
-  const title = patientGender === "male" ? "Mr." : "Ms.";
-  const firstName = patientName.split(" ")[0];
+  const title = patient?.gender === "male" ? "Mr." : "Ms.";
+  const firstName = patient?.name.split(" ")[0];
   const formattedDateTime = formatDateTime(
     appointment.schedule,
     timeZone,
@@ -98,13 +96,12 @@ export const getPendingEmailHTML = ({
 // emails/confirmed.email.ts
 
 export const getConfirmedEmailHTML = ({
-  patientName,
-  patientGender,
   appointment,
   timeZone,
+  patient,
 }: EmailProps): string => {
-  const title = patientGender === "male" ? "Mr." : "Ms.";
-  const firstName = patientName.split(" ")[0];
+  const title = patient?.gender === "male" ? "Mr." : "Ms.";
+  const firstName = patient?.name.split(" ")[0];
   const formattedDateTime = formatDateTime(
     appointment.schedule,
     timeZone,
@@ -207,21 +204,13 @@ export const getConfirmedEmailHTML = ({
   `;
 };
 
-interface CancelledEmailProps {
-  patientName: string;
-  patientGender: "male" | "female" | "other";
-  appointment: Appointment;
-  timeZone: string;
-}
-
 export const getCancelledEmailHTML = ({
-  patientName,
-  patientGender,
   appointment,
   timeZone,
-}: CancelledEmailProps): string => {
-  const title = patientGender === "male" ? "Mr." : "Ms.";
-  const firstName = patientName.split(" ")[0];
+  patient,
+}: EmailProps): string => {
+  const title = patient?.gender === "male" ? "Mr." : "Ms.";
+  const firstName = patient?.name.split(" ")[0];
   const formattedDateTime = formatDateTime(
     appointment.schedule,
     timeZone,

@@ -1,34 +1,40 @@
 "use client";
 
 import { Doctors } from "@/constants";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.action";
 import { getAppointmentSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
-import { Appointment } from "../../../types/appwrite.types";
+import {
+  AppointmentDB,
+  AppointmentUI,
+  Patient,
+} from "../../../types/appwrite.types";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { FieldGroup } from "../ui/field";
 import { SelectItem } from "../ui/select";
-import {
-  createAppointment,
-  updateAppointment,
-} from "@/lib/actions/appointment.action";
 
 export const AppointmentForm = ({
   userId,
-  patientId,
   type = "create",
   appointment,
+  patient,
   setOpen,
 }: {
   userId: string;
-  patientId: string;
+  userName?: string;
   type: "create" | "schedule" | "cancel";
-  appointment?: Appointment;
+  patient?: Patient;
+  appointment?: AppointmentUI;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
@@ -38,7 +44,9 @@ export const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation) as any,
     defaultValues: {
-      primaryPhysician: appointment ? appointment?.primaryPhysician : "",
+      primaryPhysician: appointment
+        ? appointment?.primaryPhysician
+        : patient?.primaryPhysician,
       schedule: appointment
         ? new Date(appointment?.schedule!)
         : new Date(Date.now()),
@@ -65,25 +73,39 @@ export const AppointmentForm = ({
     }
 
     try {
-      if (type === "create" && patientId) {
+      if (type === "create" && patient) {
         const appointment = {
           userId,
-          patient: patientId,
+          patient: patient.$id,
           primaryPhysician: data.primaryPhysician,
           schedule: new Date(data.schedule),
           reason: data.reason!,
           status: status as Status,
-          note: data.note,
+          note: data.note || "",
         };
 
-        const newAppointment = await createAppointment(appointment);
+        const newAppointment = await createAppointment(
+          appointment as AppointmentDB,
+          patient,
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
+        );
+        console.log("New appointment created:", newAppointment);
 
-        if (newAppointment) {
-          form.reset();
-          router.push(
-            `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`,
+        if (!newAppointment.success) {
+          console.error(
+            "Error creating appointment:",
+            newAppointment.error?.details || newAppointment.error,
           );
+          toast.error(
+            newAppointment.error?.message || "Failed to create appointment",
+          );
+          return;
         }
+
+        form.reset();
+        router.push(
+          `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.data?.appointment?.$id}`,
+        );
       } else {
         const appointmentToUpdate = {
           userId,
@@ -94,21 +116,36 @@ export const AppointmentForm = ({
             status: status as Status,
             cancellationReason: data.cancellationReason,
           },
+          patient: patient,
           type,
         };
 
         const updatedAppointment = await updateAppointment(appointmentToUpdate);
 
-        if (updatedAppointment) {
-          setOpen && setOpen(false);
-          form.reset();
+        if (!updatedAppointment.success) {
+          console.error(
+            "Error updating appointment:",
+            updatedAppointment.error?.details || updatedAppointment.error,
+          );
+          toast.error(
+            updatedAppointment.error?.message || "Failed to update appointment",
+          );
+
+          return;
         }
+
+        setOpen && setOpen(false);
+        form.reset();
+        toast.success(
+          `Appointment ${type === "schedule" ? "scheduled" : "cancelled"} successfully!`,
+        );
       }
     } catch (error: any) {
-      console.error("Error submitting appointment form:", error);
+      console.error("An unexpected error occurred:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   let buttonLabel;

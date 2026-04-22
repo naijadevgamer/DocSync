@@ -1,21 +1,17 @@
 "use client";
 
-import {
-  checkPersonalInfo,
-  createUser,
-  loginUser,
-} from "@/lib/actions/auth.actions";
-import { LoginFormValidation, UserFormValidation } from "@/lib/validation";
+import { loginUser } from "@/lib/actions/auth.actions";
+import { LoginFormValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoIosLock, IoIosMail } from "react-icons/io";
 import { toast } from "sonner";
 import { z } from "zod";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { FieldGroup } from "../ui/field";
-import { IoIosLock, IoIosMail } from "react-icons/io";
 
 export default function LoginForm() {
   const router = useRouter();

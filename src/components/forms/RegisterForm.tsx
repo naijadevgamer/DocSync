@@ -1,19 +1,18 @@
 "use client";
 
+import { createUser } from "@/lib/actions/auth.actions";
 import { UserFormValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { HiOutlineUser } from "react-icons/hi";
+import { IoIosLock, IoIosMail } from "react-icons/io";
+import { toast } from "sonner";
 import { z } from "zod";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { FieldGroup } from "../ui/field";
-// import { createUser } from "@/lib/actions/patient.actions";
-import { createUser } from "@/lib/actions/auth.actions";
-import { useRouter } from "next/navigation";
-import { HiOutlineUser } from "react-icons/hi";
-import { IoIosLock, IoIosMail } from "react-icons/io";
-import { toast } from "sonner";
 
 export default function RegisterForm() {
   const router = useRouter();

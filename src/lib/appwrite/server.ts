@@ -41,6 +41,8 @@ export const createSessionClient = async () => {
   // Inject session into Appwrite client
   client.setSession(sessionCookie.value);
 
+  console.log("Session cookie found and set in Appwrite client");
+
   return {
     account: new Account(client),
     databases: new Databases(client),
@@ -68,12 +70,13 @@ export const createSessionClientFromMiddleware = (cookieHeader: string) => {
   };
 };
 
-export const getCurrentUser = cache(async () => {
+export const getCurrentUser = async () => {
   try {
     const { account } = await createSessionClient();
     const user = await account.get();
+    console.log("Current user fetched:", user);
     return { success: true, data: { user } };
   } catch (error: any) {
     return handleError(error);
   }
-});
+};

@@ -87,8 +87,7 @@ declare type UpdateAppointmentParams = {
   timeZone?: string;
   appointment: Appointment;
   type: string;
-  patientGender?: "male" | "female" | "other";
-  patientName?: string;
+  patient: Patient;
 };
 
 declare type AppointmentData = {

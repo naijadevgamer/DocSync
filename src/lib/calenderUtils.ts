@@ -1,9 +1,9 @@
 // utils/calendarUtils.js
 
-import { Appointment } from "../../types/appwrite.types";
+import { AppointmentDB } from "../../types/appwrite.types";
 
 export const generateCalendarLinks = (
-  appointment: Appointment,
+  appointment: AppointmentDB,
   timeZone: string = "UTC",
 ) => {
   const startTime = new Date(appointment.schedule);

@@ -7,6 +7,7 @@ export type ActionResult<T = any> = {
   error?: {
     message: string;
     code?: string;
+    type?: string;
     details?: any;
   };
 };
@@ -16,11 +17,24 @@ export function handleError(error: unknown): ActionResult {
 
   // Appwrite specific errors
   if (error instanceof AppwriteException) {
+    if (error.code === 403 && error.type === "project_paused") {
+      return {
+        success: false,
+        error: {
+          message: `DocSync is paused due to inactivity. Please contact support to reactivate.`,
+          code: error.code?.toString(),
+          details:
+            process.env.NODE_ENV === "development" ? error.response : undefined,
+        },
+      };
+    }
+
     return {
       success: false,
       error: {
         message: getAppwriteErrorMessage(error),
         code: error.code?.toString(),
+        type: JSON.parse(error.response).type,
         details:
           process.env.NODE_ENV === "development" ? error.response : undefined,
       },

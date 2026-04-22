@@ -1,63 +1,88 @@
 "use server";
 
 import { ID, Query } from "node-appwrite";
-import {
-  APPOINTMENT_TABLE_ID,
-  DATABASE_ID,
-  databases,
-  messaging,
-  PATIENT_TABLE_ID,
-  permissions,
-  tablesDB,
-} from "../appwrite.config";
-import { formatDateTime, parseStringify } from "../utils";
-import { Appointment } from "../../../types/appwrite.types";
+
 import { revalidatePath } from "next/cache";
+import { AppointmentDB, Patient } from "../../../types/appwrite.types";
+import { createServerClient, createSessionClient } from "../appwrite/server";
+import { ActionResult, handleError } from "../errors";
+import {
+  getCancelledEmailHTML,
+  getConfirmedEmailHTML,
+  getPendingEmailHTML,
+} from "../messages";
+import { parseStringify } from "../utils";
 
 // Create Appointment
 export const createAppointment = async (
-  appointment: CreateAppointmentParams,
-) => {
+  appointment: AppointmentDB,
+  patient: Patient,
+  timeZone: string,
+): Promise<ActionResult<AppointmentData>> => {
   try {
+    const { tablesDB, permissions } = await createSessionClient();
+
+    console.log("Creating appointment with data:", appointment);
+
     const newAppointment = await tablesDB.createRow({
-      databaseId: DATABASE_ID!,
-      tableId: APPOINTMENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.APPOINTMENT_TABLE_ID!,
       rowId: ID.unique(),
       data: appointment,
       permissions: [permissions],
     });
 
-    return parseStringify(newAppointment);
-  } catch (error: any) {
-    console.error("Error code", error.code);
-    console.error("An error occurred while creating a new appointment:", error);
+    const emailMessage = getPendingEmailHTML({
+      appointment,
+      patient,
+      timeZone,
+    });
+
+    await sendEmailNotification(
+      appointment.userId,
+      "Appointment Request Received",
+      emailMessage,
+    );
+
+    return {
+      success: true,
+      data: { appointment: parseStringify(newAppointment) },
+    };
+  } catch (error) {
+    console.error("Error creating appointment: ", error);
+    return handleError(error);
   }
 };
 
-export const getAppointmentById = async (appointmentId: string) => {
+export const getAppointmentById = async (
+  appointmentId: string,
+): Promise<ActionResult<AppointmentData>> => {
   try {
+    const { tablesDB } = await createSessionClient();
     const appointment = await tablesDB.getRow({
-      databaseId: DATABASE_ID!,
-      tableId: APPOINTMENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.APPOINTMENT_TABLE_ID!,
       rowId: appointmentId,
     });
-    return parseStringify(appointment);
-  } catch (error: any) {
-    if (error.code === 404) {
-      // Expected "not found" case
-      return null;
-    }
-    console.error("An error occurred while fetching the appointment:", error);
-    throw error; // Unexpected server crash or network error
+    // return parseStringify(appointment);
+    return {
+      success: true,
+      data: { appointment: parseStringify(appointment) },
+    };
+  } catch (error) {
+    // console.error("Error checking personal info:", error);
+    console.error("Error fetching appointment:", error);
+    return handleError(error);
   }
 };
 
 export const getRecentAppointmentList = async () => {
   try {
+    const { tablesDB } = await createSessionClient();
     // Step 1: Fetch all appointments
     const appointments = (await tablesDB.listRows({
-      databaseId: DATABASE_ID!,
-      tableId: APPOINTMENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.APPOINTMENT_TABLE_ID!,
       queries: [Query.orderDesc("$createdAt")],
     })) as any;
 
@@ -72,8 +97,8 @@ export const getRecentAppointmentList = async () => {
         (id: any) =>
           tablesDB
             .getRow({
-              databaseId: DATABASE_ID!,
-              tableId: PATIENT_TABLE_ID!,
+              databaseId: process.env.DATABASE_ID!,
+              tableId: process.env.PATIENT_TABLE_ID!,
               rowId: id,
             })
             .catch(() => null), // in case a patient was deleted or missing
@@ -127,49 +152,76 @@ export const getRecentAppointmentList = async () => {
   }
 };
 
-//  SEND SMS NOTIFICATION
-export const sendSMSNotification = async (userId: string, content: string) => {
+export const sendEmailNotification = async (
+  userId: string,
+  subject: string,
+  content: string,
+) => {
   try {
-    const message = await messaging.createSMS({
-      messageId: ID.unique(), // auto-generate unique ID
-      content: content, // SMS body
-      topics: [], // optional
-      users: [userId], // optional
-      // targets: [], // optional
-      // draft: false, // optional
-      // scheduledAt: "", // optional
+    const { messaging } = createServerClient();
+    const message = await messaging.createEmail({
+      messageId: ID.unique(),
+      subject: subject,
+      content: content,
+      users: [userId],
+      html: true,
     });
-    return parseStringify(message);
+    return { success: true, data: parseStringify(message) };
   } catch (error) {
-    console.error("An error occurred while sending sms:", error);
+    console.error("An error occurred while sending email:", error);
+    return handleError(error);
   }
 };
 
 export const updateAppointment = async ({
-  userId,
   appointmentId,
   appointment,
   type,
   timeZone,
-}: UpdateAppointmentParams) => {
+  patient,
+}: UpdateAppointmentParams): Promise<ActionResult<AppointmentData>> => {
   try {
+    const { tablesDB, permissions } = await createSessionClient();
     const updatedAppointment = await tablesDB.updateRow({
-      databaseId: DATABASE_ID!,
-      tableId: APPOINTMENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.APPOINTMENT_TABLE_ID!,
       rowId: appointmentId,
       data: appointment,
       permissions: [permissions],
     });
 
-    if (!updatedAppointment) throw Error;
+    // if (!updatedAppointment) throw Error;
 
-    const smsMessage = `Greetings from DocSync. ${type === "schedule" ? `Your appointment is confirmed for ${formatDateTime(appointment.schedule!, timeZone).dateTime} with Dr. ${appointment.primaryPhysician}` : `We regret to inform that your appointment for ${formatDateTime(appointment.schedule!, timeZone).dateTime} is cancelled. Reason:  ${appointment.cancellationReason}`}.`;
-    await sendSMSNotification(userId, smsMessage);
+    const emailMessage =
+      type === "schedule"
+        ? getConfirmedEmailHTML({
+            appointment,
+            patient,
+            timeZone:
+              timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+        : getCancelledEmailHTML({
+            appointment,
+            patient,
+            timeZone:
+              timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          });
+
+    const mailTitle =
+      type === "schedule"
+        ? "Appointment Confirmation"
+        : "Appointment Cancellation";
+
+    await sendEmailNotification(appointment.userId, mailTitle, emailMessage);
 
     revalidatePath("/admin");
-    return parseStringify(updatedAppointment);
-  } catch (error: any) {
+
+    return {
+      success: true,
+      data: { appointment: parseStringify(updatedAppointment) },
+    };
+  } catch (error) {
     console.error("Error updating appointment:", error);
-    throw error;
+    return handleError(error);
   }
 };

@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { ID, Query } from "node-appwrite";
+import { createToken } from "../appwrite/jwt";
 import {
   createServerClient,
   createSessionClient,
@@ -10,7 +11,6 @@ import {
 } from "../appwrite/server";
 import { handleError } from "../errors";
 import { parseStringify } from "../utils";
-import { createToken } from "../appwrite/jwt";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -26,22 +26,6 @@ export const createUser = async (user: CreateUserParams) => {
       name: user.name,
       password: user.password,
     });
-    // } catch (error: any) {
-    //   if (error.code === 409) {
-    //     const existing = await users.list({
-    //       queries: [
-    //         Query.or([
-    //           Query.equal("email", [user.email]),
-    //           Query.equal("phone", [user.phone]),
-    //         ]),
-    //       ],
-    //     });
-
-    //     newUser = existing.users[0];
-    //   } else {
-    //     throw error;
-    //   }
-    // }
 
     const session = await users.createSession({
       userId: newUser.$id,
@@ -182,7 +166,9 @@ export const logoutUser = async () => {
 
 export const verifyEmail = async () => {
   try {
-    const user = await getCurrentUser();
+    const result = await getCurrentUser();
+
+    const user = result.data.user;
 
     if (user?.emailVerification) {
       return { isVerified: true, error: null };
@@ -226,26 +212,27 @@ export const checkPersonalInfo = async () => {
   }
 };
 
-// lib/auth/guards.ts
-// import { redirect, notFound } from "next/navigation";
-// import { getCurrentUser } from "@/lib/appwrite/server";
+class AppError extends Error {
+  code?: string;
 
-// 🔐 Require logged-in user
-// export async function requireUser() {
-//   return user;
-// }
+  constructor(message: string, code?: string) {
+    super(message);
+    this.code = code;
+  }
+}
 
 // 🔐 Require specific user (ownership check)
 export async function getAuthorizedUser(userId: string) {
-  const user = await getCurrentUser();
+  const result = await getCurrentUser();
 
-  if (!user) {
-    notFound();
-    // redirect("/login");
+  if (!result.success) {
+    throw new Error(result.error?.message || "Failed to fetch user");
   }
 
+  const user = result.data.user;
+
   if (user.$id !== userId) {
-    notFound(); // hide resource
+    notFound();
   }
 
   return user;
@@ -253,14 +240,21 @@ export async function getAuthorizedUser(userId: string) {
 
 // 🔐 Require admin
 export async function getAuthorizedAdmin() {
-  const user = await getCurrentUser();
+  const result = await getCurrentUser();
 
-  if (!user) {
-    redirect("/login");
+  if (!result.success) {
+    console.error(
+      "Error fetching current user:",
+      result.error?.details || result.error,
+    );
+
+    throw new Error(result.error?.message || "Failed to fetch user");
   }
 
+  const user = result.data.user;
+
   if (!user.labels?.includes("admin")) {
-    notFound(); // or redirect("/unauthorized")
+    redirect("/login");
   }
 
   return user;

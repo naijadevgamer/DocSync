@@ -2,70 +2,24 @@
 
 import { ID, Query } from "node-appwrite";
 
-import {
-  DATABASE_ID,
-  PATIENT_TABLE_ID,
-  permissions,
-  tablesDB,
-  users,
-} from "../appwrite.config";
+import { createSessionClient } from "../appwrite/server";
+import { ActionResult, handleError } from "../errors";
 import { parseStringify } from "../utils";
-
-export const createUser = async (user: CreateUserParams) => {
-  try {
-    const newUser = await users.create({
-      userId: ID.unique(),
-      email: user.email,
-      phone: user.phone,
-      name: user.name,
-      // password: user.password, // only if you want to set one
-    });
-
-    return parseStringify(newUser);
-  } catch (error: any) {
-    console.error("Error code", error);
-    if (error?.code === 409) {
-      const existingUser = await users.list({
-        queries: [
-          Query.or([
-            Query.equal("email", [user.email]),
-            Query.equal("phone", [user.phone]),
-          ]),
-        ],
-      });
-
-      return existingUser.users[0];
-    }
-
-    throw error;
-  }
-};
-
-export const getUserById = async (userId: string) => {
-  try {
-    const user = await users.get({ userId });
-    return parseStringify(user);
-  } catch (error: any) {
-    if (error.code === 404) {
-      // Expected "not found" case
-      return null;
-    }
-    throw error; // Unexpected server crash or network error
-  }
-};
 
 // REGISTER PATIENT
 export const registerPatient = async ({
   identificationDocument,
   ...patient
-}: RegisterUserParams) => {
+}: RegisterUserParams): Promise<ActionResult<PatientData>> => {
   try {
+    const { tablesDB, permissions } = await createSessionClient();
+
     const fileId = identificationDocument?.get("fileId") as string;
     const fileUrl = identificationDocument?.get("fileUrl") as string;
 
     const newPatient = await tablesDB.createRow({
-      databaseId: DATABASE_ID!,
-      tableId: PATIENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.PATIENT_TABLE_ID!,
       rowId: ID.unique(),
       data: {
         identificationDocumentId: fileId ?? null,
@@ -75,27 +29,35 @@ export const registerPatient = async ({
       permissions: [permissions],
     });
 
-    return parseStringify(newPatient);
-  } catch (error: any) {
-    console.error("Error code", error.code);
-    console.error("An error occurred while creating a new patient:", error);
+    return {
+      success: true,
+      data: { patient: parseStringify(newPatient) },
+    };
+  } catch (error) {
+    console.error("Error creating patient personal info:", error);
+    return handleError(error);
   }
 };
 
 // GET PATIENT
-export const getPatient = async (userId: string) => {
+export const getPatient = async (
+  userId: string,
+): Promise<ActionResult<PatientData>> => {
   try {
+    const { tablesDB } = await createSessionClient();
+
     const patient = await tablesDB.listRows({
-      databaseId: DATABASE_ID!,
-      tableId: PATIENT_TABLE_ID!,
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.PATIENT_TABLE_ID!,
       queries: [Query.equal("userId", [userId])],
     });
 
-    return parseStringify(patient.rows[0] || null);
-  } catch (error: any) {
-    if (error.code === 404) {
-      return null;
-    }
-    throw error;
+    return {
+      success: true,
+      data: { patient: parseStringify(patient.rows[0] || null) },
+    };
+  } catch (error) {
+    console.error("Error fetching patient:", error);
+    return handleError(error);
   }
 };
