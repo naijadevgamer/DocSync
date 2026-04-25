@@ -3,9 +3,7 @@ import FullLogo from "@/components/FullLogo";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function RegisterPage({ searchParams }: SearchParamProps) {
-  const { admin } = await searchParams;
-
+export default async function RegisterPage() {
   return (
     <div className="flex h-screen">
       <section className="remove-scrollbar container">
@@ -20,9 +18,6 @@ export default async function RegisterPage({ searchParams }: SearchParamProps) {
             <p className="text-dark-600 justify-items-end xl:text-left">
               © {new Date().getFullYear()} DocSync
             </p>
-            <Link href="/?admin=true" className="text-green-500">
-              Admin
-            </Link>
           </div>
         </div>
       </section>
@@ -36,6 +31,20 @@ export default async function RegisterPage({ searchParams }: SearchParamProps) {
           className="object-cover"
           priority
         />
+
+        <div className="from-dark-300/80 absolute inset-0 bg-linear-to-t to-transparent" />
+        <div className="absolute right-12 bottom-12 left-12">
+          <blockquote className="space-y-2">
+            <q className="text-18-bold block text-white">
+              DocSync has transformed how we manage patient care. The efficiency
+              gains are remarkable.
+            </q>
+
+            <footer className="text-14-regular text-dark-700">
+              — Dr. Sarah Johnson, Medical Director
+            </footer>
+          </blockquote>
+        </div>
       </div>
     </div>
   );

@@ -14,6 +14,8 @@ import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { FieldGroup } from "../ui/field";
 import Link from "next/link";
+import { Alert, AlertDescription } from "../ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -62,6 +64,15 @@ export default function RegisterForm() {
           <p className="text-dark-700">Get started with appointments.</p>
         </section>
 
+        {form.formState.errors.root && (
+          <Alert className="border-red-500/30 bg-red-500/10 text-red-500">
+            <AlertCircle />
+            <AlertDescription className="text-14-regular text-red-500">
+              {form.formState.errors.root.message}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <FieldGroup className="gap-6">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -105,34 +116,6 @@ export default function RegisterForm() {
             placeholder="••••••••"
             icon={<IoIosLock size={22} />}
           />
-
-          {/* <div className="flex items-center gap-2"> */}
-          {/* <Checkbox
-              id="terms"
-              checked={form.watch("terms")}
-              onCheckedChange={(checked) =>
-                form.setValue("terms", checked as boolean)
-              }
-            />
-            <Label
-              htmlFor="terms"
-              className="text-dark-600 cursor-pointer text-sm"
-            >
-              I agree to the{" "}
-              <Link href="/terms" className="text-green-500 hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy" className="text-green-500 hover:underline">
-                Privacy Policy
-              </Link>
-            </Label>
-          </div>
-          {form.formState.errors && (
-            <p className="text-sm text-red-500">
-              {form.formState.errors.terms.message}
-            </p>
-          )} */}
         </FieldGroup>
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
