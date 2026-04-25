@@ -34,6 +34,7 @@ export const LoginFormValidation = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(100, "Password must be at most 100 characters"),
+  rememberMe: z.boolean().optional(),
 });
 
 export const PatientFormValidation = z.object({

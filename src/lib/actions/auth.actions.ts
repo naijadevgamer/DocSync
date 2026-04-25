@@ -74,9 +74,11 @@ export const createUser = async (user: CreateUserParams) => {
 export const loginUser = async ({
   email,
   password,
+  rememberMe,
 }: {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }) => {
   try {
     const { account } = createServerClient();
@@ -89,12 +91,14 @@ export const loginUser = async ({
 
     const cookieStore = await cookies();
 
+    const maxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 1; // 30 days or session cookie
+
     cookieStore.set("my-custom-session", session.secret, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge,
     });
 
     // 2. Create session client
