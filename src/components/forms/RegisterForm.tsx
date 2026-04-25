@@ -13,6 +13,7 @@ import { z } from "zod";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { FieldGroup } from "../ui/field";
+import Link from "next/link";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function RegisterForm() {
       email: "",
       phone: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -95,9 +97,52 @@ export default function RegisterForm() {
             placeholder="••••••••"
             icon={<IoIosLock size={22} />}
           />
+          <CustomFormField
+            fieldType={FormFieldType.PASSWORD_INPUT}
+            control={form.control}
+            name="confirmPassword"
+            label="Confirm Password"
+            placeholder="••••••••"
+            icon={<IoIosLock size={22} />}
+          />
+
+          {/* <div className="flex items-center gap-2"> */}
+          {/* <Checkbox
+              id="terms"
+              checked={form.watch("terms")}
+              onCheckedChange={(checked) =>
+                form.setValue("terms", checked as boolean)
+              }
+            />
+            <Label
+              htmlFor="terms"
+              className="text-dark-600 cursor-pointer text-sm"
+            >
+              I agree to the{" "}
+              <Link href="/terms" className="text-green-500 hover:underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="text-green-500 hover:underline">
+                Privacy Policy
+              </Link>
+            </Label>
+          </div>
+          {form.formState.errors && (
+            <p className="text-sm text-red-500">
+              {form.formState.errors.terms.message}
+            </p>
+          )} */}
         </FieldGroup>
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+
+        <p className="text-dark-600 text-14-regular mt-4 text-center">
+          Already have an account?{" "}
+          <Link href="/login" className="text-green-500 hover:underline">
+            Log in
+          </Link>
+        </p>
       </form>
     </div>
   );

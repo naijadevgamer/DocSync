@@ -143,7 +143,7 @@ function getAppwriteErrorMessage(error: AppwriteException): string {
     case 404:
       return "Resource not found";
     case 409:
-      return "User already exists";
+      return "A user with the same id, email, or phone already exists";
     case 429:
       return "Too many requests. Please try again later";
     case 500:
