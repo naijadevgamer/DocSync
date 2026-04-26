@@ -1,41 +1,85 @@
 import VerifyForm from "@/components/forms/VerifyForm";
+import FullLogo from "@/components/FullLogo";
 import { verifyEmail } from "@/lib/actions/auth.actions";
+import { CheckCircle2, Mail } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export default async function VerifyPage() {
-  // Check verification status
+export default async function VerifyPage({ searchParams }: SearchParamProps) {
+  const { email } = await searchParams;
   const { isVerified } = await verifyEmail();
 
   if (isVerified) {
-    // Already verified - show appropriate message
     return (
-      <div className="mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow">
-        <h1 className="mb-4 text-2xl font-bold text-green-600">
-          Email Already Verified
-        </h1>
-        <p className="mb-6 text-gray-600">
-          Your email has already been verified. You can now access all features.
-        </p>
-        <Link
-          href="/dashboard"
-          className="inline-block rounded bg-blue-500 px-4 py-2 text-white"
-        >
-          Go to Dashboard
-        </Link>
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="mb-8 flex justify-center">
+            <FullLogo />
+          </div>
+
+          <div className="bg-dark-400 border-dark-500 rounded-2xl border p-8 text-center shadow-xl">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
+              <CheckCircle2 className="h-10 w-10 text-green-500" />
+            </div>
+            <h1 className="text-24-bold mb-2 text-white">Email Verified!</h1>
+            <p className="text-dark-600 mb-8">
+              Your email has been successfully verified. You can now access all
+              features.
+            </p>
+            <Link
+              href="/login"
+              className="shad-primary-btn inline-block w-full rounded-lg px-6 py-3 text-center"
+            >
+              Continue to Login
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container max-w-md py-10">
-      <h1 className="header mb-4">Verify Your Email</h1>
-      <p className="text-dark-700 mb-8">
-        We've sent a verification link to your email. Please check your inbox.
-      </p>
-      <Suspense fallback={<div>Loading...</div>}>
-        <VerifyForm />
-      </Suspense>
+    <div className="min-h-screen">
+      {/* Left Side - Verification Form */}
+      <section className="remove-scrollbar container mx-auto flex items-center">
+        <div className="sub-container min-h-screen max-w-2xl">
+          <div className="mx-auto mb-12">
+            <FullLogo />
+          </div>
+
+          <div className="mb-8">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
+              <Mail className="h-8 w-8 text-green-500" />
+            </div>
+            <h1 className="header text-center">Verify your email</h1>
+            <p className="text-dark-600 mt-2 text-center">
+              We've sent a verification link to{" "}
+              <span className="font-medium text-white">
+                {email || "your email address"}
+              </span>
+            </p>
+          </div>
+
+          <Suspense fallback={<VerifySkeleton />}>
+            <VerifyForm />
+          </Suspense>
+
+          <div className="mt-auto text-center">
+            <p className="text-14-regular text-dark-600">
+              © {new Date().getFullYear()} DocSync
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function VerifySkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      <div className="bg-dark-400 h-10 rounded-lg"></div>
+      <div className="bg-dark-400 h-10 rounded-lg"></div>
     </div>
   );
 }

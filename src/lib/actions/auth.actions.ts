@@ -46,7 +46,7 @@ export const createUser = async (user: CreateUserParams) => {
     const { account } = await createSessionClient();
 
     await account.createEmailVerification({
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify?email=${encodeURIComponent(user.email)}`,
     });
 
     const token = await createToken({
