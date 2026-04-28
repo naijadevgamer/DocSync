@@ -5,6 +5,7 @@ import { ID, Query } from "node-appwrite";
 import { createSessionClient } from "../appwrite/server";
 import { ActionResult, handleError } from "../errors";
 import { parseStringify } from "../utils";
+import { Patient } from "../../../types/appwrite.types";
 
 // REGISTER PATIENT
 export const registerPatient = async ({
@@ -58,6 +59,25 @@ export const getPatient = async (
     };
   } catch (error) {
     console.error("Error fetching patient:", error);
+    return handleError(error);
+  }
+};
+
+export const getAllPatients = async (): Promise<
+  ActionResult<{ patients: Patient[] }>
+> => {
+  try {
+    const { tablesDB } = await createSessionClient();
+    const patients = await tablesDB.listRows({
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.PATIENT_TABLE_ID!,
+      queries: [Query.limit(100)],
+    });
+    return {
+      success: true,
+      data: { patients: parseStringify(patients.rows) },
+    };
+  } catch (error) {
     return handleError(error);
   }
 };
