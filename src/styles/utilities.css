@@ -133,7 +133,7 @@
   @apply text-36-bold! border-dark-500! flex! size-16! justify-center! gap-4! rounded-lg! border!;
 }
 @utility shad-primary-btn {
-  @apply bg-green-500! text-white!;
+  @apply bg-green-500! text-white! hover:bg-green-500/70!;
 }
 @utility shad-select-content {
   @apply bg-dark-400! border-dark-500!;
