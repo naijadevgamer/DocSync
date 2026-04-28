@@ -152,6 +152,33 @@ export const getRecentAppointmentList = async () => {
   }
 };
 
+export const getPatientAppointments = async (
+  patientId: string,
+): Promise<ActionResult<{ appointments: AppointmentDB[] }>> => {
+  console.log("Fetching appointments for patientId:", patientId);
+  try {
+    const { tablesDB } = await createSessionClient();
+    const appointments = await tablesDB.listRows({
+      databaseId: process.env.DATABASE_ID!,
+      tableId: process.env.APPOINTMENT_TABLE_ID!,
+      queries: [
+        Query.equal("patient", [patientId]),
+        Query.orderDesc("$createdAt"),
+      ],
+    });
+    return {
+      success: true,
+      data: { appointments: parseStringify(appointments.rows) },
+    };
+  } catch (error) {
+    console.error(
+      "An error occurred while fetching patient appointments:",
+      error,
+    );
+    return handleError(error);
+  }
+};
+
 export const sendEmailNotification = async (
   userId: string,
   subject: string,

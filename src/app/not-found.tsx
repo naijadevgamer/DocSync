@@ -1,17 +1,98 @@
 // app/not-found.tsx
-import Link from "next/link";
+import FullLogo from "@/components/FullLogo";
 import { Button } from "@/components/ui/button";
+import { Home, Search, Stethoscope } from "lucide-react";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h2 className="header mb-4">Page Not Found</h2>
-      <p className="text-dark-700 mb-8">
-        The page you're looking for doesn't exist.
-      </p>
-      <Button asChild>
-        <Link href="/">Go Home</Link>
-      </Button>
+    <div className="bg-dark-200 flex min-h-screen items-center justify-center p-4">
+      <div className="w-full max-w-2xl text-center">
+        {/* Logo */}
+        <div className="mb-12 flex justify-center">
+          <FullLogo />
+        </div>
+
+        {/* 404 Illustration */}
+        <div className="relative mb-12">
+          <div className="text-[120px] font-bold text-green-500/10 select-none lg:text-[180px]">
+            404
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Stethoscope className="h-24 w-24 text-green-500/30 lg:h-32 lg:w-32" />
+          </div>
+        </div>
+
+        {/* Message */}
+        <h1 className="text-32-bold lg:text-36-bold mb-4 text-white">
+          Page Not Found
+        </h1>
+        <p className="text-dark-600 mx-auto mb-8 max-w-md text-lg">
+          The page you're looking for doesn't exist or has been moved. Let's get
+          you back on track.
+        </p>
+
+        {/* Actions */}
+        <div className="flex flex-col justify-center gap-4 sm:flex-row">
+          <Link href="/">
+            <Button className="shad-primary-btn px-8 py-6">
+              {/* <Home className="mr-2 h-5 w-5" /> */}
+              Go Home
+            </Button>
+          </Link>
+          {/* <Link href="/">
+            <Button
+              variant="outline"
+              className="border-dark-500 text-dark-600 hover:bg-dark-400 px-8 py-6"
+            >
+              <Search className="mr-2 h-5 w-5" />
+              Find Appointments
+            </Button>
+          </Link> */}
+        </div>
+
+        {/* Helpful Links */}
+        {/* <div className="border-dark-400 mt-12 border-t pt-8">
+          <p className="text-14-medium text-dark-500 mb-4">Quick Links</p>
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link
+              href="/dashboard"
+              className="text-14-regular text-dark-600 transition-colors hover:text-white"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/appointments"
+              className="text-14-regular text-dark-600 transition-colors hover:text-white"
+            >
+              Appointments
+            </Link>
+            <Link
+              href="/profile"
+              className="text-14-regular text-dark-600 transition-colors hover:text-white"
+            >
+              Profile
+            </Link>
+            <Link
+              href="/help"
+              className="text-14-regular text-dark-600 transition-colors hover:text-white"
+            >
+              Help Center
+            </Link>
+            <Link
+              href="/contact"
+              className="text-14-regular text-dark-600 transition-colors hover:text-white"
+            >
+              Contact Support
+            </Link>
+          </div>
+        </div> */}
+
+        {/* Footer */}
+        <p className="text-12-regular border-dark-500 text-dark-600 mt-12 border-t pt-6">
+          © {new Date().getFullYear()} DocSync. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 }
