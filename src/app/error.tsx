@@ -19,7 +19,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div className="bg-dark-300 flex min-h-screen items-center justify-center p-4">
+    <div className="bg-dark-300 flex min-h-screen items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 flex justify-center">
@@ -27,7 +27,7 @@ export default function ErrorPage({
         </div>
 
         {/* Error Card */}
-        <div className="bg-dark-400 rounded-2xl border border-red-500/30 p-8 text-center shadow-xl">
+        <div className="bg-dark-400 rounded-2xl border border-red-500/30 p-4 text-center shadow-xl md:p-8">
           {/* Error Icon */}
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10">
             <AlertCircle className="h-10 w-10 text-red-500" />
@@ -74,7 +74,7 @@ export default function ErrorPage({
 
         {/* Support Info */}
         <div className="mt-6 text-center">
-          <p className="text-14-regular text-dark-500">
+          <p className="text-14-regular text-dark-600">
             If the problem persists, please contact{" "}
             <Link href="/support" className="text-blue-500 hover:text-blue-400">
               support

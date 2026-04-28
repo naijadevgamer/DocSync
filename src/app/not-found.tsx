@@ -6,15 +6,15 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="bg-dark-200 flex min-h-screen items-center justify-center p-4">
+    <div className="bg-dark-200 flex min-h-screen items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-2xl text-center">
         {/* Logo */}
-        <div className="mb-12 flex justify-center">
+        <div className="flex justify-center">
           <FullLogo />
         </div>
 
         {/* 404 Illustration */}
-        <div className="relative mb-12">
+        <div className="relative">
           <div className="text-[120px] font-bold text-green-500/10 select-none lg:text-[180px]">
             404
           </div>
@@ -40,53 +40,7 @@ export default function NotFound() {
               Go Home
             </Button>
           </Link>
-          {/* <Link href="/">
-            <Button
-              variant="outline"
-              className="border-dark-500 text-dark-600 hover:bg-dark-400 px-8 py-6"
-            >
-              <Search className="mr-2 h-5 w-5" />
-              Find Appointments
-            </Button>
-          </Link> */}
         </div>
-
-        {/* Helpful Links */}
-        {/* <div className="border-dark-400 mt-12 border-t pt-8">
-          <p className="text-14-medium text-dark-500 mb-4">Quick Links</p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Link
-              href="/dashboard"
-              className="text-14-regular text-dark-600 transition-colors hover:text-white"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/appointments"
-              className="text-14-regular text-dark-600 transition-colors hover:text-white"
-            >
-              Appointments
-            </Link>
-            <Link
-              href="/profile"
-              className="text-14-regular text-dark-600 transition-colors hover:text-white"
-            >
-              Profile
-            </Link>
-            <Link
-              href="/help"
-              className="text-14-regular text-dark-600 transition-colors hover:text-white"
-            >
-              Help Center
-            </Link>
-            <Link
-              href="/contact"
-              className="text-14-regular text-dark-600 transition-colors hover:text-white"
-            >
-              Contact Support
-            </Link>
-          </div>
-        </div> */}
 
         {/* Footer */}
         <p className="text-12-regular border-dark-500 text-dark-600 mt-12 border-t pt-6">
