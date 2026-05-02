@@ -59,6 +59,25 @@
   }
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #363a3d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #76828d;
+}
+
 /* Container */
 /* @utility container {
   @apply mx-auto w-full px-4 md:px-8;
