@@ -22,6 +22,7 @@
     "appwrite": "^22.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
     "import-in-the-middle": "2.0.6",
     "input-otp": "^1.4.2",
     "jose": "^6.2.2",
