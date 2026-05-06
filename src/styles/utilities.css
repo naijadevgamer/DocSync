@@ -1,6 +1,6 @@
 /* === ADMIN */
 @utility admin-header {
-  @apply bg-dark-200 sticky top-3 z-20 mx-4 flex items-center justify-between rounded-2xl px-[5%] py-5 shadow-lg xl:px-12;
+  @apply bg-dark-200 sticky z-20 flex items-center justify-between rounded-2xl px-[5%] py-5 shadow-lg xl:px-12;
 }
 
 @utility admin-main {
@@ -116,7 +116,7 @@
   @apply text-red-400!;
 }
 @utility shad-gray-btn {
-  @apply border-dark-500! bg-dark-400! cursor-pointer! border! text-white!;
+  @apply border-dark-500! bg-dark-400! hover:bg-dark-500! border! text-white!;
 }
 
 @utility shad-input {
