@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -89,14 +90,9 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="shad-gray-btn disabled:cursor-not-allowed!"
+          className="shad-gray-btn"
         >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow"
-          />
+          <HiArrowLeft className="h-4 w-4 text-green-500" />
         </Button>
         <Button
           variant="outline"
@@ -105,13 +101,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
           className="shad-gray-btn"
         >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow "
-            className="rotate-180"
-          />
+          <HiArrowRight className="h-4 w-4 text-green-500" />
         </Button>
       </div>
     </div>

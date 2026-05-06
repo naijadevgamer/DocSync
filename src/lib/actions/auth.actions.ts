@@ -128,7 +128,7 @@ export const loginUser = async ({
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge,
     });
 
     return {
@@ -154,19 +154,35 @@ export const loginUser = async ({
 
 export const logoutUser = async () => {
   try {
-    // const cookieHeader = (await cookies()).toString();
     const { account } = await createSessionClient();
-    await account.deleteSessions();
 
-    const cookieStore = await cookies();
+    const [_, cookieStore] = await Promise.all([
+      account.deleteSessions(),
+      cookies(),
+    ]);
+
     cookieStore.delete("my-custom-session");
     cookieStore.delete("auth_token");
 
-    redirect("/login");
+    return { success: true };
   } catch (error) {
     return handleError(error);
   }
 };
+
+// export const logoutUser = async () => {
+//   try {
+//     const { account } = await createSessionClient();
+//     await account.deleteSessions();
+//     const cookieStore = await cookies();
+//     cookieStore.delete("my-custom-session", { path: "/" });
+//     cookieStore.delete("auth_token", { path: "/" });
+//     redirect("/login");
+//   } catch (error) {
+//     console.error("Error logging out:", error);
+//     redirect("/login");
+//   }
+// };
 
 export const verifyEmail = async () => {
   try {
