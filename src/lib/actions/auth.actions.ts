@@ -170,20 +170,6 @@ export const logoutUser = async () => {
   }
 };
 
-// export const logoutUser = async () => {
-//   try {
-//     const { account } = await createSessionClient();
-//     await account.deleteSessions();
-//     const cookieStore = await cookies();
-//     cookieStore.delete("my-custom-session", { path: "/" });
-//     cookieStore.delete("auth_token", { path: "/" });
-//     redirect("/login");
-//   } catch (error) {
-//     console.error("Error logging out:", error);
-//     redirect("/login");
-//   }
-// };
-
 export const verifyEmail = async () => {
   try {
     const result = await getCurrentUser();
