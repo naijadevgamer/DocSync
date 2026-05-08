@@ -9,7 +9,7 @@ import {
   createSessionClient,
   getCurrentUser,
 } from "../appwrite/server";
-import { handleError } from "../errors";
+import { ActionResult, handleError } from "../errors";
 import { parseStringify } from "../utils";
 
 export const createUser = async (user: CreateUserParams) => {
@@ -183,6 +183,46 @@ export const verifyEmail = async () => {
     return { isVerified: false, error: null };
   } catch (error) {
     return { isVerified: false, error: handleError(error) };
+  }
+};
+
+// Update password
+export const updatePassword = async (
+  currentPassword: string,
+  newPassword: string,
+): Promise<ActionResult<any>> => {
+  try {
+    const { account } = await createSessionClient();
+
+    await account.updatePassword(newPassword, currentPassword);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+// Delete account
+export const deleteAccount = async (
+  userId: string,
+): Promise<ActionResult<any>> => {
+  try {
+    const { users } = createServerClient();
+
+    await users.delete({ userId });
+
+    // Also delete session cookies
+    const cookieStore = await cookies();
+    cookieStore.delete("my-custom-session");
+    cookieStore.delete("auth_token");
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return handleError(error);
   }
 };
 
