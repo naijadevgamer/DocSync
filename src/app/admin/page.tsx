@@ -1,52 +1,52 @@
-import FullLogo from "@/components/FullLogo";
 import { StatCard } from "@/components/StatsCard";
-import { columns } from "@/components/table/columns";
-import { DataTable } from "@/components/table/DataTable";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.action";
-import Link from "next/link";
+import { getAllPatients } from "@/lib/actions/patient.actions";
+import AdminHeader from "../../components/admin/AdminHeader";
+import AdminTabs from "../../components/admin/AdminTabs";
 
-export default async function page() {
+export default async function AdminPage() {
   const appointments = await getRecentAppointmentList();
+  const patientsResult = await getAllPatients();
+
   return (
-    <div className="mx-auto flex max-w-7xl flex-col space-y-14">
-      <header className="admin-header">
-        <Link href="/" className="cursor-pointer">
-          <FullLogo />
-        </Link>
-
-        <p className="text-16-semibold">Admin</p>
-      </header>
-
+    <div className="mx-auto flex flex-col space-y-14">
+      <AdminHeader />
       <main className="admin-main">
         <section className="w-full space-y-4">
-          <h1 className="header">Welcome 👋</h1>
+          <h1 className="header">Welcome, Admin 👋</h1>
+
           <p className="text-dark-700">
-            Start the day with managing new appointments
+            Manage appointments and view patient data
           </p>
         </section>
 
+        {/* Stats Cards */}
         <section className="admin-stat">
           <StatCard
             type="appointments"
             count={appointments.scheduledCount}
             label="Scheduled appointments"
-            icon={"/assets/icons/appointments.svg"}
+            icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
             count={appointments.pendingCount}
             label="Pending appointments"
-            icon={"/assets/icons/pending.svg"}
+            icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
             count={appointments.cancelledCount}
             label="Cancelled appointments"
-            icon={"/assets/icons/cancelled.svg"}
+            icon="/assets/icons/cancelled.svg"
           />
         </section>
 
-        <DataTable columns={columns} data={appointments.documents} />
+        {/* Tabs for Appointments, Patients, and Insights */}
+        <AdminTabs
+          appointments={appointments}
+          patients={patientsResult.data?.patients || []}
+        />
       </main>
     </div>
   );
