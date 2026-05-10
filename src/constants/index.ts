@@ -83,3 +83,5 @@ export const StatusIcon = {
   pending: "/assets/icons/pending.svg",
   cancelled: "/assets/icons/cancelled.svg",
 };
+
+export const customEase: [number, number, number, number] = [0.76, 0, 0.24, 1];
