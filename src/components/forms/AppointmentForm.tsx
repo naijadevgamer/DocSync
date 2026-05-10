@@ -18,10 +18,11 @@ import {
   AppointmentUI,
   Patient,
 } from "../../../types/appwrite.types";
-import CustomFormField, { FormFieldType } from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
+import CustomFormField, { FormFieldType } from "./util/CustomFormField";
+import SubmitButton from "../utils/SubmitButton";
 import { FieldGroup } from "../ui/field";
 import { SelectItem } from "../ui/select";
+import { time } from "console";
 
 export const AppointmentForm = ({
   userId,
@@ -117,6 +118,7 @@ export const AppointmentForm = ({
             cancellationReason: data.cancellationReason,
           },
           patient: patient,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           type,
         };
 

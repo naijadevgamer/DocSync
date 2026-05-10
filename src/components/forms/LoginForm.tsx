@@ -11,8 +11,8 @@ import { useForm } from "react-hook-form";
 import { IoIosLock, IoIosMail } from "react-icons/io";
 import { toast } from "sonner";
 import { z } from "zod";
-import CustomFormField, { FormFieldType } from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
+import CustomFormField, { FormFieldType } from "./util/CustomFormField";
+import SubmitButton from "../utils/SubmitButton";
 import { Alert, AlertDescription } from "../ui/alert";
 import { FieldGroup } from "../ui/field";
 
