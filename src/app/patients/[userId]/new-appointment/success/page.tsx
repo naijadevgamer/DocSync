@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
 import { getAppointmentById } from "@/lib/actions/appointment.action";

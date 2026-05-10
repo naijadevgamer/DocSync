@@ -1,5 +1,5 @@
 import PatientForm from "@/components/forms/PatientInfoForm";
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 import { getAuthorizedUser } from "@/lib/actions/auth.actions";
 import Image from "next/image";
 

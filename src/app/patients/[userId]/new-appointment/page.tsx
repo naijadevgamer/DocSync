@@ -1,5 +1,5 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 import { getAuthorizedUser } from "@/lib/actions/auth.actions";
 import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
