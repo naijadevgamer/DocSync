@@ -46,28 +46,7 @@ declare interface RegisterUserParams extends CreateUserParams {
 }
 
 declare type PatientData = {
-  patient: {
-    $id: string;
-    userId: string;
-    birthDate: Date;
-    gender: Gender;
-    address: string;
-    occupation: string;
-    emergencyContactName: string;
-    emergencyContactNumber: string;
-    primaryPhysician: string;
-    insuranceProvider: string;
-    insurancePolicyNumber: string;
-    allergies: string | undefined;
-    currentMedication: string | undefined;
-    familyMedicalHistory: string | undefined;
-    pastMedicalHistory: string | undefined;
-    identificationType: string | undefined;
-    identificationNumber: string | undefined;
-    identificationDocument: FormData | undefined;
-    privacyConsent: boolean;
-    // add only what you need
-  } | null;
+  patient: Patient | null;
 };
 
 declare type CreateAppointmentParams = {
@@ -84,7 +63,7 @@ declare type CreateAppointmentParams = {
 declare type UpdateAppointmentParams = {
   appointmentId: string;
   userId: string;
-  timeZone?: string;
+  timeZone: string;
   appointment: Appointment;
   type: string;
   patient: Patient;

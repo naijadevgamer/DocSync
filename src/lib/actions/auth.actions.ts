@@ -194,7 +194,10 @@ export const updatePassword = async (
   try {
     const { account } = await createSessionClient();
 
-    await account.updatePassword(newPassword, currentPassword);
+    await account.updatePassword({
+      password: newPassword,
+      oldPassword: currentPassword,
+    });
 
     return {
       success: true,

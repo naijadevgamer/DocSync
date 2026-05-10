@@ -3,7 +3,11 @@
 import { ID, Query } from "node-appwrite";
 
 import { revalidatePath } from "next/cache";
-import { AppointmentDB, Patient } from "../../../types/appwrite.types";
+import {
+  AppointmentDB,
+  AppointmentUI,
+  Patient,
+} from "../../../types/appwrite.types";
 import { createServerClient, createSessionClient } from "../appwrite/server";
 import { ActionResult, handleError } from "../errors";
 import {
@@ -22,7 +26,7 @@ export const createAppointment = async (
   try {
     const { tablesDB, permissions } = await createSessionClient();
 
-    console.log("Creating appointment with data:", appointment);
+    // console.log("Creating appointment with data:", appointment);
 
     const newAppointment = await tablesDB.createRow({
       databaseId: process.env.DATABASE_ID!,
@@ -154,8 +158,7 @@ export const getRecentAppointmentList = async () => {
 
 export const getPatientAppointments = async (
   patientId: string,
-): Promise<ActionResult<{ appointments: AppointmentDB[] }>> => {
-  console.log("Fetching appointments for patientId:", patientId);
+): Promise<ActionResult<{ appointments: AppointmentUI[] }>> => {
   try {
     const { tablesDB } = await createSessionClient();
     const appointments = await tablesDB.listRows({
@@ -224,14 +227,12 @@ export const updateAppointment = async ({
         ? getConfirmedEmailHTML({
             appointment,
             patient,
-            timeZone:
-              timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+            timeZone,
           })
         : getCancelledEmailHTML({
             appointment,
             patient,
-            timeZone:
-              timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+            timeZone,
           });
 
     const mailTitle =
@@ -239,7 +240,11 @@ export const updateAppointment = async ({
         ? "Appointment Confirmation"
         : "Appointment Cancellation";
 
-    await sendEmailNotification(appointment.userId, mailTitle, emailMessage);
+    await sendEmailNotification(
+      updatedAppointment.userId,
+      mailTitle,
+      emailMessage,
+    );
 
     revalidatePath("/admin");
 
