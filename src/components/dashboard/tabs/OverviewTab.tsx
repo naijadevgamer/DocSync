@@ -1,7 +1,7 @@
 "use client";
 
-import { StatCard } from "@/components/StatsCard";
-import StatusBadge from "@/components/StatusBadge";
+import { StatCard } from "@/components/utils/StatsCard";
+import StatusBadge from "@/components/utils/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
 import { formatDateTime } from "@/lib/utils";

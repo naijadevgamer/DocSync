@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import StatusBadge from "@/components/StatusBadge";
+import StatusBadge from "@/components/utils/StatusBadge";
 import { Doctors } from "@/constants";
 import { formatDateTime } from "@/lib/utils";
 import { Calendar, Search, ChevronRight } from "lucide-react";

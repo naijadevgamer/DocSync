@@ -17,7 +17,7 @@ import {
   logoutUser,
   updatePassword,
 } from "@/lib/actions/auth.actions";
-import { downloadPatientData } from "@/lib/actions/patient.actions";
+// import { downloadPatientData } from "@/lib/actions/patient.actions";
 import {
   Shield,
   Bell,
@@ -28,12 +28,14 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import LogoutModal from "@/components/modals/LogoutModal";
+import { useLogout } from "@/hooks/useLogout";
+import { downloadPatientData } from "@/lib/utils";
 
 export default function SettingsTab({ user, patient }: any) {
   const router = useRouter();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -42,76 +44,83 @@ export default function SettingsTab({ user, patient }: any) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChangePassword = async () => {
+    if (passwordData.newPassword.length < 8) {
+      toast.error("New password must be at least 8 characters long");
+      return;
+    }
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error("Passwords don't match");
       return;
     }
 
     setIsLoading(true);
-    try {
-      const result = await updatePassword(
-        passwordData.currentPassword,
-        passwordData.newPassword,
-      );
-      if (result.success) {
-        toast.success("Password updated successfully!");
-        setShowPasswordModal(false);
-        setPasswordData({
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
+
+    const result = await updatePassword(
+      passwordData.currentPassword,
+      passwordData.newPassword,
+    );
+
+    if (result.success) {
+      toast.success("Password updated successfully!");
+      setShowPasswordModal(false);
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } else {
+      if (result.error?.code === "401") {
+        toast.error("Current password is incorrect");
       } else {
         toast.error(result.error?.message || "Failed to update password");
       }
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   };
 
   const handleDownloadData = async () => {
-    setIsLoading(true);
+    const toastId = toast.loading("Preparing your data...");
+
     try {
       await downloadPatientData(patient.$id, patient);
-      toast.success("Your data has been downloaded!");
+
+      toast.success("Your data has been downloaded!", {
+        id: toastId,
+      });
     } catch (error) {
-      toast.error("Failed to download data");
-    } finally {
-      setIsLoading(false);
+      console.error(error);
+
+      toast.error("Failed to download data", {
+        id: toastId,
+      });
     }
   };
 
   const handleDeleteAccount = async () => {
     setIsLoading(true);
-    try {
-      const result = await deleteAccount(user.$id);
-      if (result.success) {
-        toast.success("Account deleted successfully");
-        router.push("/login");
-      } else {
-        toast.error(result.error?.message || "Failed to delete account");
-      }
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-      setShowDeleteModal(false);
+
+    const result = await deleteAccount(user.$id);
+    if (result.success) {
+      toast.success("Account deleted successfully");
+      router.push("/login");
+    } else {
+      toast.error(result.error?.message || "Failed to delete account");
     }
+
+    setIsLoading(false);
+    setShowDeleteModal(false);
   };
 
-  const handleLogout = async () => {
-    setIsLoading(true);
-    const result = await logoutUser();
-    if (!result.success) {
-      toast.error("Logout failed");
-      setIsLoading(false);
-      return;
-    }
-    setShowLogoutModal(false);
-    router.push("/login");
-  };
+  const {
+    isLoading: isLogoutLoading,
+    showModal: showLogoutModal,
+    handleLogout,
+    confirmLogout,
+    cancelLogout,
+    setShowModal: setShowLogoutModal,
+  } = useLogout();
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -140,7 +149,7 @@ export default function SettingsTab({ user, patient }: any) {
             variant="outline"
             className="border-dark-500 text-dark-600 w-full justify-start"
             onClick={handleDownloadData}
-            disabled={isLoading}
+            // disabled={isLoading}
           >
             <Download className="mr-3 h-5 w-5" />
             {isLoading ? "Downloading..." : "Download My Data"}
@@ -161,7 +170,7 @@ export default function SettingsTab({ user, patient }: any) {
       <Button
         variant="destructive"
         className="w-full bg-red-600 hover:bg-red-700"
-        onClick={() => setShowLogoutModal(true)}
+        onClick={handleLogout}
       >
         <LogOut className="mr-2 h-5 w-5" />
         Logout from Account
@@ -263,33 +272,14 @@ export default function SettingsTab({ user, patient }: any) {
       </Dialog>
 
       {/* Logout Confirmation Modal */}
-      <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
-        <DialogContent className="bg-dark-400 border-dark-500 sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-white">Confirm Logout</DialogTitle>
-            <DialogDescription className="text-dark-600">
-              Are you sure you want to log out? You will need to sign in again
-              to access your account.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowLogoutModal(false)}
-              className="border-dark-500 text-dark-600"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleLogout}
-              disabled={isLoading}
-              className="bg-red-600 text-white hover:bg-red-700"
-            >
-              {isLoading ? "Logging out..." : "Yes, Logout"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Logout Modal */}
+      <LogoutModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+        isLoading={isLogoutLoading}
+      />
     </div>
   );
 }

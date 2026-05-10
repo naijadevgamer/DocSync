@@ -28,19 +28,22 @@ export default function ProfileTab({ user, patient }: any) {
 
   const handleSave = async () => {
     setIsLoading(true);
-    try {
+    
       const result = await updatePatient(patient.$id, formData);
       if (result.success) {
         toast.success("Profile updated successfully!");
         setIsEditing(false);
+        
       } else {
         toast.error(result.error?.message || "Failed to update profile");
       }
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
+
       setIsLoading(false);
-    }
+    // } catch (error) {
+    //   toast.error("Something went wrong");
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
