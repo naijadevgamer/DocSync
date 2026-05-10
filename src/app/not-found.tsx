@@ -1,5 +1,4 @@
-// app/not-found.tsx
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
 import { Home, Search, Stethoscope } from "lucide-react";
 import Link from "next/link";

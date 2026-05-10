@@ -2,7 +2,7 @@
 // import FullLogo from "@/components/FullLogo";
 // import { Loader2 } from "lucide-react";
 
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 
 // export default function Loading() {
 //   return (

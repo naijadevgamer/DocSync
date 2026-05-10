@@ -1,7 +1,7 @@
 // app/error.tsx
 "use client";
 
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, RefreshCw, Home } from "lucide-react";
 import Link from "next/link";

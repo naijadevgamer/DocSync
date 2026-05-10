@@ -1,4 +1,4 @@
-import { StatCard } from "@/components/StatsCard";
+import { StatCard } from "@/components/utils/StatsCard";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.action";
 import { getAllPatients } from "@/lib/actions/patient.actions";
 import AdminHeader from "../../components/admin/AdminHeader";
@@ -11,7 +11,7 @@ export default async function AdminPage() {
   return (
     <div className="mx-auto flex flex-col space-y-14">
       <AdminHeader />
-      <main className="admin-main">
+      <main className="admin-main container">
         <section className="w-full space-y-4">
           <h1 className="header">Welcome, Admin 👋</h1>
 
