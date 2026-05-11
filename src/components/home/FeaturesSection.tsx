@@ -3,8 +3,39 @@
 import { customEase } from "@/constants";
 import { motion } from "framer-motion";
 import { Calendar, Clock, Users } from "lucide-react";
+import { memo } from "react";
 
-export default function FeaturesSection() {
+const FEATURES = [
+  {
+    step: "01",
+    title: "Register Once",
+    description:
+      "Create your secure account in under 60 seconds. One form, complete profile, permanent access.",
+    icon: Users,
+    visual:
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+  },
+  {
+    step: "02",
+    title: "Book Instantly",
+    description:
+      "Browse available slots, select your preferred doctor, and confirm with a single click.",
+    icon: Calendar,
+    visual:
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1e?w=800&q=80",
+  },
+  {
+    step: "03",
+    title: "Manage Effortlessly",
+    description:
+      "Track appointments, receive reminders, and let your admin handle scheduling—all in one view.",
+    icon: Clock,
+    visual:
+      "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&q=80",
+  },
+];
+
+const FeaturesSection = memo(() => {
   return (
     <section className="relative border-t border-white/4 py-32">
       <div className="container">
@@ -28,40 +59,12 @@ export default function FeaturesSection() {
         </motion.div>
 
         <div className="grid gap-8 overflow-hidden lg:grid-cols-3">
-          {[
-            {
-              step: "01",
-              title: "Register Once",
-              description:
-                "Create your secure account in under 60 seconds. One form, complete profile, permanent access.",
-              icon: Users,
-              visual:
-                "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
-            },
-            {
-              step: "02",
-              title: "Book Instantly",
-              description:
-                "Browse available slots, select your preferred doctor, and confirm with a single click.",
-              icon: Calendar,
-              visual:
-                "https://images.unsplash.com/photo-1576091160399-112ba8d25d1e?w=800&q=80",
-            },
-            {
-              step: "03",
-              title: "Manage Effortlessly",
-              description:
-                "Track appointments, receive reminders, and let your admin handle scheduling—all in one view.",
-              icon: Clock,
-              visual:
-                "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&q=80",
-            },
-          ].map((item, i) => (
+          {FEATURES.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{
                 duration: 0.6,
                 delay: 0.1 + i * 0.15,
@@ -87,4 +90,8 @@ export default function FeaturesSection() {
       </div>
     </section>
   );
-}
+});
+
+export default FeaturesSection;
+
+FeaturesSection.displayName = "FeaturesSection";
