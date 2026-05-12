@@ -90,13 +90,6 @@ export default function HeroSection({ user, particles }: HeroSectionProps) {
         ))}
       </div>
 
-      {/* <div className="mx-auto max-w-7xl px-6 pt-32 pb-24">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="relative z-10 max-w-3xl"
-        > */}
       <div className="container pt-32 pb-24">
         <motion.div
           variants={staggerContainer}

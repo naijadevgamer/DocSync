@@ -1,8 +1,15 @@
 import Link from "next/link";
-import React from "react";
+import { memo } from "react";
 import FullLogo from "../utils/FullLogo";
 
-export default function Footer() {
+const FOOTER_LINKS = [
+  { name: "Privacy Policy", href: "/privacy" },
+  { name: "Terms of Service", href: "/terms" },
+  { name: "Contact Us", href: "/contact" },
+  { name: "Admin Login", href: "/login?admin=true" },
+];
+
+const Footer = memo(() => {
   return (
     <footer className="relative border-t border-white/4 py-12">
       <div className="container flex flex-col items-center justify-between gap-6 md:flex-row">
@@ -15,13 +22,7 @@ export default function Footer() {
         </p>
 
         <div className="flex flex-wrap justify-center gap-4">
-          {[
-            { name: "Privacy Policy", href: "/privacy" },
-            { name: "Terms of Service", href: "/terms" },
-            { name: "Contact Us", href: "/contact" },
-
-            { name: "Admin Login", href: "/login?admin=true" },
-          ].map((link, i) => (
+          {FOOTER_LINKS.map((link, i) => (
             <Link
               key={String(i)}
               href={link.href}
@@ -34,4 +35,8 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+});
+
+export default Footer;
+
+Footer.displayName = "Footer";

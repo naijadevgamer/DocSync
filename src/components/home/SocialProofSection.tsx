@@ -2,8 +2,18 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { memo } from "react";
 
-export default function SocialProofSection() {
+const STATS = [
+  { value: "5,000+", label: "Registered Patients" },
+  { value: "12K+", label: "Appointments Booked" },
+  { value: "99.9%", label: "Uptime" },
+  { value: "< 2min", label: "Avg. Booking Time" },
+];
+
+const STARS_ARR = [...Array(5)];
+
+const SocialProofSection = memo(() => {
   return (
     <section className="relative border-t border-white/4 py-32">
       <div className="container text-center">
@@ -14,7 +24,7 @@ export default function SocialProofSection() {
           transition={{ duration: 0.8 }}
         >
           <div className="mb-4 flex items-center justify-center gap-2">
-            {[...Array(5)].map((_, i) => (
+            {STARS_ARR.map((_, i) => (
               <Star
                 key={i}
                 className="h-5 w-5 fill-emerald-400 text-emerald-400"
@@ -37,12 +47,7 @@ export default function SocialProofSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4"
         >
-          {[
-            { value: "5,000+", label: "Registered Patients" },
-            { value: "12K+", label: "Appointments Booked" },
-            { value: "99.9%", label: "Uptime" },
-            { value: "< 2min", label: "Avg. Booking Time" },
-          ].map((stat, i) => (
+          {STATS.map((stat, i) => (
             <div key={i}>
               <div className="text-32-bold text-white">{stat.value}</div>
               <div className="text-12-medium mt-1 text-white/30">
@@ -54,4 +59,8 @@ export default function SocialProofSection() {
       </div>
     </section>
   );
-}
+});
+
+export default SocialProofSection;
+
+SocialProofSection.displayName = "SocialProofSection";

@@ -13,18 +13,6 @@ import CTASection from "./CTASection";
 import Footer from "./Footer";
 
 export default function ClientHome({ user }: { user: User }) {
-  const {
-    isLoading: isLogoutLoading,
-    showModal: showLogoutModal,
-    handleLogout,
-    confirmLogout,
-    cancelLogout,
-    setShowModal: setShowLogoutModal,
-  } = useLogout({
-    redirectTo: "/",
-    refreshAfterLogout: true,
-  });
-
   const [particles, setParticles] = useState<
     { left: number; top: number; duration: number; delay: number }[]
   >([]);
@@ -55,11 +43,7 @@ export default function ClientHome({ user }: { user: User }) {
       </div>
 
       {/* Navigation */}
-      <HomeNav
-        user={user}
-        onLogout={handleLogout}
-        isLogoutLoading={isLogoutLoading}
-      />
+      <HomeNav user={user} />
 
       {/* Hero Section - The Hook */}
       <HeroSection user={user} particles={particles} />
@@ -81,15 +65,6 @@ export default function ClientHome({ user }: { user: User }) {
 
       {/* Footer */}
       <Footer />
-
-      {/* Logout Modal */}
-      <LogoutModal
-        open={showLogoutModal}
-        onOpenChange={setShowLogoutModal}
-        onConfirm={confirmLogout}
-        onCancel={cancelLogout}
-        isLoading={isLogoutLoading}
-      />
     </div>
   );
 }

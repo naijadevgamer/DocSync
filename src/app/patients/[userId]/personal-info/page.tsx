@@ -31,6 +31,7 @@ export default async function PersonalInfo({ params }: SearchParamProps) {
           fill
           sizes="(max-width: 768px) 100vw, 30vw"
           className="object-cover"
+          priority
         />
       </div>
     </div>

@@ -18,11 +18,10 @@ import {
   AppointmentUI,
   Patient,
 } from "../../../types/appwrite.types";
-import CustomFormField, { FormFieldType } from "./util/CustomFormField";
-import SubmitButton from "../utils/SubmitButton";
 import { FieldGroup } from "../ui/field";
 import { SelectItem } from "../ui/select";
-import { time } from "console";
+import SubmitButton from "../utils/SubmitButton";
+import CustomFormField, { FormFieldType } from "./util/CustomFormField";
 
 export const AppointmentForm = ({
   userId,
@@ -58,7 +57,6 @@ export const AppointmentForm = ({
   });
 
   const onSubmit = async (data: z.infer<typeof AppointmentFormValidation>) => {
-    console.log("Form data:", data);
     setIsLoading(true);
 
     let status;
@@ -73,81 +71,76 @@ export const AppointmentForm = ({
         status = "pending";
     }
 
-    try {
-      if (type === "create" && patient) {
-        const appointment = {
-          userId,
-          patient: patient.$id,
+    if (type === "create" && patient) {
+      const appointment = {
+        userId,
+        patient: patient.$id,
+        primaryPhysician: data.primaryPhysician,
+        schedule: new Date(data.schedule),
+        reason: data.reason!,
+        status: status as Status,
+        note: data.note || "",
+      };
+
+      const newAppointment = await createAppointment(
+        appointment as AppointmentDB,
+        patient,
+        Intl.DateTimeFormat().resolvedOptions().timeZone,
+      );
+
+      if (!newAppointment.success) {
+        // console.error(
+        //   "Error creating appointment:",
+        //   newAppointment.error?.details || newAppointment.error,
+        // );
+        toast.error(
+          newAppointment.error?.message || "Failed to create appointment",
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      form.reset();
+      router.push(
+        `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.data?.appointment?.$id}`,
+      );
+    } else {
+      const appointmentToUpdate = {
+        userId,
+        appointmentId: appointment?.$id!,
+        appointment: {
           primaryPhysician: data.primaryPhysician,
           schedule: new Date(data.schedule),
-          reason: data.reason!,
           status: status as Status,
-          note: data.note || "",
-        };
+          cancellationReason: data.cancellationReason,
+        },
+        patient: patient,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        type,
+      };
 
-        const newAppointment = await createAppointment(
-          appointment as AppointmentDB,
-          patient,
-          Intl.DateTimeFormat().resolvedOptions().timeZone,
+      const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+      if (!updatedAppointment.success) {
+        // console.error(
+        //   "Error updating appointment:",
+        //   updatedAppointment.error?.details || updatedAppointment.error,
+        // );
+        toast.error(
+          updatedAppointment.error?.message || "Failed to update appointment",
         );
-        console.log("New appointment created:", newAppointment);
-
-        if (!newAppointment.success) {
-          console.error(
-            "Error creating appointment:",
-            newAppointment.error?.details || newAppointment.error,
-          );
-          toast.error(
-            newAppointment.error?.message || "Failed to create appointment",
-          );
-          return;
-        }
-
-        form.reset();
-        router.push(
-          `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.data?.appointment?.$id}`,
-        );
-      } else {
-        const appointmentToUpdate = {
-          userId,
-          appointmentId: appointment?.$id!,
-          appointment: {
-            primaryPhysician: data.primaryPhysician,
-            schedule: new Date(data.schedule),
-            status: status as Status,
-            cancellationReason: data.cancellationReason,
-          },
-          patient: patient,
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          type,
-        };
-
-        const updatedAppointment = await updateAppointment(appointmentToUpdate);
-
-        if (!updatedAppointment.success) {
-          console.error(
-            "Error updating appointment:",
-            updatedAppointment.error?.details || updatedAppointment.error,
-          );
-          toast.error(
-            updatedAppointment.error?.message || "Failed to update appointment",
-          );
-
-          return;
-        }
-
-        setOpen && setOpen(false);
-        form.reset();
-        toast.success(
-          `Appointment ${type === "schedule" ? "scheduled" : "cancelled"} successfully!`,
-        );
+        setIsLoading(false);
+        return;
       }
-    } catch (error: any) {
-      console.error("An unexpected error occurred:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
+
+      setOpen && setOpen(false);
+      form.reset();
+      toast.success(
+        `Appointment ${type === "schedule" ? "scheduled" : "cancelled"} successfully!`,
+      );
     }
+
+    setIsLoading(false);
   };
 
   let buttonLabel;

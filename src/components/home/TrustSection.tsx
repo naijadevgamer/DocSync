@@ -2,8 +2,16 @@
 
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
+import { memo } from "react";
 
-export default function TrustSection() {
+const SECURITY_FEATURES = [
+  "256-bit AES encryption at rest and in transit",
+  "HIPAA & GDPR compliant data handling",
+  "Multi-factor authentication support",
+  "Automated session management",
+];
+
+const TrustSection = memo(() => {
   return (
     <section className="relative border-t border-white/4 py-32">
       <div className="container">
@@ -26,12 +34,7 @@ export default function TrustSection() {
             </p>
 
             <div className="space-y-4">
-              {[
-                "256-bit AES encryption at rest and in transit",
-                "HIPAA & GDPR compliant data handling",
-                "Multi-factor authentication support",
-                "Automated session management",
-              ].map((item, i) => (
+              {SECURITY_FEATURES.map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
@@ -85,4 +88,8 @@ export default function TrustSection() {
       </div>
     </section>
   );
-}
+});
+
+export default TrustSection;
+
+TrustSection.displayName = "TrustSection";

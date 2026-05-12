@@ -7,7 +7,6 @@ import {
   PatientFormDefaultValues,
 } from "@/constants";
 import { registerPatient } from "@/lib/actions/patient.actions";
-import { storage } from "@/lib/appwrite.client"; // adjust import path
 import { PatientFormValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
@@ -17,13 +16,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import CustomFormField, { FormFieldType } from "./util/CustomFormField";
-import { FileUploader } from "./util/FileUploader";
-import SubmitButton from "../utils/SubmitButton";
 import { FieldGroup } from "../ui/field";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { SelectItem } from "../ui/select";
+import SubmitButton from "../utils/SubmitButton";
+import CustomFormField, { FormFieldType } from "./util/CustomFormField";
+import { FileUploader } from "./util/FileUploader";
 
 import {
   HiOutlineBriefcase,
@@ -36,6 +35,7 @@ import {
 } from "react-icons/hi";
 
 import { MdHealthAndSafety, MdMedication } from "react-icons/md";
+import { createBrowserClient } from "@/lib/appwrite/client";
 
 export default function PatientForm({ user }: { user: User }) {
   const router = useRouter();
@@ -52,7 +52,6 @@ export default function PatientForm({ user }: { user: User }) {
   });
 
   const onSubmit = async (data: z.infer<typeof PatientFormValidation>) => {
-    console.log("Form data:", data);
     setIsLoading(true);
 
     try {
@@ -64,7 +63,7 @@ export default function PatientForm({ user }: { user: User }) {
         return;
       }
 
-      console.log("File to upload:", file);
+      const { storage } = createBrowserClient();
 
       const uploadedFile = await storage.createFile({
         bucketId: process.env.NEXT_PUBLIC_BUCKET_ID!,
@@ -78,11 +77,8 @@ export default function PatientForm({ user }: { user: User }) {
         fileId: uploadedFile.$id,
       });
 
-      // console.log("Uploaded file:", uploadedFileUrl);
-
       formData.append("fileId", uploadedFile.$id);
       formData.append("fileUrl", uploadedFileUrl);
-      // console.log("View URL:", uploadedFileUrl);
 
       const patient = {
         userId: user.$id,
@@ -111,10 +107,8 @@ export default function PatientForm({ user }: { user: User }) {
       };
 
       const newPatient = await registerPatient(patient);
-      console.log("New patient registration result:", newPatient);
-      if (!newPatient.success) {
-        console.error(newPatient.error?.details);
 
+      if (!newPatient.success) {
         if (uploadedFile) {
           await storage.deleteFile({
             bucketId: uploadedFile.bucketId,
@@ -132,8 +126,6 @@ export default function PatientForm({ user }: { user: User }) {
       toast.success("Patient information saved successfully!");
       router.push(`/patients/${user.$id}/new-appointment`);
     } catch (error: any) {
-      console.error("Unexpected error submitting form:", error);
-
       const message =
         process.env.NODE_ENV === "development" && error?.message
           ? error.message
@@ -152,7 +144,9 @@ export default function PatientForm({ user }: { user: User }) {
         className="flex-1 space-y-12"
       >
         <section className="space-y-4">
-          <h1 className="header">Welcome 👋</h1>
+          <h1 className="header">
+            Welcome {user?.name.split(" ")[0] || "there"} 👋
+          </h1>
           <p className="text-dark-700">Let us know more about yourself.</p>
         </section>
 
@@ -161,37 +155,6 @@ export default function PatientForm({ user }: { user: User }) {
             <div className="mb-9 space-y-1">
               <h2 className="sub-header">Personal Information</h2>
             </div>
-
-            {/* NAME */}
-            {/* <CustomFormField
-              fieldType={FormFieldType.INPUT}
-              control={form.control}
-              name="name"
-              placeholder="John Doe"
-              label="Full name"
-              icon={<HiOutlineUser size={22} />}
-            /> */}
-
-            {/* EMAIL & PHONE */}
-            {/* <div className="flex flex-col gap-6 xl:flex-row">
-              <CustomFormField
-                fieldType={FormFieldType.INPUT}
-                control={form.control}
-                name="email"
-                label="Email address"
-                placeholder="johndoe@gmail.com"
-                icon={<HiOutlineMail size={22} />}
-                disabled={true}
-              />
-
-              <CustomFormField
-                fieldType={FormFieldType.PHONE_INPUT}
-                control={form.control}
-                name="phone"
-                label="Phone number"
-                placeholder="(555) 123-4567"
-              />
-            </div> */}
 
             {/* BirthDate & Gender */}
             <div className="flex flex-col gap-6 xl:flex-row">
