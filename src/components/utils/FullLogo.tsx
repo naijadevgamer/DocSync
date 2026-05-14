@@ -8,6 +8,7 @@ export default function FullLogo() {
       width={164}
       alt="DocSync Logo"
       className="h-10 w-fit"
+      priority
     />
   );
 }

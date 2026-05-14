@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 export default function VerifyForm() {
   const params = useSearchParams();
@@ -67,10 +68,10 @@ export default function VerifyForm() {
         });
       }, 1000);
 
-      alert("Verification email sent. Check your inbox.");
+      toast.success("Verification email sent. Check your inbox.");
     } catch (err) {
       console.error(err);
-      alert("Failed to resend verification email.");
+      toast.error("Failed to resend verification email.");
     } finally {
       setResending(false);
     }
