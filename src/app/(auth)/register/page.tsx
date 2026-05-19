@@ -1,7 +1,6 @@
 import RegisterForm from "@/components/forms/RegisterForm";
 import FullLogo from "@/components/utils/FullLogo";
 import Image from "next/image";
-import Link from "next/link";
 
 export default async function RegisterPage() {
   return (

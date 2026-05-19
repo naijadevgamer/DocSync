@@ -3,9 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
-import { AppointmentUI } from "../../../types/appwrite.types";
+import { Doctors } from "@/lib/constants";
+import { formatDateTime } from "@/lib/utils/utils";
+import { AppointmentUI } from "../../types/appwrite.types";
 import { AppointmentModal } from "../modals/AppointmentModal";
 import StatusBadge from "../utils/StatusBadge";
 

@@ -216,6 +216,7 @@ export const getBaseStyles = () => `
       justify-content: center;
       gap: 8px;
       margin: 16px 0;
+      width: 100%;
     }
     
     .cal-btn {
@@ -226,8 +227,10 @@ export const getBaseStyles = () => `
       font-size: 12px;
       font-weight: 500;
       text-decoration: none;
-      color: #5a6e7c;
+      color: black;
       border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+      width: max-content;
     }
     
     /* What to bring list - LIGHT VERSION */

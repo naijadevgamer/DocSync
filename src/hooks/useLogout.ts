@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { logoutUser } from "@/lib/actions/auth.actions";
+import { logoutUser } from "@/lib/appwrite/actions/auth.actions";
 
 interface UseLogoutOptions {
   redirectTo?: string;

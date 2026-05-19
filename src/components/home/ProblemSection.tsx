@@ -1,6 +1,6 @@
 "use client";
 
-import { customEase } from "@/constants";
+import { customEase } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";

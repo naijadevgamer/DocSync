@@ -1,18 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLogout } from "@/hooks/useLogout";
-import LogoutModal from "../modals/LogoutModal";
-import HomeNav from "./HomeNav";
-import HeroSection from "./HeroSection";
-import ProblemSection from "./ProblemSection";
-import FeaturesSection from "./FeaturesSection";
-import TrustSection from "./TrustSection";
-import SocialProofSection from "./SocialProofSection";
 import CTASection from "./CTASection";
+import FeaturesSection from "./FeaturesSection";
 import Footer from "./Footer";
+import HeroSection from "./HeroSection";
+import HomeNav from "./HomeNav";
+import ProblemSection from "./ProblemSection";
+import SocialProofSection from "./SocialProofSection";
+import TrustSection from "./TrustSection";
 
-export default function ClientHome({ user }: { user: User }) {
+export default function ClientHome({ user }: { user: User | null }) {
   const [particles, setParticles] = useState<
     { left: number; top: number; duration: number; delay: number }[]
   >([]);

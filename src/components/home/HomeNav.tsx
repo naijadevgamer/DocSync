@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { customEase } from "@/constants";
+import { customEase } from "@/lib/constants";
 import { useLogout } from "@/hooks/useLogout";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -12,7 +12,7 @@ import FullLogo from "../utils/FullLogo";
 import HomeDesktopNav from "./HomeDesktopNav";
 import HomeMobileNav from "./HomeMobileNav";
 
-export default function HomeNav({ user }: { user: User }) {
+export default function HomeNav({ user }: { user: User | null }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const {

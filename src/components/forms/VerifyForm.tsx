@@ -1,7 +1,7 @@
 // components/forms/VerifyForm.tsx
 "use client";
 
-import { createBrowserClient } from "@/lib/appwrite/client";
+import { createBrowserClient } from "@/lib/appwrite/config/client";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

@@ -1,11 +1,11 @@
 "use client";
 
-import { Doctors } from "@/constants";
+import { Doctors } from "@/lib/constants";
 import {
   createAppointment,
   updateAppointment,
-} from "@/lib/actions/appointment.action";
-import { getAppointmentSchema } from "@/lib/validation";
+} from "@/lib/appwrite/actions/appointment.action";
+import { getAppointmentSchema } from "@/lib/validators/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ import {
   AppointmentDB,
   AppointmentUI,
   Patient,
-} from "../../../types/appwrite.types";
+} from "../../types/appwrite.types";
 import { FieldGroup } from "../ui/field";
 import { SelectItem } from "../ui/select";
 import SubmitButton from "../utils/SubmitButton";

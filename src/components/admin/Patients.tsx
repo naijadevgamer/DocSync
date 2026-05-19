@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ChevronDown, Download, Filter, Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Patient } from "../../../types/appwrite.types";
+import { Patient } from "../../types/appwrite.types";
 import AdminPatientsTable from "./AdminPatientsTable";
 
 type FilterType = "all" | "male" | "female" | "other";

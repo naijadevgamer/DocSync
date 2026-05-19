@@ -4,10 +4,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils/utils";
 import { Edit3, Save, X } from "lucide-react";
 import { toast } from "sonner";
-import { updatePatient } from "@/lib/actions/patient.actions";
+import { updatePatient } from "@/lib/appwrite/actions/patient.actions";
 
 export default function ProfileTab({ user, patient }: any) {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,17 +28,16 @@ export default function ProfileTab({ user, patient }: any) {
 
   const handleSave = async () => {
     setIsLoading(true);
-    
-      const result = await updatePatient(patient.$id, formData);
-      if (result.success) {
-        toast.success("Profile updated successfully!");
-        setIsEditing(false);
-        
-      } else {
-        toast.error(result.error?.message || "Failed to update profile");
-      }
 
-      setIsLoading(false);
+    const result = await updatePatient(patient.$id, formData);
+    if (result.success) {
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
+    } else {
+      toast.error(result.error?.message || "Failed to update profile");
+    }
+
+    setIsLoading(false);
     // } catch (error) {
     //   toast.error("Something went wrong");
     // } finally {

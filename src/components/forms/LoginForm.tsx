@@ -1,7 +1,7 @@
 "use client";
 
-import { loginUser } from "@/lib/actions/auth.actions";
-import { LoginFormValidation } from "@/lib/validation";
+import { loginUser } from "@/lib/appwrite/actions/auth.actions";
+import { LoginFormValidation } from "@/lib/validators/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Info } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import CustomFormField, { FormFieldType } from "./util/CustomFormField";
 import SubmitButton from "../utils/SubmitButton";
 import { Alert, AlertDescription } from "../ui/alert";
 import { FieldGroup } from "../ui/field";
+import { handleActionError } from "@/lib/errors/create-error-response";
 
 export default function LoginForm({
   isAdminFlow,
@@ -59,15 +60,11 @@ export default function LoginForm({
 
     if (!result.success) {
       console.error("Error logging user in:", result.error);
-      switch (result.error?.code) {
-        case "401":
-          form.setError("root", { message: "Invalid email or password " });
-          toast.error("Invalid email or password");
-          break;
-
-        default:
-          toast.error(result.error?.message || "Login failed");
-      }
+      handleActionError({
+        ...result.error,
+        message:
+          "Failed to log in. Please check your credentials and try again.",
+      });
       setIsLoading(false);
       return;
     }

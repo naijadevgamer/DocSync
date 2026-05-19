@@ -1,20 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
-import { Doctors } from "@/constants";
-import { getAppointmentById } from "@/lib/actions/appointment.action";
-import { formatDateTime } from "@/lib/utils";
+import FullLogo from "@/components/utils/FullLogo";
+import { Doctors } from "@/lib/constants";
+import { getAppointmentById } from "@/lib/appwrite/actions/appointment.action";
+import { formatDateTime } from "@/lib/utils/utils";
 import { notFound } from "next/navigation";
-import { getAuthorizedUser } from "@/lib/actions/auth.actions";
 import { toast } from "sonner";
+import { requireOwnership } from "@/lib/actions/ownership-guard";
 
 export default async function RequestSuccess({
   params,
   searchParams,
 }: SearchParamProps) {
   const { userId } = await params;
+  const { user } = await requireOwnership(userId);
 
   const { appointmentId } = await searchParams;
 
@@ -22,9 +23,6 @@ export default async function RequestSuccess({
     throw new Error("Invalid appointment ID");
   }
 
-  const user = await getAuthorizedUser(userId);
-
-  // console.log("Appointment ID from search params:", appointmentId);
   const result = await getAppointmentById(appointmentId);
 
   if (!result.success) {
@@ -51,6 +49,7 @@ export default async function RequestSuccess({
             height={300}
             width={280}
             alt="success"
+            priority
           />
           <h2 className="header mb-6 max-w-150 text-center">
             Your <span className="text-green-500">appointment request</span> has
@@ -79,7 +78,6 @@ export default async function RequestSuccess({
               alt="calendar"
             />
             <p>
-              {" "}
               {
                 formatDateTime(result.data?.appointment?.schedule || new Date())
                   .dateTime

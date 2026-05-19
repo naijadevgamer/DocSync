@@ -1,24 +1,18 @@
 import ClientHome from "@/components/home/ClientHome";
-import { getCurrentUser } from "@/lib/appwrite/server";
-import { cookies } from "next/headers";
+import { getCurrentUser } from "@/lib/appwrite/actions/auth.actions";
 
 export default async function HomePage() {
   let user = null;
 
-  try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("my-custom-session");
+  const result = await getCurrentUser();
 
-    if (sessionCookie) {
-      const result = await getCurrentUser();
-
-      if (result.success) {
-        user = result.data.user;
-      }
+  if (!result.success) {
+    if (result.error?.code === "NETWORK_ERROR") {
+      throw new Error(result.error?.message || "Network error occurred");
     }
-  } catch (error) {
-    console.log("No active session");
   }
+
+  user = result.success ? result.data.user : null;
 
   return <ClientHome user={user} />;
 }

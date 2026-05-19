@@ -16,7 +16,7 @@ import {
   deleteAccount,
   logoutUser,
   updatePassword,
-} from "@/lib/actions/auth.actions";
+} from "@/lib/appwrite/actions/auth.actions";
 // import { downloadPatientData } from "@/lib/actions/patient.actions";
 import {
   Shield,
@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import LogoutModal from "@/components/modals/LogoutModal";
 import { useLogout } from "@/hooks/useLogout";
-import { downloadPatientData } from "@/lib/utils";
+import { downloadPatientData } from "@/lib/utils/utils";
 
 export default function SettingsTab({ user, patient }: any) {
   const router = useRouter();

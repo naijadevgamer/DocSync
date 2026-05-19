@@ -1,6 +1,6 @@
 // utils/calendarUtils.js
 
-import { AppointmentDB } from "../../types/appwrite.types";
+import { AppointmentDB } from "@/types/appwrite.types";
 
 export const generateCalendarLinks = (
   appointment: AppointmentDB,

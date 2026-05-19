@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils/utils";
 
 import Image from "next/image";
 
@@ -26,7 +26,7 @@ import {
   Clock3,
 } from "lucide-react";
 
-import { Patient } from "../../../types/appwrite.types";
+import { Patient } from "../../types/appwrite.types";
 
 export default function PatientDetailsModal({
   patient,

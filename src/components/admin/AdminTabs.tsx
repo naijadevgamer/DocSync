@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { Patient } from "../../../types/appwrite.types";
+import { Patient } from "../../types/appwrite.types";
 import AdminInsights from "./AdminInsights";
 import Patients from "./Patients";
 import RecentAppointments from "./RecentAppointments";

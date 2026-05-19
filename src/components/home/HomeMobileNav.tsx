@@ -8,7 +8,7 @@ import { LayoutDashboard, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface HomeMobileNavProps {
-  user: User;
+  user: User | null;
   onLogout: () => void;
   onClose: () => void;
 }

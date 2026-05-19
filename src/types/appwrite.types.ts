@@ -1,5 +1,4 @@
 import { Models } from "node-appwrite";
-import { string } from "zod";
 
 export interface Patient extends Models.Document {
   userId: string;

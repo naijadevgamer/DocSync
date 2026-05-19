@@ -5,9 +5,9 @@ import {
   GenderOptions,
   IdentificationTypes,
   PatientFormDefaultValues,
-} from "@/constants";
-import { registerPatient } from "@/lib/actions/patient.actions";
-import { PatientFormValidation } from "@/lib/validation";
+} from "@/lib/constants";
+import { registerPatient } from "@/lib/appwrite/actions/patient.actions";
+import { PatientFormValidation } from "@/lib/validators/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
 import Image from "next/image";
@@ -35,7 +35,7 @@ import {
 } from "react-icons/hi";
 
 import { MdHealthAndSafety, MdMedication } from "react-icons/md";
-import { createBrowserClient } from "@/lib/appwrite/client";
+import { createBrowserClient } from "@/lib/appwrite/config/client";
 
 export default function PatientForm({ user }: { user: User }) {
   const router = useRouter();

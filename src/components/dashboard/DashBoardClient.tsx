@@ -4,7 +4,7 @@ import { useState } from "react";
 import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { logoutUser } from "@/lib/actions/auth.actions";
+import { logoutUser } from "@/lib/appwrite/actions/auth.actions";
 import {
   Activity,
   Calendar,
@@ -28,7 +28,7 @@ import SettingsTab from "./tabs/SettingsTab";
 import MobileNav from "./MobileNav";
 import { useLogout } from "@/hooks/useLogout";
 import LogoutModal from "../modals/LogoutModal";
-import { AppointmentUI, Patient } from "../../../types/appwrite.types";
+import { AppointmentUI, Patient } from "../../types/appwrite.types";
 
 export default function DashboardClient({
   user,

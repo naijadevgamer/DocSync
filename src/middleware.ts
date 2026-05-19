@@ -1,8 +1,8 @@
 // middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createSessionClientFromMiddleware } from "./lib/appwrite/server";
-import { verifyToken } from "./lib/appwrite/jwt";
+import { createSessionClientFromMiddleware } from "./lib/appwrite/config/server";
+import { verifyToken } from "./lib/appwrite/helper/jwt";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

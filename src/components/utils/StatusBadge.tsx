@@ -1,4 +1,4 @@
-import { StatusIcon } from "@/constants";
+import { StatusIcon } from "@/lib/constants";
 import clsx from "clsx";
 import Image from "next/image";
 

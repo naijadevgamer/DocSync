@@ -4,8 +4,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import StatusBadge from "@/components/utils/StatusBadge";
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
+import { Doctors } from "@/lib/constants";
+import { formatDateTime } from "@/lib/utils/utils";
 import { Calendar, Search, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,10 +1,10 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import FullLogo from "@/components/utils/FullLogo";
-import { getAuthorizedUser } from "@/lib/actions/auth.actions";
-import { getPatient } from "@/lib/actions/patient.actions";
+import { getAuthorizedUser } from "@/lib/appwrite/actions/auth.actions";
+import { getPatient } from "@/lib/appwrite/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Patient } from "../../../../../types/appwrite.types";
+import { Patient } from "../../../../types/appwrite.types";
 
 export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;

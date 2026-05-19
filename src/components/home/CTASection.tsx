@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { customEase } from "@/constants";
+import { customEase } from "@/lib/constants";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useRef } from "react";
 
-export default function CTASection({ user }: { user: User }) {
+export default function CTASection({ user }: { user: User | null }) {
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleMouseMove = (e: React.MouseEvent, index: number) => {

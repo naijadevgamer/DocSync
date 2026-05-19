@@ -1,7 +1,7 @@
 "use client";
 
-import { createUser } from "@/lib/actions/auth.actions";
-import { UserFormValidation } from "@/lib/validation";
+import { createUser } from "@/lib/appwrite/actions/auth.actions";
+import { UserFormValidation } from "@/lib/validators/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import { FieldGroup } from "../ui/field";
 import Link from "next/link";
 import { Alert, AlertDescription } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
+import { handleActionError } from "@/lib/errors/create-error-response";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -46,7 +47,11 @@ export default function RegisterForm() {
 
     if (!result.success) {
       console.error("Error creating user:", result.error);
-      toast.error(result.error?.message || "Registration failed");
+      handleActionError({
+        ...result.error,
+        message: "Failed to create account. Please try again.",
+      });
+
       setIsLoading(false);
       return;
     }

@@ -1,6 +1,6 @@
 import { StatCard } from "@/components/utils/StatsCard";
-import { getRecentAppointmentList } from "@/lib/actions/appointment.action";
-import { getAllPatients } from "@/lib/actions/patient.actions";
+import { getRecentAppointmentList } from "@/lib/appwrite/actions/appointment.action";
+import { getAllPatients } from "@/lib/appwrite/actions/patient.actions";
 import AdminHeader from "../../components/admin/AdminHeader";
 import AdminTabs from "../../components/admin/AdminTabs";
 

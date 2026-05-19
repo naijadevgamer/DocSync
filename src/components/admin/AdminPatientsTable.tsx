@@ -16,9 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils/utils";
 import { useState } from "react";
-import { Patient } from "../../../types/appwrite.types";
+import { Patient } from "../../types/appwrite.types";
 import PatientDetailsModal from "./PatientDetailsModal";
 
 export default function AdminPatientsTable({

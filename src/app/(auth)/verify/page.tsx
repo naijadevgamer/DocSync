@@ -1,6 +1,6 @@
 import VerifyForm from "@/components/forms/VerifyForm";
 import FullLogo from "@/components/utils/FullLogo";
-import { verifyEmail } from "@/lib/actions/auth.actions";
+import { verifyEmail } from "@/lib/appwrite/actions/auth.actions";
 import { CheckCircle2, Mail } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";

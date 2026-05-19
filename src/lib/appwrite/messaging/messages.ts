@@ -1,10 +1,12 @@
 // emails/pending.email.ts
 
-import { AppointmentDB, Patient } from "../../types/appwrite.types";
-import { formatDateTime } from "./utils";
+// import { AppointmentDB, Patient } from "../types/appwrite.types";
+// import { formatDateTime } from "";
 import { getBaseStyles } from "./emailStyles";
 import { generateCalendarLinks } from "./calenderUtils";
 import { getDirectionsLink } from "./locationUtils";
+import { formatDateTime } from "@/lib/utils/utils";
+import { AppointmentDB, Patient } from "@/types/appwrite.types";
 
 const LOGO_URL = process.env.NEXT_PUBLIC_LOGO_URL;
 
@@ -146,7 +148,7 @@ export const getConfirmedEmailHTML = ({
               <div class="datetime-large">${formattedDateTime}</div>
               <div style="text-align: center; margin-top: 8px;">
                 <span style="color: #76828d;">with</span>
-                <div style="font-size: 20px; font-weight: 700; color: #e8e9e9; margin-top: 4px;">Dr. ${appointment.primaryPhysician}</div>
+                <div style="font-size: 20px; font-weight: 700; color: #76828d; margin-top: 4px;">Dr. ${appointment.primaryPhysician}</div>
               </div>
             </div>
             
@@ -155,7 +157,7 @@ export const getConfirmedEmailHTML = ({
               <div style="text-align: center; margin-bottom: 12px;">
                 <span style="color: #79b5ec; font-weight: 600;">📅 ADD TO CALENDAR</span>
               </div>
-              <div class="calendar-grid">
+              <div class="calendar-grid" style="justify-content: center; gap: 8px; display: flex; flex-wrap: wrap;">
                 <a href="${calendarLinks.google}" class="cal-btn">🗓️ Google</a>
                 <a href="${calendarLinks.outlook}" class="cal-btn">📧 Outlook</a>
                 <a href="${calendarLinks.yahoo}" class="cal-btn">📆 Yahoo</a>
@@ -177,11 +179,11 @@ export const getConfirmedEmailHTML = ({
             
             <!-- What to bring -->
             <div class="checklist">
-              <div class="checklist-title">✓ PREPARATION CHECKLIST</div>
-              <div class="checklist-item">🪪 Valid ID proof</div>
-              <div class="checklist-item">📋 Previous medical records (if any)</div>
-              <div class="checklist-item">💳 Insurance card (if applicable)</div>
-              <div class="checklist-item">📝 List of current medications</div>
+              <div class="checklist-title">✓  PREPARATION CHECKLIST</div>
+              <div class="checklist-item">🪪  Valid ID proof</div>
+              <div class="checklist-item">📋  Previous medical records (if any)</div>
+              <div class="checklist-item">💳  Insurance card (if applicable)</div>
+              <div class="checklist-item">📝  List of current medications</div>
             </div>
             
             <div class="divider"></div>

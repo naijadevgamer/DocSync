@@ -3,8 +3,8 @@
 import { StatCard } from "@/components/utils/StatsCard";
 import StatusBadge from "@/components/utils/StatusBadge";
 import { Button } from "@/components/ui/button";
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
+import { Doctors } from "@/lib/constants";
+import { formatDateTime } from "@/lib/utils/utils";
 import { Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

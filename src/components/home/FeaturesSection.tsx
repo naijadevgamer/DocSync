@@ -1,6 +1,6 @@
 "use client";
 
-import { customEase } from "@/constants";
+import { customEase } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { Calendar, Clock, Users } from "lucide-react";
 import { memo } from "react";

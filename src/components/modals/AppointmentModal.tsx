@@ -15,7 +15,7 @@ import {
 import { AppointmentForm } from "../forms/AppointmentForm";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { AppointmentUI, Patient } from "../../../types/appwrite.types";
+import { AppointmentUI, Patient } from "../../types/appwrite.types";
 
 export const AppointmentModal = ({
   userId,
@@ -57,7 +57,6 @@ export const AppointmentModal = ({
           setOpen={setOpen}
           patient={patient}
         />
-        
       </DialogContent>
     </Dialog>
   );
