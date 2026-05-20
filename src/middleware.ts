@@ -28,9 +28,7 @@ export async function middleware(request: NextRequest) {
 
   // ✅ You now trust this
   const userId = payload?.userId;
-
-  console.log("Middleware - Path:", pathname);
-  console.log("Middleware - Has auth cookie:", isLoggedIn);
+  const userRole = payload?.role;
 
   // Public routes
   if (
@@ -42,52 +40,33 @@ export async function middleware(request: NextRequest) {
     );
   }
 
+  // Protected routes
   if (!isLoggedIn && pathname.startsWith("/verify")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Protected routes
-  if (pathname.startsWith("/patients") && !isLoggedIn) {
-    // if (!isLoggedIn) {
+  if (
+    !isLoggedIn &&
+    pathname.startsWith("/patients") &&
+    pathname.startsWith("/admin")
+  ) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
-    // }
-    // return NextResponse.next();
   }
 
-  // In middleware
-  // const userRole = request.cookies.get("user_role")?.value;
-  // if (pathname.startsWith("/admin") && userRole !== "admin") {
-
-  //   return NextResponse.redirect(new URL("/dashboard", request.url));
-  // }
-
-  if (pathname.startsWith("/admin")) {
-    const session = await getSession(request);
-    console.log("Session user:", session);
-    if (!session?.labels?.includes("admin")) {
+  // If an admin is removed, their auth token remains valid until expiry.
+  // This middleware redirects them to their dashboard if they're no longer an admin.
+  // Not foolproof, but adds a layer of protection before the token expires.
+  if (isLoggedIn && pathname.startsWith("/admin")) {
+    if (userRole !== "admin") {
       return NextResponse.redirect(
-        new URL(`/patients/${session?.$id}/dashboard`, request.url),
+        new URL(`/patients/${userId}/dashboard`, request.url),
       );
     }
   }
 
   return NextResponse.next();
-}
-
-async function getSession(request: NextRequest) {
-  try {
-    const cookieHeader = request.headers.get("cookie") || "";
-
-    const { account } = createSessionClientFromMiddleware(cookieHeader);
-
-    const user = await account.get();
-
-    return user;
-  } catch {
-    return null;
-  }
 }
 
 export const config = {
