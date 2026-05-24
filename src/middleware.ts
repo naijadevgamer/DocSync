@@ -40,15 +40,20 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // Protected routes
-  if (!isLoggedIn && pathname.startsWith("/verify")) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // const isVerifyPage = pathname.startsWith("/verify");
+
+  // const hasVerificationParams =
+  //   request.nextUrl.searchParams.has("userId") &&
+  //   request.nextUrl.searchParams.has("secret");
+
+  // // Protected routes
+  // if (!isLoggedIn  && !hasVerificationParams) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
   if (
     !isLoggedIn &&
-    pathname.startsWith("/patients") &&
-    pathname.startsWith("/admin")
+    (pathname.startsWith("/patients") || pathname.startsWith("/admin"))
   ) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
