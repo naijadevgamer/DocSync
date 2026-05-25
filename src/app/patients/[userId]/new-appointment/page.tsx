@@ -1,53 +1,25 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import FullLogo from "@/components/utils/FullLogo";
-import { getAuthorizedUser } from "@/lib/appwrite/actions/auth.actions";
 import { getPatient } from "@/lib/appwrite/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Patient } from "../../../../types/appwrite.types";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import { ErrorCode } from "@/lib/errors";
 
 export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;
 
-  const [userResult, patientResult] = await Promise.allSettled([
-    getAuthorizedUser(userId),
-    getPatient(userId),
+  const [authorizedUser, patientResult] = await Promise.all([
+    requireOwnership(userId),
+    unwrapAction(() => getPatient(userId), {
+      onError: {
+        [ErrorCode.NOT_FOUND]: "redirect",
+      },
+      redirectTo: `/patients/${userId}/personal-info`,
+    }),
   ]);
-
-  if (userResult.status === "rejected") {
-    // console.error("Error fetching user:", userResult.reason);
-    notFound();
-  }
-
-  const user = userResult.value;
-
-  if (patientResult.status === "rejected") {
-    // console.error(
-    //   "Error fetching patient:",
-    //   patientResult.reason?.details || patientResult.reason,
-    // );
-
-    if (patientResult.reason?.code === "404") notFound();
-
-    throw new Error(
-      patientResult.reason?.message || "Failed to fetch patient data",
-    );
-  }
-
-  const patientResponse = patientResult.value;
-
-  if (!patientResponse.success) {
-    // console.error(
-    //   "Error fetching patient:",
-    //   patientResponse.error?.details || patientResponse.error,
-    // );
-
-    if (patientResponse.error?.code === "404") notFound();
-
-    throw new Error(
-      patientResponse.error?.message || "Failed to fetch patient data",
-    );
-  }
 
   return (
     <div className="flex h-screen">
@@ -58,9 +30,9 @@ export default async function Appointment({ params }: SearchParamProps) {
           </div>
 
           <AppointmentForm
-            patient={patientResponse.data?.patient as Patient}
-            userId={user.$id}
-            userName={user.name}
+            patient={patientResult.patient}
+            userId={authorizedUser.$id}
+            userName={authorizedUser.name}
             type="create"
           />
 

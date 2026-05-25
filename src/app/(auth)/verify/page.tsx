@@ -1,13 +1,22 @@
 import VerifyForm from "@/components/forms/VerifyForm";
 import FullLogo from "@/components/utils/FullLogo";
 import { verifyEmail } from "@/lib/appwrite/actions/auth.actions";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { CheckCircle2, Mail } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function VerifyPage({ searchParams }: SearchParamProps) {
-  const { email } = await searchParams;
-  const { isVerified } = await verifyEmail();
+  const [{ email }, result] = await Promise.all([
+    searchParams,
+    unwrapAction(verifyEmail, {
+      onError: {
+        AUTH_REQUIRED: "ignore",
+      },
+    }),
+  ]);
+
+  const isVerified = result?.isVerified;
 
   if (isVerified) {
     return (

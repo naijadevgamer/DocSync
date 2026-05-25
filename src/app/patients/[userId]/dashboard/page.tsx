@@ -1,34 +1,36 @@
-import { getAuthorizedUser } from "@/lib/appwrite/actions/auth.actions";
-import { getPatient } from "@/lib/appwrite/actions/patient.actions";
-import { getPatientAppointments } from "@/lib/appwrite/actions/appointment.action";
-import { notFound } from "next/navigation";
 import DashboardClient from "@/components/dashboard/DashBoardClient";
-import { AppointmentUI } from "../../../../types/appwrite.types";
+import { getPatientAppointments } from "@/lib/appwrite/actions/appointment.action";
+import { getPatient } from "@/lib/appwrite/actions/patient.actions";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { ErrorCode } from "@/lib/errors";
 
 export default async function Dashboard({ params }: SearchParamProps) {
   const { userId } = await params;
 
-  const user = await getAuthorizedUser(userId);
-  const patientResult = await getPatient(user.$id);
+  const [authorizedUser, patientResult] = await Promise.all([
+    requireOwnership(userId),
+    unwrapAction(() => getPatient(userId), {
+      onError: {
+        [ErrorCode.NOT_FOUND]: "redirect",
+      },
+      redirectTo: `/patients/${userId}/personal-info`,
+    }),
+  ]);
 
-  if (!patientResult.success) {
-    if (patientResult.error?.code === ErrorCode.AUTH_UNAUTHORIZED) notFound();
-  }
-
-  const patient = patientResult.data?.patient;
-  const appointmentsResult = await getPatientAppointments(
-    patient?.$id as string,
+  const appointmentsResult = await unwrapAction(
+    () => getPatientAppointments(patientResult.patient.$id),
+    {
+      onError: { [ErrorCode.NOT_FOUND]: "ignore" },
+      defaultValue: { appointments: [] },
+    },
   );
-  const appointments = appointmentsResult.success
-    ? appointmentsResult.data?.appointments || []
-    : [];
 
   return (
     <DashboardClient
-      user={user}
-      patient={patient}
-      appointments={appointments}
+      user={authorizedUser}
+      patient={patientResult.patient}
+      appointments={appointmentsResult.appointments}
     />
   );
 }

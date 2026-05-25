@@ -1,18 +1,17 @@
 import ClientHome from "@/components/home/ClientHome";
 import { getCurrentUser } from "@/lib/appwrite/actions/auth.actions";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 
 export default async function HomePage() {
-  let user = null;
+  const result = await unwrapAction(getCurrentUser, {
+    onError: {
+      AUTH_REQUIRED: "ignore",
+      AUTH_SESSION_EXPIRED: "ignore",
+    },
+    defaultValue: null,
+  });
 
-  const result = await getCurrentUser();
-
-  if (!result.success) {
-    if (result.error?.code === "NETWORK_ERROR") {
-      throw new Error(result.error?.message || "Network error occurred");
-    }
-  }
-
-  user = result.success ? result.data.user : null;
+  const user = result?.user ?? null;
 
   return <ClientHome user={user} />;
 }

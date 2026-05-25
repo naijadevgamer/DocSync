@@ -1,12 +1,19 @@
 import { StatCard } from "@/components/utils/StatsCard";
 import { getRecentAppointmentList } from "@/lib/appwrite/actions/appointment.action";
 import { getAllPatients } from "@/lib/appwrite/actions/patient.actions";
+import { requireAdmin } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import AdminHeader from "../../components/admin/AdminHeader";
 import AdminTabs from "../../components/admin/AdminTabs";
 
 export default async function AdminPage() {
-  const appointments = await getRecentAppointmentList();
-  const patientsResult = await getAllPatients();
+  // Middleware handles early auth checks.
+  // This is the final server-side authorization guard.
+  const [_, appointmentsResult, patientsResult] = await Promise.all([
+    requireAdmin(),
+    unwrapAction(getRecentAppointmentList),
+    unwrapAction(getAllPatients),
+  ]);
 
   return (
     <div className="mx-auto flex flex-col space-y-14">
@@ -24,19 +31,19 @@ export default async function AdminPage() {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduledCount}
+            count={appointmentsResult.totalCount}
             label="Scheduled appointments"
             icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
-            count={appointments.pendingCount}
+            count={appointmentsResult.pendingCount}
             label="Pending appointments"
             icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
-            count={appointments.cancelledCount}
+            count={appointmentsResult.cancelledCount}
             label="Cancelled appointments"
             icon="/assets/icons/cancelled.svg"
           />
@@ -44,8 +51,8 @@ export default async function AdminPage() {
 
         {/* Tabs for Appointments, Patients, and Insights */}
         <AdminTabs
-          appointments={appointments}
-          patients={patientsResult.data?.patients || []}
+          appointments={appointmentsResult}
+          patients={patientsResult?.patients || []}
         />
       </main>
     </div>

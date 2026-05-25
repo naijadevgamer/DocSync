@@ -1,6 +1,6 @@
-import FullLogo from "@/components/utils/FullLogo";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Stethoscope } from "lucide-react";
+import FullLogo from "@/components/utils/FullLogo";
+import { Stethoscope } from "lucide-react";
 import Link from "next/link";
 
 export default function NotFound() {

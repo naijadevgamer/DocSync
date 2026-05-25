@@ -1,13 +1,12 @@
 import PatientForm from "@/components/forms/PatientInfoForm";
 import FullLogo from "@/components/utils/FullLogo";
-import { requireOwnership } from "@/lib/actions/ownership-guard";
-// import { getAuthorizedUser } from "@/lib/actions/auth.actions";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
 import Image from "next/image";
 
 export default async function PersonalInfo({ params }: SearchParamProps) {
   const { userId } = await params;
 
-  const { user } = (await requireOwnership(userId)) as { user: User };
+  const user = await requireOwnership(userId);
 
   return (
     <div className="flex h-screen">

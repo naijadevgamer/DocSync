@@ -3,37 +3,33 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import FullLogo from "@/components/utils/FullLogo";
-import { Doctors } from "@/lib/constants";
 import { getAppointmentById } from "@/lib/appwrite/actions/appointment.action";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import { Doctors } from "@/lib/constants";
+import { ErrorCode } from "@/lib/errors";
 import { formatDateTime } from "@/lib/utils/utils";
-import { notFound } from "next/navigation";
-import { toast } from "sonner";
-import { requireOwnership } from "@/lib/actions/ownership-guard";
 
 export default async function RequestSuccess({
   params,
   searchParams,
 }: SearchParamProps) {
-  const { userId } = await params;
-  const { user } = await requireOwnership(userId);
+  const [{ userId }, { appointmentId }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
 
-  const { appointmentId } = await searchParams;
-
-  if (!appointmentId || Array.isArray(appointmentId)) {
-    throw new Error("Invalid appointment ID");
-  }
-
-  const result = await getAppointmentById(appointmentId);
-
-  if (!result.success) {
-    console.error(result.error?.details || result.error);
-    if (result.error?.code === "404") notFound();
-
-    toast.error(result.error?.message || "Something went wrong");
-  }
+  const [authorizedUser, appointmentResult] = await Promise.all([
+    requireOwnership(userId),
+    unwrapAction(() => getAppointmentById(appointmentId as string), {
+      onError: {
+        [ErrorCode.NOT_FOUND]: "notFound",
+      },
+    }),
+  ]);
 
   const doctor = Doctors.find(
-    (doctor) => doctor.name === result.data?.appointment?.primaryPhysician,
+    (doctor) => doctor.name === appointmentResult.appointment?.primaryPhysician,
   );
 
   return (
@@ -79,18 +75,31 @@ export default async function RequestSuccess({
             />
             <p>
               {
-                formatDateTime(result.data?.appointment?.schedule || new Date())
-                  .dateTime
+                formatDateTime(
+                  appointmentResult.appointment?.schedule || new Date(),
+                ).dateTime
               }
             </p>
           </div>
         </section>
 
-        <Button className="shad-primary-btn" asChild>
-          <Link href={`/patients/${user.$id}/new-appointment`}>
-            New Appointment
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-4">
+          <Button className="shad-primary-btn" asChild>
+            <Link href={`/patients/${authorizedUser.$id}/new-appointment`}>
+              New Appointment
+            </Link>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="border-dark-500 hover:bg-dark-500"
+            asChild
+          >
+            <Link href={`/patients/${authorizedUser.$id}/dashboard`}>
+              Dashboard
+            </Link>
+          </Button>
+        </div>
 
         <p className="copyright">© {new Date().getFullYear()} DocSync</p>
       </div>
