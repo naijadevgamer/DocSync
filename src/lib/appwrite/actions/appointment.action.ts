@@ -10,7 +10,12 @@ import {
   AppointmentUI,
   Patient,
 } from "../../../types/appwrite.types";
-import { ActionResponse, successResponse } from "../../errors";
+import {
+  ActionResponse,
+  AppError,
+  ErrorCode,
+  successResponse,
+} from "../../errors";
 import { parseStringify } from "../../utils/utils";
 import { withServerAction } from "../helper/with-server-action";
 import {
@@ -62,6 +67,15 @@ export const getAppointmentById = withServerAction(
       tableId: process.env.APPOINTMENT_TABLE_ID!,
       rowId: appointmentId,
     });
+
+    if (!appointment) {
+      throw new AppError({
+        code: ErrorCode.NOT_FOUND,
+        message: "Appointment not found",
+        statusCode: 404,
+      });
+    }
+
     return successResponse({
       appointment: parseStringify(appointment),
     });

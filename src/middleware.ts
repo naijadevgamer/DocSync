@@ -33,23 +33,15 @@ export async function middleware(request: NextRequest) {
   // Public routes
   if (
     isLoggedIn &&
-    (pathname.startsWith("/login") || pathname.startsWith("/register"))
+    (pathname.startsWith("/login") ||
+      pathname.startsWith("/register") ||
+      pathname.startsWith("/forgot-password") ||
+      pathname.startsWith("/reset-password"))
   ) {
     return NextResponse.redirect(
       new URL(`/patients/${userId}/dashboard`, request.url),
     );
   }
-
-  // const isVerifyPage = pathname.startsWith("/verify");
-
-  // const hasVerificationParams =
-  //   request.nextUrl.searchParams.has("userId") &&
-  //   request.nextUrl.searchParams.has("secret");
-
-  // // Protected routes
-  // if (!isLoggedIn  && !hasVerificationParams) {
-  //   return NextResponse.redirect(new URL("/", request.url));
-  // }
 
   if (
     !isLoggedIn &&

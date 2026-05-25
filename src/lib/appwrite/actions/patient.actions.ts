@@ -6,7 +6,12 @@ import { createSessionClient } from "../config/server";
 import { ActionResult, handleError } from "../../errors/errors";
 import { parseStringify } from "../../utils/utils";
 import { Patient } from "../../../types/appwrite.types";
-import { ActionResponse, successResponse } from "../../errors";
+import {
+  ActionResponse,
+  AppError,
+  ErrorCode,
+  successResponse,
+} from "../../errors";
 import { withServerAction } from "../helper/with-server-action";
 
 // REGISTER PATIENT
@@ -38,43 +43,6 @@ export const registerPatient = withServerAction(
   },
 );
 
-// GET PATIENT
-// export const getPatient = async (
-//   userId: string,
-// ): Promise<ActionResult<PatientData>> => {
-//   try {
-//     const { tablesDB } = await createSessionClient();
-
-//     const patient = await tablesDB.listRows({
-//       databaseId: process.env.DATABASE_ID!,
-//       tableId: process.env.PATIENT_TABLE_ID!,
-//       queries: [Query.equal("userId", [userId])],
-//     });
-
-//     return {
-//       success: true,
-//       data: { patient: parseStringify(patient.rows[0] || null) },
-//     };
-//   } catch (error) {
-//     console.error("Error fetching patient:", {
-//       error,
-//       userId,
-//       timestamp: new Date().toISOString(),
-//     });
-
-//     // Use the enhanced error handler
-//     const result = handleError(error);
-
-//     // Add additional context for the error classifier
-//     if (result.error?.code === "404") {
-//       result.error!.message = "Patient record not found";
-//       result.error!.code = "NOT_FOUND";
-//     }
-
-//     return result;
-//   }
-// };
-
 export const getPatient = withServerAction(async (userId: string) => {
   const { tablesDB } = await createSessionClient();
 
@@ -84,8 +52,16 @@ export const getPatient = withServerAction(async (userId: string) => {
     queries: [Query.equal("userId", [userId])],
   });
 
+  if (!patient.rows.length) {
+    throw new AppError({
+      code: ErrorCode.NOT_FOUND,
+      message: "Patient not found",
+      statusCode: 404,
+    });
+  }
+
   return successResponse({
-    patient: parseStringify(patient.rows[0] || null),
+    patient: parseStringify(patient.rows[0]),
   });
 });
 
