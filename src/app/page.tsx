@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = createMetadata({
   title: "Home",
   description:
-    "Manage appointments, patient records, and healthcare services seamlessly.",
+    "Manage appointments, patient records, and healthcare services seamlessly",
 });
 
 export default async function HomePage() {
