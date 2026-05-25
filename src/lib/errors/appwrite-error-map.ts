@@ -46,8 +46,8 @@ export function mapAppwriteError(error: AppwriteException) {
 
     case "user_already_exists":
       return errorResponse({
-        code: ErrorCode.PATIENT_ALREADY_EXISTS,
-        message: ERROR_MESSAGES.PATIENT_ALREADY_EXISTS,
+        code: ErrorCode.USER_ALREADY_EXISTS,
+        message: ERROR_MESSAGES.USER_ALREADY_EXISTS,
         statusCode: 409,
       });
 
@@ -70,6 +70,13 @@ export function mapAppwriteError(error: AppwriteException) {
         code: ErrorCode.NOT_FOUND,
         message: ERROR_MESSAGES.NOT_FOUND,
         statusCode: 404,
+      });
+
+    case "project_paused":
+      return errorResponse({
+        code: ErrorCode.PROJECT_PAUSED,
+        message: ERROR_MESSAGES.PROJECT_PAUSED,
+        statusCode: 403,
       });
 
     case "storage_device_not_found":

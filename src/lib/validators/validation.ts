@@ -37,6 +37,27 @@ export const LoginFormValidation = z.object({
   rememberMe: z.boolean().optional(),
 });
 
+export const ForgotPasswordFormValidation = z.object({
+  email: z.email("Invalid email address"),
+});
+
+export const ResetPasswordFormValidation = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(100, "Password must be at most 100 characters"),
+
+    confirmPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(100, "Password must be at most 100 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const PatientFormValidation = z.object({
   name: z
     .string()

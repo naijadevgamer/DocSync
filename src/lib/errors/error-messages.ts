@@ -18,8 +18,10 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
 
   NOT_FOUND: "Resource not found",
   CONFLICT: "Resource already exists",
+  PROJECT_PAUSED:
+    "Project is paused due to inactivity. Contact the developer to reactivate it",
 
-  NETWORK_ERROR: "Network error. Please try again",
+  NETWORK_ERROR: "Check network and retry.",
   NETWORK_TIMEOUT: "Connection timeout",
 
   RATE_LIMITED: "Too many requests. Please try again later",
@@ -31,7 +33,8 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   FILE_INVALID_TYPE: "File type is not supported",
   FILE_DELETE_FAILED: "File deletion failed",
 
-  PATIENT_ALREADY_EXISTS: "Patient already exists",
+  USER_ALREADY_EXISTS:
+    "A user with the same id, email, or phone already exists",
 
   APPOINTMENT_CONFLICT: "Appointment conflict detected",
   APPOINTMENT_NOT_AVAILABLE: "The selected appointment slot is not available",
