@@ -1,7 +1,14 @@
 import PatientForm from "@/components/forms/PatientInfoForm";
 import FullLogo from "@/components/utils/FullLogo";
 import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+
+export const metadata = createMetadata({
+  title: "Complete Your Profile",
+  description: "Provide your personal and medical information to continue.",
+  noIndex: true,
+});
 
 export default async function PersonalInfo({ params }: SearchParamProps) {
   const { userId } = await params;

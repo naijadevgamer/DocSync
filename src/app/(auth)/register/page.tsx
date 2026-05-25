@@ -1,6 +1,13 @@
 import RegisterForm from "@/components/forms/RegisterForm";
 import FullLogo from "@/components/utils/FullLogo";
+import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+
+export const metadata = createMetadata({
+  title: "Create Account",
+  description: "Create your DocSync healthcare account.",
+  noIndex: true,
+});
 
 export default async function RegisterPage() {
   return (

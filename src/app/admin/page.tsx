@@ -5,6 +5,13 @@ import { requireAdmin } from "@/lib/appwrite/auth/guards";
 import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import AdminHeader from "../../components/admin/AdminHeader";
 import AdminTabs from "../../components/admin/AdminTabs";
+import { createMetadata } from "@/lib/utils/metadata";
+
+export const metadata = createMetadata({
+  title: "Admin Dashboard",
+  description: "Manage patients and appointments.",
+  noIndex: true,
+});
 
 export default async function AdminPage() {
   // Middleware handles early auth checks.

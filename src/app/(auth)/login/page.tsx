@@ -1,7 +1,14 @@
 import LoginForm from "@/components/forms/LoginForm";
 import FullLogo from "@/components/utils/FullLogo";
+import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata = createMetadata({
+  title: "Login",
+  description: "Sign in to access your DocSync account.",
+  noIndex: true,
+});
 
 export default async function LoginPage({ searchParams }: SearchParamProps) {
   const { admin, callbackUrl } = await searchParams;

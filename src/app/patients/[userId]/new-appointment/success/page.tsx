@@ -9,6 +9,13 @@ import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { Doctors } from "@/lib/constants";
 import { ErrorCode } from "@/lib/errors";
 import { formatDateTime } from "@/lib/utils/utils";
+import { createMetadata } from "@/lib/utils/metadata";
+
+export const metadata = createMetadata({
+  title: "Appointment Confirmed",
+  description: "Your appointment request has been successfully submitted.",
+  noIndex: true,
+});
 
 export default async function RequestSuccess({
   params,

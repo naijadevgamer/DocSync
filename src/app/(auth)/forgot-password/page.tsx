@@ -1,6 +1,13 @@
 import ForgotPassword from "@/components/forms/ForgotPassword";
 import FullLogo from "@/components/utils/FullLogo";
+import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+
+export const metadata = createMetadata({
+  title: "Forgot Password",
+  description: "Recover access to your DocSync account.",
+  noIndex: true,
+});
 
 export default async function ForgotPasswordPage() {
   return (

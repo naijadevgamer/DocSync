@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
 import FullLogo from "@/components/utils/FullLogo";
+import { createMetadata } from "@/lib/utils/metadata";
 import { Stethoscope } from "lucide-react";
 import Link from "next/link";
+
+export const metadata = createMetadata({
+  title: "Page Not Found",
+  description: "The page you are looking for does not exist.",
+  noIndex: true,
+});
 
 export default function NotFound() {
   return (

@@ -7,6 +7,31 @@ import { Patient } from "../../../../types/appwrite.types";
 import { requireOwnership } from "@/lib/appwrite/auth/guards";
 import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { ErrorCode } from "@/lib/errors";
+import { createMetadata } from "@/lib/utils/metadata";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: SearchParamProps): Promise<Metadata> {
+  const { userId } = await params;
+
+  const patientResult = await unwrapAction(() => getPatient(userId), {
+    onError: {
+      [ErrorCode.NOT_FOUND]: "ignore",
+    },
+    defaultValue: null,
+  });
+
+  return createMetadata({
+    title: patientResult?.patient?.name
+      ? `Book Appointment - ${patientResult.patient.name}`
+      : "Book Appointment",
+
+    description: "Schedule a healthcare appointment with DocSync.",
+
+    noIndex: true,
+  });
+}
 
 export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;

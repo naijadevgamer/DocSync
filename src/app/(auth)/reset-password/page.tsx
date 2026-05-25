@@ -1,6 +1,13 @@
 import ResetPassword from "@/components/forms/ResetPassword";
 import FullLogo from "@/components/utils/FullLogo";
+import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+
+export const metadata = createMetadata({
+  title: "Reset Password",
+  description: "Set a new password for your DocSync account.",
+  noIndex: true,
+});
 
 export default async function ResetPasswordPage() {
   return (

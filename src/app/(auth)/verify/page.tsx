@@ -2,9 +2,25 @@ import VerifyForm from "@/components/forms/VerifyForm";
 import FullLogo from "@/components/utils/FullLogo";
 import { verifyEmail } from "@/lib/appwrite/actions/auth.actions";
 import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import { createMetadata } from "@/lib/utils/metadata";
 import { CheckCircle2, Mail } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+
+export async function generateMetadata({
+  searchParams,
+}: SearchParamProps): Promise<Metadata> {
+  const { email } = await searchParams;
+
+  return createMetadata({
+    title: "Verify Email",
+    description: email
+      ? `Verify the email address ${email} for your DocSync account.`
+      : "Verify your DocSync email address.",
+    noIndex: true,
+  });
+}
 
 export default async function VerifyPage({ searchParams }: SearchParamProps) {
   const [{ email }, result] = await Promise.all([

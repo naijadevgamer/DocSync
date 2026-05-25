@@ -4,6 +4,33 @@ import { getPatient } from "@/lib/appwrite/actions/patient.actions";
 import { requireOwnership } from "@/lib/appwrite/auth/guards";
 import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { ErrorCode } from "@/lib/errors";
+import { createMetadata } from "@/lib/utils/metadata";
+
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: SearchParamProps): Promise<Metadata> {
+  const { userId } = await params;
+
+  const patientResult = await unwrapAction(() => getPatient(userId), {
+    onError: {
+      [ErrorCode.NOT_FOUND]: "ignore",
+    },
+    defaultValue: null,
+  });
+
+  return createMetadata({
+    title: patientResult?.patient?.name
+      ? `${patientResult.patient.name.split(" ")[0]}'s Dashboard`
+      : "Patient Dashboard",
+
+    description:
+      "View appointments, healthcare information, and medical updates.",
+
+    noIndex: true,
+  });
+}
 
 export default async function Dashboard({ params }: SearchParamProps) {
   const { userId } = await params;
