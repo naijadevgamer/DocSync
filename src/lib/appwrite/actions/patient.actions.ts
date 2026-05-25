@@ -2,9 +2,6 @@
 
 import { ID, Query } from "node-appwrite";
 
-import { createSessionClient } from "../config/server";
-import { ActionResult, handleError } from "../../errors/errors";
-import { parseStringify } from "../../utils/utils";
 import { Patient } from "../../../types/appwrite.types";
 import {
   ActionResponse,
@@ -12,6 +9,8 @@ import {
   ErrorCode,
   successResponse,
 } from "../../errors";
+import { parseStringify } from "../../utils/utils";
+import { createSessionClient } from "../config/server";
 import { withServerAction } from "../helper/with-server-action";
 
 // REGISTER PATIENT
