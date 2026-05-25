@@ -15,7 +15,7 @@ import CustomFormField, { FormFieldType } from "./util/CustomFormField";
 import SubmitButton from "../utils/SubmitButton";
 import { Alert, AlertDescription } from "../ui/alert";
 import { FieldGroup } from "../ui/field";
-import { handleActionError } from "@/lib/errors/create-error-response";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export default function LoginForm({
   isAdminFlow,
@@ -59,12 +59,8 @@ export default function LoginForm({
     const result = await loginUser(user);
 
     if (!result.success) {
-      console.error("Error logging user in:", result.error);
-      handleActionError({
-        ...result.error,
-        message:
-          "Failed to log in. Please check your credentials and try again.",
-      });
+      handleActionError(result.error);
+
       setIsLoading(false);
       return;
     }

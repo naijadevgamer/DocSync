@@ -9,7 +9,7 @@ import {
 import { registerPatient } from "@/lib/appwrite/actions/patient.actions";
 import { PatientFormValidation } from "@/lib/validators/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ID, Permission, Role } from "appwrite";
+import { ID, Models, Permission, Role } from "appwrite";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,6 +36,7 @@ import {
 
 import { MdHealthAndSafety, MdMedication } from "react-icons/md";
 import { createBrowserClient } from "@/lib/appwrite/config/client";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export default function PatientForm({ user }: { user: User }) {
   const router = useRouter();
@@ -54,77 +55,32 @@ export default function PatientForm({ user }: { user: User }) {
   const onSubmit = async (data: z.infer<typeof PatientFormValidation>) => {
     setIsLoading(true);
 
+    const formData = new FormData();
+
+    const file = data.identificationDocument?.[0];
+    if (!file) {
+      toast.error("Please upload an identification document");
+      return;
+    }
+    let uploadedFile;
+    let uploadedFileUrl;
+
+    const { storage } = createBrowserClient();
+
     try {
-      const formData = new FormData();
-
-      const file = data.identificationDocument?.[0];
-      if (!file) {
-        toast.error("Please upload an identification document");
-        return;
-      }
-
-      const { storage } = createBrowserClient();
-
-      const uploadedFile = await storage.createFile({
+      uploadedFile = await storage.createFile({
         bucketId: process.env.NEXT_PUBLIC_BUCKET_ID!,
         fileId: ID.unique(),
         file,
         permissions: [Permission.read(Role.any())],
       });
-
-      const uploadedFileUrl = storage.getFileView({
+      uploadedFileUrl = storage.getFileView({
         bucketId: uploadedFile.bucketId,
         fileId: uploadedFile.$id,
       });
 
       formData.append("fileId", uploadedFile.$id);
       formData.append("fileUrl", uploadedFileUrl);
-
-      const patient = {
-        userId: user.$id,
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        birthDate: new Date(data.birthDate),
-        gender: data.gender,
-        address: data.address,
-        occupation: data.occupation,
-        emergencyContactName: data.emergencyContactName,
-        emergencyContactNumber: data.emergencyContactNumber,
-        primaryPhysician: data.primaryPhysician,
-        insuranceProvider: data.insuranceProvider,
-        insurancePolicyNumber: data.insurancePolicyNumber,
-        allergies: data.allergies,
-        currentMedication: data.currentMedication,
-        familyMedicalHistory: data.familyMedicalHistory,
-        pastMedicalHistory: data.pastMedicalHistory,
-        identificationType: data.identificationType,
-        identificationNumber: data.identificationNumber,
-        identificationDocument: formData,
-        privacyConsent: data.privacyConsent,
-        treatmentConsent: data.treatmentConsent,
-        disclosureConsent: data.disclosureConsent,
-      };
-
-      const newPatient = await registerPatient(patient);
-
-      if (!newPatient.success) {
-        if (uploadedFile) {
-          await storage.deleteFile({
-            bucketId: uploadedFile.bucketId,
-            fileId: uploadedFile.$id,
-          });
-        }
-
-        toast.error(
-          newPatient.error?.message ||
-            "Failed to save patient info. Please try again.",
-        );
-        return;
-      }
-
-      toast.success("Patient information saved successfully!");
-      router.push(`/patients/${user.$id}/new-appointment`);
     } catch (error: any) {
       const message =
         process.env.NODE_ENV === "development" && error?.message
@@ -132,9 +88,54 @@ export default function PatientForm({ user }: { user: User }) {
           : "Something went wrong. Please try again.";
 
       toast.error(message);
-    } finally {
       setIsLoading(false);
+      return;
     }
+
+    const patient = {
+      userId: user.$id,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      birthDate: new Date(data.birthDate),
+      gender: data.gender,
+      address: data.address,
+      occupation: data.occupation,
+      emergencyContactName: data.emergencyContactName,
+      emergencyContactNumber: data.emergencyContactNumber,
+      primaryPhysician: data.primaryPhysician,
+      insuranceProvider: data.insuranceProvider,
+      insurancePolicyNumber: data.insurancePolicyNumber,
+      allergies: data.allergies,
+      currentMedication: data.currentMedication,
+      familyMedicalHistory: data.familyMedicalHistory,
+      pastMedicalHistory: data.pastMedicalHistory,
+      identificationType: data.identificationType,
+      identificationNumber: data.identificationNumber,
+      identificationDocument: formData,
+      privacyConsent: data.privacyConsent,
+      treatmentConsent: data.treatmentConsent,
+      disclosureConsent: data.disclosureConsent,
+    };
+
+    const newPatient = await registerPatient(patient);
+
+    if (!newPatient.success) {
+      if (uploadedFile) {
+        await storage.deleteFile({
+          bucketId: uploadedFile.bucketId,
+          fileId: uploadedFile.$id,
+        });
+      }
+
+      handleActionError(newPatient.error);
+      setIsLoading(false);
+      return;
+    }
+
+    toast.success("Patient information saved successfully!");
+    router.push(`/patients/${user.$id}/new-appointment`);
+    setIsLoading(false);
   };
 
   return (

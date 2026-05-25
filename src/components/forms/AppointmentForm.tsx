@@ -22,6 +22,7 @@ import { FieldGroup } from "../ui/field";
 import { SelectItem } from "../ui/select";
 import SubmitButton from "../utils/SubmitButton";
 import CustomFormField, { FormFieldType } from "./util/CustomFormField";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export const AppointmentForm = ({
   userId,
@@ -93,9 +94,9 @@ export const AppointmentForm = ({
         //   "Error creating appointment:",
         //   newAppointment.error?.details || newAppointment.error,
         // );
-        toast.error(
-          newAppointment.error?.message || "Failed to create appointment",
-        );
+
+        handleActionError(newAppointment.error);
+
         setIsLoading(false);
         return;
       }
@@ -122,13 +123,7 @@ export const AppointmentForm = ({
       const updatedAppointment = await updateAppointment(appointmentToUpdate);
 
       if (!updatedAppointment.success) {
-        // console.error(
-        //   "Error updating appointment:",
-        //   updatedAppointment.error?.details || updatedAppointment.error,
-        // );
-        toast.error(
-          updatedAppointment.error?.message || "Failed to update appointment",
-        );
+        handleActionError(updatedAppointment.error);
         setIsLoading(false);
         return;
       }

@@ -3,11 +3,12 @@
 
 import { createBrowserClient } from "@/lib/appwrite/config/client";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { resendVerificationEmail } from "@/lib/appwrite/actions/auth.actions";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export default function VerifyForm() {
   const params = useSearchParams();
@@ -31,14 +32,14 @@ export default function VerifyForm() {
         setStatus("verifying");
 
         const { account } = createBrowserClient();
-        const updatedUser = await account.updateEmailVerification({
+        await account.updateEmailVerification({
           userId,
           secret,
         });
 
         setStatus("success");
         setTimeout(() => {
-          router.push(`/patients/${updatedUser.userId}/personal-info`);
+          router.push("/login");
         }, 3000);
       } catch (err) {
         console.error(err);
@@ -50,31 +51,30 @@ export default function VerifyForm() {
   }, [userId, secret, router]);
 
   const resendEmail = async () => {
-    try {
-      setResending(true);
-      const { account } = createBrowserClient();
-      await account.createEmailVerification({
-        url: `${window.location.origin}/verify`,
-      });
+    setResending(true);
 
-      setCountdown(60);
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    const result = await resendVerificationEmail();
 
-      toast.success("Verification email sent. Check your inbox.");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to resend verification email.");
-    } finally {
+    if (!result.success) {
+      handleActionError(result.error);
       setResending(false);
+      return;
     }
+
+    toast.success("Verification email resent!");
+
+    setResending(false);
+
+    setCountdown(60);
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   if (status === "verifying") {

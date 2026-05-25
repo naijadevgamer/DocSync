@@ -1,4 +1,3 @@
-// components/dashboard/tabs/ProfileTab.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,6 +7,7 @@ import { formatDateTime } from "@/lib/utils/utils";
 import { Edit3, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import { updatePatient } from "@/lib/appwrite/actions/patient.actions";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export default function ProfileTab({ user, patient }: any) {
   const [isEditing, setIsEditing] = useState(false);
@@ -30,19 +30,15 @@ export default function ProfileTab({ user, patient }: any) {
     setIsLoading(true);
 
     const result = await updatePatient(patient.$id, formData);
-    if (result.success) {
-      toast.success("Profile updated successfully!");
-      setIsEditing(false);
-    } else {
-      toast.error(result.error?.message || "Failed to update profile");
+    if (!result.success) {
+      handleActionError(result.error);
+      setIsLoading(false);
+      return;
     }
 
+    setIsEditing(false);
+    toast.success("Profile updated successfully!");
     setIsLoading(false);
-    // } catch (error) {
-    //   toast.error("Something went wrong");
-    // } finally {
-    //   setIsLoading(false);
-    // }
   };
 
   return (

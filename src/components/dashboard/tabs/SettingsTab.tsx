@@ -31,6 +31,8 @@ import { toast } from "sonner";
 import LogoutModal from "@/components/modals/LogoutModal";
 import { useLogout } from "@/hooks/useLogout";
 import { downloadPatientData } from "@/lib/utils/utils";
+import { handleActionError } from "@/lib/errors/handle-action-error";
+import { ErrorCode } from "@/lib/errors";
 
 export default function SettingsTab({ user, patient }: any) {
   const router = useRouter();
@@ -61,21 +63,27 @@ export default function SettingsTab({ user, patient }: any) {
       passwordData.newPassword,
     );
 
-    if (result.success) {
-      toast.success("Password updated successfully!");
-      setShowPasswordModal(false);
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } else {
-      if (result.error?.code === "401") {
-        toast.error("Current password is incorrect");
+    if (!result.success) {
+      console.error(result.error);
+      if (result.error.code === ErrorCode.AUTH_INVALID_CREDENTIALS) {
+        handleActionError({
+          ...result.error,
+          message: "Current password is incorrect",
+        });
       } else {
-        toast.error(result.error?.message || "Failed to update password");
+        handleActionError(result.error);
       }
+      setIsLoading(false);
+      return;
     }
+
+    toast.success("Password updated successfully!");
+    setShowPasswordModal(false);
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
 
     setIsLoading(false);
   };

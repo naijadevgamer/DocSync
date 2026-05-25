@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { logoutUser } from "@/lib/appwrite/actions/auth.actions";
+import { handleActionError } from "@/lib/errors/handle-action-error";
+import { on } from "events";
 
 interface UseLogoutOptions {
   redirectTo?: string;
@@ -45,14 +47,10 @@ export function useLogout(options: UseLogoutOptions = {}): UseLogoutReturn {
       const result = await logoutUser();
 
       if (!result.success) {
-        const errorMessage = result.error?.message || "Logout failed";
-        setError(errorMessage);
-        if (showToast) {
-          toast.error(errorMessage);
-        }
+        handleActionError(result.error);
         onError?.(result.error);
         setIsLoading(false);
-        return false;
+        return;
       }
 
       if (showToast) {

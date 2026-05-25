@@ -16,7 +16,7 @@ import { FieldGroup } from "../ui/field";
 import Link from "next/link";
 import { Alert, AlertDescription } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
-import { handleActionError } from "@/lib/errors/create-error-response";
+import { handleActionError } from "@/lib/errors/handle-action-error";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -46,11 +46,7 @@ export default function RegisterForm() {
     const result = await createUser(user);
 
     if (!result.success) {
-      console.error("Error creating user:", result.error);
-      handleActionError({
-        ...result.error,
-        message: "Failed to create account. Please try again.",
-      });
+      handleActionError(result.error);
 
       setIsLoading(false);
       return;
