@@ -56,7 +56,7 @@ export default function RootLayout({
           forcedTheme="dark"
         >
           <main>{children}</main>
-          <Toaster richColors />
+          <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>
     </html>
