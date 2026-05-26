@@ -75,7 +75,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <div>
+    <div className="flex-1">
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
         <section className="mb-12 space-y-4">
           <h1 className="text-24-bold mb-2">Set New Password</h1>

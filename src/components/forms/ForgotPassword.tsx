@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-// import FullLogo from "@/components/FullLogo";
-// import { sendPasswordRecovery } from "@/lib/actions/auth.actions";
 import { sendPasswordRecovery } from "@/lib/appwrite/actions/auth.actions";
 import { handleActionError } from "@/lib/errors/handle-action-error";
 import { ForgotPasswordFormValidation } from "@/lib/validators/validation";
@@ -18,6 +16,7 @@ import { Alert, AlertDescription } from "../ui/alert";
 import { FieldGroup } from "../ui/field";
 import SubmitButton from "../utils/SubmitButton";
 import CustomFormField, { FormFieldType } from "./util/CustomFormField";
+import { ErrorCode } from "@/lib/errors";
 
 export default function ForgotPassword() {
   const [submitted, setSubmitted] = useState(false);
@@ -36,7 +35,13 @@ export default function ForgotPassword() {
     setIsLoading(true);
     const res = await sendPasswordRecovery(data.email);
     if (!res.success) {
-      handleActionError(res.error);
+      if (res.error.code === ErrorCode.NOT_FOUND)
+        handleActionError({
+          ...res.error,
+          message: "User with the requested email could not be found.",
+        });
+      else handleActionError(res.error);
+      setIsLoading(false);
       return;
     }
 
@@ -61,8 +66,8 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
+    <div className="flex-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <section className="mb-12 space-y-4">
           <h1 className="text-24-bold mb-2">Forgot Password</h1>
         </section>
