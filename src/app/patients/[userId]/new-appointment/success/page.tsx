@@ -2,29 +2,41 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
-import { getAppointmentById } from "@/lib/actions/appointment.action";
-import { notFound } from "next/navigation";
-import FullLogo from "@/components/FullLogo";
+import FullLogo from "@/components/utils/FullLogo";
+import { getAppointmentById } from "@/lib/appwrite/actions/appointment.action";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import { Doctors } from "@/lib/constants";
+import { ErrorCode } from "@/lib/errors";
+import { formatDateTime } from "@/lib/utils/utils";
+import { createMetadata } from "@/lib/utils/metadata";
+
+export const metadata = createMetadata({
+  title: "Appointment Confirmed",
+  description: "Your appointment request has been successfully submitted.",
+  noIndex: true,
+});
 
 export default async function RequestSuccess({
   params,
   searchParams,
 }: SearchParamProps) {
-  const { userId } = await params;
-  // console.log(params); // should log { userId: "697354460029a83470dc" }
-  // console.log(searchParams); // should log { appointmentId: "69989adf000fc708a6dc" }
+  const [{ userId }, { appointmentId }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
 
-  const { appointmentId } = (await searchParams) || {};
-
-  // console.log("Appointment ID from search params:", appointmentId);
-  const appointment = await getAppointmentById(appointmentId as string);
-
-  if (!appointment) notFound();
+  const [authorizedUser, appointmentResult] = await Promise.all([
+    requireOwnership(userId),
+    unwrapAction(() => getAppointmentById(appointmentId as string), {
+      onError: {
+        [ErrorCode.NOT_FOUND]: "notFound",
+      },
+    }),
+  ]);
 
   const doctor = Doctors.find(
-    (doctor) => doctor.name === appointment.primaryPhysician,
+    (doctor) => doctor.name === appointmentResult.appointment?.primaryPhysician,
   );
 
   return (
@@ -40,6 +52,7 @@ export default async function RequestSuccess({
             height={300}
             width={280}
             alt="success"
+            priority
           />
           <h2 className="header mb-6 max-w-150 text-center">
             Your <span className="text-green-500">appointment request</span> has
@@ -67,15 +80,33 @@ export default async function RequestSuccess({
               width={24}
               alt="calendar"
             />
-            <p> {formatDateTime(appointment.schedule).dateTime}</p>
+            <p>
+              {
+                formatDateTime(
+                  appointmentResult.appointment?.schedule || new Date(),
+                ).dateTime
+              }
+            </p>
           </div>
         </section>
 
-        <Button className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>
-            New Appointment
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-4">
+          <Button className="shad-primary-btn" asChild>
+            <Link href={`/patients/${authorizedUser.$id}/new-appointment`}>
+              New Appointment
+            </Link>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="border-dark-500 hover:bg-dark-500"
+            asChild
+          >
+            <Link href={`/patients/${authorizedUser.$id}/dashboard`}>
+              Dashboard
+            </Link>
+          </Button>
+        </div>
 
         <p className="copyright">© {new Date().getFullYear()} DocSync</p>
       </div>

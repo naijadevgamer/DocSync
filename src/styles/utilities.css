@@ -1,10 +1,12 @@
 /* === ADMIN */
 @utility admin-header {
-  @apply bg-dark-200 sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl px-[5%] py-5 shadow-lg xl:px-12;
+  @apply sticky z-20 flex items-center justify-between rounded-2xl py-5 shadow-lg;
 }
+
 @utility admin-main {
-  @apply flex flex-col items-center space-y-6 px-[5%] pb-12 xl:space-y-12 xl:px-12;
+  @apply flex flex-col items-center space-y-6 pb-12 xl:space-y-12;
 }
+
 @utility admin-stat {
   @apply flex w-full flex-col justify-between gap-5 sm:flex-row xl:gap-10;
 }
@@ -13,14 +15,10 @@
 @utility flex-between {
   @apply flex items-center justify-between;
 }
+
 @utility flex-center {
   @apply flex items-center justify-center;
 }
-
-/* === BACKGROUND */
-/* @utility bg-image {
-  @apply bg-dark-900 bg-light-rays bg-cover bg-no-repeat;
-} */
 
 /* === CLIP / TEXT */
 @utility clip-text {
@@ -29,7 +27,7 @@
 
 /* === CONTAINERS */
 @utility container {
-  @apply relative flex-1 overflow-y-auto px-[5%];
+  @apply relative mx-auto flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8;
 }
 @utility sub-container {
   @apply mx-auto flex size-full flex-col py-10;
@@ -118,7 +116,7 @@
   @apply text-red-400!;
 }
 @utility shad-gray-btn {
-  @apply border-dark-500! bg-dark-400! cursor-pointer! border! text-white!;
+  @apply border-dark-500! bg-dark-400! hover:bg-dark-500! border! text-white!;
 }
 
 @utility shad-input {
@@ -135,7 +133,7 @@
   @apply text-36-bold! border-dark-500! flex! size-16! justify-center! gap-4! rounded-lg! border!;
 }
 @utility shad-primary-btn {
-  @apply bg-green-500! text-white!;
+  @apply bg-green-500! text-white! hover:bg-green-500/70!;
 }
 @utility shad-select-content {
   @apply bg-dark-400! border-dark-500!;

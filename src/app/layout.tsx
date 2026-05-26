@@ -1,10 +1,10 @@
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -13,11 +13,27 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "DocSync",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+
+  title: {
+    default: "DocSync",
+    template: "%s | DocSync",
+  },
+
   description:
-    "A healthcare patient management System designed to streamline patient registration, appointment scheduling, and medical records management for healthcare providers.",
+    "A healthcare patient management system for appointments, patient records, and healthcare administration.",
+
   icons: {
     icon: "/assets/icons/logo-icon.svg",
+  },
+
+  openGraph: {
+    siteName: "DocSync",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
   },
 };
 
@@ -40,7 +56,7 @@ export default function RootLayout({
           forcedTheme="dark"
         >
           <main>{children}</main>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

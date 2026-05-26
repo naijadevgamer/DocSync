@@ -1,53 +1,66 @@
-import FullLogo from "@/components/FullLogo";
-import { StatCard } from "@/components/StatsCard";
-import { columns } from "@/components/table/columns";
-import { DataTable } from "@/components/table/DataTable";
-import { getRecentAppointmentList } from "@/lib/actions/appointment.action";
-import Link from "next/link";
+import { StatCard } from "@/components/utils/StatsCard";
+import { getRecentAppointmentList } from "@/lib/appwrite/actions/appointment.action";
+import { getAllPatients } from "@/lib/appwrite/actions/patient.actions";
+import { requireAdmin } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import AdminHeader from "../../components/admin/AdminHeader";
+import AdminTabs from "../../components/admin/AdminTabs";
+import { createMetadata } from "@/lib/utils/metadata";
 
-export default async function page() {
-  const appointments = await getRecentAppointmentList();
-  // console.log("Appointments in admin dashboard: ", appointments);
+export const metadata = createMetadata({
+  title: "Admin Dashboard",
+  description: "Manage patients and appointments.",
+  noIndex: true,
+});
+
+export default async function AdminPage() {
+  // Middleware handles early auth checks.
+  // This is the final server-side authorization guard.
+  const [_, appointmentsResult, patientsResult] = await Promise.all([
+    requireAdmin(),
+    unwrapAction(getRecentAppointmentList),
+    unwrapAction(getAllPatients),
+  ]);
+
   return (
-    <div className="mx-auto flex max-w-7xl flex-col space-y-14">
-      <header className="admin-header">
-        <Link href="/" className="cursor-pointer">
-          <FullLogo />
-        </Link>
-
-        <p className="text-16-semibold">Admin Dashboard</p>
-      </header>
-
-      <main className="admin-main">
+    <div className="mx-auto flex flex-col space-y-14">
+      <AdminHeader />
+      <main className="admin-main container">
         <section className="w-full space-y-4">
-          <h1 className="header">Welcome 👋</h1>
+          <h1 className="header">Welcome, Admin 👋</h1>
+
           <p className="text-dark-700">
-            Start the day with managing new appointments
+            Manage appointments and view patient data
           </p>
         </section>
 
+        {/* Stats Cards */}
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduledCount}
+            count={appointmentsResult.totalCount}
             label="Scheduled appointments"
-            icon={"/assets/icons/appointments.svg"}
+            icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
-            count={appointments.pendingCount}
+            count={appointmentsResult.pendingCount}
             label="Pending appointments"
-            icon={"/assets/icons/pending.svg"}
+            icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
-            count={appointments.cancelledCount}
+            count={appointmentsResult.cancelledCount}
             label="Cancelled appointments"
-            icon={"/assets/icons/cancelled.svg"}
+            icon="/assets/icons/cancelled.svg"
           />
         </section>
 
-        <DataTable columns={columns} data={appointments.documents} />
+        {/* Tabs for Appointments, Patients, and Insights */}
+        <AdminTabs
+          appointments={appointmentsResult}
+          patients={patientsResult?.patients || []}
+        />
       </main>
     </div>
   );

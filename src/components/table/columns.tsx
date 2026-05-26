@@ -3,16 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
-import { Appointment } from "../../../types/appwrite.types";
-import StatusBadge from "../StatusBadge";
-import { AppointmentModal } from "../AppointmentModal";
+import { Doctors } from "@/lib/constants";
+import { formatDateTime } from "@/lib/utils/utils";
+import { AppointmentUI } from "../../types/appwrite.types";
+import { AppointmentModal } from "../modals/AppointmentModal";
+import StatusBadge from "../utils/StatusBadge";
 
-// import { AppointmentModal } from "../AppointmentModal";
-// import { StatusBadge } from "../StatusBadge";
-
-export const columns: ColumnDef<Appointment>[] = [
+export const columns: ColumnDef<AppointmentUI>[] = [
   {
     header: "#",
     cell: ({ row }) => {
@@ -84,7 +81,7 @@ export const columns: ColumnDef<Appointment>[] = [
       return (
         <div className="flex gap-1">
           <AppointmentModal
-            patientId={appointment.patient.$id}
+            patient={appointment.patient}
             userId={appointment.userId}
             appointment={appointment}
             type="schedule"
@@ -92,7 +89,7 @@ export const columns: ColumnDef<Appointment>[] = [
             description="Please confirm the following details to schedule."
           />
           <AppointmentModal
-            patientId={appointment.patient.$id}
+            patient={appointment.patient}
             userId={appointment.userId}
             appointment={appointment}
             type="cancel"

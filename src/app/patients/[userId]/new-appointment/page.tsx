@@ -1,23 +1,50 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
-import RegisterForm from "@/components/forms/RegisterForm";
-import FullLogo from "@/components/FullLogo";
-import { getPatient, getUserById } from "@/lib/actions/patient.actions";
+import FullLogo from "@/components/utils/FullLogo";
+import { getPatient } from "@/lib/appwrite/actions/patient.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Patient } from "../../../../types/appwrite.types";
+import { requireOwnership } from "@/lib/appwrite/auth/guards";
+import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
+import { ErrorCode } from "@/lib/errors";
+import { createMetadata } from "@/lib/utils/metadata";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: SearchParamProps): Promise<Metadata> {
+  const { userId } = await params;
+
+  const patientResult = await unwrapAction(() => getPatient(userId), {
+    onError: {
+      [ErrorCode.NOT_FOUND]: "ignore",
+    },
+    defaultValue: null,
+  });
+
+  return createMetadata({
+    title: patientResult?.patient?.name
+      ? `Book Appointment - ${patientResult.patient.name}`
+      : "Book Appointment",
+
+    description: "Schedule a healthcare appointment with DocSync.",
+
+    noIndex: true,
+  });
+}
 
 export default async function Appointment({ params }: SearchParamProps) {
   const { userId } = await params;
-  let patient;
 
-  try {
-    patient = await getPatient(userId);
-    // console.log("Patient is what: ", patient);
-  } catch (err: any) {
-    console.error("Error fetching user:", err);
-    throw err; // Let Next.js handle the error and show the error page
-  }
-
-  if (!patient) notFound(); // must be outside the try/catch
+  const [authorizedUser, patientResult] = await Promise.all([
+    requireOwnership(userId),
+    unwrapAction(() => getPatient(userId), {
+      onError: {
+        [ErrorCode.NOT_FOUND]: "redirect",
+      },
+      redirectTo: `/patients/${userId}/personal-info`,
+    }),
+  ]);
 
   return (
     <div className="flex h-screen">
@@ -28,8 +55,9 @@ export default async function Appointment({ params }: SearchParamProps) {
           </div>
 
           <AppointmentForm
-            patientId={patient?.$id}
-            userId={userId}
+            patient={patientResult.patient}
+            userId={authorizedUser.$id}
+            userName={authorizedUser.name}
             type="create"
           />
 
@@ -46,6 +74,7 @@ export default async function Appointment({ params }: SearchParamProps) {
           fill
           sizes="(max-width: 768px) 100vw, 30vw"
           className="bg-bottom object-cover"
+          priority
         />
       </div>
     </div>
