@@ -18,7 +18,9 @@ export default async function LoginPage({ searchParams }: SearchParamProps) {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <LoginForm

@@ -2,6 +2,7 @@ import ResetPassword from "@/components/forms/ResetPassword";
 import FullLogo from "@/components/utils/FullLogo";
 import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = createMetadata({
   title: "Reset Password",
@@ -15,7 +16,9 @@ export default async function ResetPasswordPage() {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <ResetPassword />

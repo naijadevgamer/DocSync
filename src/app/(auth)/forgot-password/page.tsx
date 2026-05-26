@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/forms/ForgotPassword";
 import FullLogo from "@/components/utils/FullLogo";
 import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = createMetadata({
   title: "Forgot Password",
@@ -15,7 +16,9 @@ export default async function ForgotPasswordPage() {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <ForgotPassword />

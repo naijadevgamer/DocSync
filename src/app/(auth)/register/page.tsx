@@ -1,6 +1,7 @@
 import RegisterForm from "@/components/forms/RegisterForm";
 import FullLogo from "@/components/utils/FullLogo";
 import { createMetadata } from "@/lib/utils/metadata";
+import { Link } from "lucide-react";
 import Image from "next/image";
 
 export const metadata = createMetadata({
@@ -15,7 +16,9 @@ export default async function RegisterPage() {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-124">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <RegisterForm />
