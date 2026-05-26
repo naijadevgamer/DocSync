@@ -8,7 +8,7 @@ import { createMetadata } from "@/lib/utils/metadata";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = createMetadata({
-  title: "Home",
+  title: "Home | DocSync",
   description:
     "Manage appointments, patient records, and healthcare services seamlessly",
 });
