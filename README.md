@@ -226,34 +226,25 @@ This allows the application to scale from a small clinic tool into a multi-tenan
 
 1. **Home / Landing Page**
 
-````md
-![Home](./public/screenshots/home.png)
+   ![Home](./public/screenshots/home.png)
 
 2. **Login Page**
 
-   ```md
    ![Login](./public/screenshots/login.png)
-   ```
 
 3. **Admin Dashboard 📊**
 
-   ```md
    ![admin](./public/screenshots/admin.png)
-   ```
 
 4. **Patient List + Modal 👤**
 
-   ```md
    ![Patient](./public/screenshots/patient.png)
-   ```
 
 5. **Appointment Form 📅**
-   ```md
+
    ![Appointment](./public/screenshots/appointment.png)
-   ```
-   ```md
+
    ![Email](./public/screenshots/email.png)
-   ```
 
 ---
 
@@ -297,8 +288,4 @@ pnpm build
 ```
 
 Once the dev server is running, open `http://localhost:3000` in your browser.
-
-```
-
-```
-````
+`
