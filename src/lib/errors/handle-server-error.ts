@@ -8,7 +8,7 @@ import { errorResponse } from "./result";
 import { mapAppwriteError } from "./appwrite-error-map";
 
 export function handleServerError(error: unknown) {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "production") {
     console.error("SERVER ERROR:", error);
   }
 
@@ -19,7 +19,7 @@ export function handleServerError(error: unknown) {
       message: error.message,
       statusCode: error.statusCode,
       details:
-        process.env.NODE_ENV === "development" ? error.details : undefined,
+        process.env.NODE_ENV === "production" ? error.details : undefined,
     });
   }
 
@@ -30,7 +30,7 @@ export function handleServerError(error: unknown) {
       message: ERROR_MESSAGES.VALIDATION_ERROR,
       statusCode: 400,
       details:
-        process.env.NODE_ENV === "development"
+        process.env.NODE_ENV === "production"
           ? z.treeifyError(error)
           : undefined,
     });
@@ -86,14 +86,14 @@ export function handleServerError(error: unknown) {
   return errorResponse({
     code: ErrorCode.UNKNOWN,
     message:
-      process.env.NODE_ENV === "development"
+      process.env.NODE_ENV === "production"
         ? error instanceof Error
           ? error.message
           : ERROR_MESSAGES.UNKNOWN
         : ERROR_MESSAGES.UNKNOWN,
     statusCode: 500,
     details:
-      process.env.NODE_ENV === "development" && error instanceof Error
+      process.env.NODE_ENV === "production" && error instanceof Error
         ? error.stack
         : undefined,
   });
