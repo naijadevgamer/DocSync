@@ -20,43 +20,39 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  const userId = params.get("userId");
-  const secret = params.get("secret");
+  // const userId = params.get("userId");
+  // const secret = params.get("secret");
 
   const hasVerified = useRef(false);
-  console.log("VerifyForm rendered with:", { userId, secret, isVerified });
+  console.log("VerifyForm rendered with:", { isVerified });
 
   // Auto-verify from link
-  // useEffect(() => {
-  //   if (!userId || !secret) return;
+  useEffect(() => {
+    const userId = params.get("userId");
+    const secret = params.get("secret");
 
-  //   // Prevent duplicate verification calls
-  //   if (hasVerified.current) return;
+    if (!userId || !secret) return;
+    if (hasVerified.current) return;
 
-  //   hasVerified.current = true;
+    hasVerified.current = true;
 
-  //   const verify = async () => {
-  //     try {
-  //       setStatus("verifying");
+    (async () => {
+      try {
+        setStatus("verifying");
 
-  //       const { account } = createBrowserClient();
-  //       await account.updateEmailVerification({
-  //         userId,
-  //         secret,
-  //       });
+        const { account } = createBrowserClient();
 
-  //       setStatus("success");
-  //       setTimeout(() => {
-  //         router.push("/login");
-  //       }, 3000);
-  //     } catch (err) {
-  //       console.error("Verification error:", err);
-  //       setStatus("error");
-  //     }
-  //   };
+        await account.updateEmailVerification({ userId, secret });
 
-  //   verify();
-  // }, [userId, secret]);
+        setStatus("success");
+
+        setTimeout(() => router.push("/login"), 3000);
+      } catch (err) {
+        console.error(err);
+        setStatus("error");
+      }
+    })();
+  }, []);
 
   const resendEmail = async () => {
     setResending(true);
