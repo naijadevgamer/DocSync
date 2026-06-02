@@ -28,17 +28,7 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
 
   // Auto-verify from link
   useEffect(() => {
-    if (!userId || !secret) {
-      setStatus("error");
-      return;
-    }
-    if (isVerified) {
-      setStatus("success");
-      setTimeout(() => {
-        router.push("/login");
-      }, 3000);
-      return;
-    }
+    if (!userId || !secret) return;
 
     // Prevent duplicate verification calls
     if (hasVerified.current) return;

@@ -55,8 +55,7 @@ export default function RegisterForm() {
 
     toast.success("Account created successfully!");
     console.log("Created User:", result.data?.newUser);
-    if (!result.data?.newUser.emailVerification) router.push("/verify");
-    else router.push(`/login`);
+    router.push("/verify");
   };
 
   return (

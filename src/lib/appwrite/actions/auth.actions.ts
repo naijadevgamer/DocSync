@@ -33,12 +33,10 @@ export const createUser = withServerAction(async (user: CreateUserParams) => {
     maxAge: 60 * 60 * 24 * 30,
   });
 
-  if (!newUser.emailVerification) {
-    const { account } = await createSessionClient();
-    await account.createEmailVerification({
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
-    });
-  }
+  const { account } = await createSessionClient();
+  await account.createEmailVerification({
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
+  });
 
   return successResponse({ newUser });
 });
