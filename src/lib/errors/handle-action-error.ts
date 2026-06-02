@@ -13,6 +13,8 @@ const dynamicMessageCodes = new Set([ErrorCode.VALIDATION_ERROR]);
 const contactRequiredCodes = new Set([ErrorCode.PROJECT_PAUSED]);
 
 export function handleActionError(error: ActionError) {
+  console.error("Unhandled error code:", error.code, "Message:", error.message);
+
   if (contactRequiredCodes.has(error.code)) {
     toast.error(ERROR_MESSAGES[error.code], {
       duration: Infinity, // Won't auto-dismiss
@@ -47,11 +49,6 @@ export function handleActionError(error: ActionError) {
     return;
   }
 
-  console.error("Unhandled error code:", error.code, "Message:", error.message);
   // Default fallback
-  toast.error(
-    process.env.NODE_ENV === "development"
-      ? error.message
-      : ERROR_MESSAGES.UNKNOWN,
-  );
+  toast.error(error.message);
 }
