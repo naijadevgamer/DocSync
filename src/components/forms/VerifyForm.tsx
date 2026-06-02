@@ -27,36 +27,36 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   console.log("VerifyForm rendered with:", { userId, secret, isVerified });
 
   // Auto-verify from link
-  useEffect(() => {
-    if (!userId || !secret) return;
+  // useEffect(() => {
+  //   if (!userId || !secret) return;
 
-    // Prevent duplicate verification calls
-    if (hasVerified.current) return;
+  //   // Prevent duplicate verification calls
+  //   if (hasVerified.current) return;
 
-    hasVerified.current = true;
+  //   hasVerified.current = true;
 
-    const verify = async () => {
-      try {
-        setStatus("verifying");
+  //   const verify = async () => {
+  //     try {
+  //       setStatus("verifying");
 
-        const { account } = createBrowserClient();
-        await account.updateEmailVerification({
-          userId,
-          secret,
-        });
+  //       const { account } = createBrowserClient();
+  //       await account.updateEmailVerification({
+  //         userId,
+  //         secret,
+  //       });
 
-        setStatus("success");
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } catch (err) {
-        console.error("Verification error:", err);
-        setStatus("error");
-      }
-    };
+  //       setStatus("success");
+  //       setTimeout(() => {
+  //         router.push("/login");
+  //       }, 3000);
+  //     } catch (err) {
+  //       console.error("Verification error:", err);
+  //       setStatus("error");
+  //     }
+  //   };
 
-    verify();
-  }, [userId, secret]);
+  //   verify();
+  // }, [userId, secret]);
 
   const resendEmail = async () => {
     setResending(true);
