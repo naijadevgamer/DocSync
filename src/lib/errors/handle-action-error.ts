@@ -47,6 +47,7 @@ export function handleActionError(error: ActionError) {
     return;
   }
 
+  console.error("Unhandled error code:", error.code, "Message:", error.message);
   // Default fallback
   toast.error(
     process.env.NODE_ENV === "development"
