@@ -23,16 +23,16 @@ export default function VerifyForm() {
   const userId = params.get("userId");
   const secret = params.get("secret");
 
-  // const hasVerified = useRef(false);
+  const hasVerified = useRef(false);
 
   // Auto-verify from link
   useEffect(() => {
     if (!userId || !secret) return;
 
     // Prevent duplicate verification calls
-    // if (hasVerified.current) return;
+    if (hasVerified.current) return;
 
-    // hasVerified.current = true;
+    hasVerified.current = true;
 
     const verify = async () => {
       try {
