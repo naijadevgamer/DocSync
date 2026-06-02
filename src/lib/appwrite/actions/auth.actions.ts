@@ -38,6 +38,15 @@ export const createUser = withServerAction(async (user: CreateUserParams) => {
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
   });
 
+  // IMPORTANT: Delete the session so user isn't logged in
+  await users.deleteSession({
+    userId: newUser.$id,
+    sessionId: session.$id,
+  });
+
+  // Clear the cookie
+  cookieStore.delete("my-custom-session");
+
   return successResponse({ newUser });
 });
 

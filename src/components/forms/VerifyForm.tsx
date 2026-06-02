@@ -26,11 +26,10 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   const hasVerified = useRef(false);
   console.log("VerifyForm rendered with:", { isVerified });
 
-  // Auto-verify from link
-  useEffect(() => {
-    const userId = params.get("userId");
-    const secret = params.get("secret");
+  const userId = params.get("userId");
+  const secret = params.get("secret");
 
+  useEffect(() => {
     if (!userId || !secret) return;
     if (hasVerified.current) return;
 
@@ -52,7 +51,7 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
         setStatus("error");
       }
     })();
-  }, []);
+  }, [userId, secret]);
 
   const resendEmail = async () => {
     setResending(true);
