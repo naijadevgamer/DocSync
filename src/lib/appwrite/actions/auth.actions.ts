@@ -124,7 +124,7 @@ export const resendVerificationEmail = withServerAction(async () => {
 
   // This requires an API key with appropriate permissions
   await account.createEmailVerification({
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify}`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
   });
 
   return successResponse(null);

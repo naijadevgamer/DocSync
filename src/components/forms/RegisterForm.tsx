@@ -46,6 +46,7 @@ export default function RegisterForm() {
     const result = await createUser(user);
 
     if (!result.success) {
+      console.error("Error creating user:", result.error);
       handleActionError(result.error);
 
       setIsLoading(false);
@@ -53,8 +54,9 @@ export default function RegisterForm() {
     }
 
     toast.success("Account created successfully!");
+    console.log("Created User:", result.data?.newUser);
     if (!result.data?.newUser.emailVerification) router.push("/verify");
-    else router.push(`/patients/${result.data?.newUser.$id}/personal-info`);
+    else router.push(`/login`);
   };
 
   return (

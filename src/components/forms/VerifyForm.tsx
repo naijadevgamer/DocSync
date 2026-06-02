@@ -42,7 +42,7 @@ export default function VerifyForm() {
           router.push("/login");
         }, 3000);
       } catch (err) {
-        console.error(err);
+        console.error("Verification error:", err);
         setStatus("error");
       }
     };
