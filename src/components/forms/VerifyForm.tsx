@@ -4,7 +4,7 @@
 import { createBrowserClient } from "@/lib/appwrite/config/client";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { resendVerificationEmail } from "@/lib/appwrite/actions/auth.actions";
@@ -23,9 +23,16 @@ export default function VerifyForm() {
   const userId = params.get("userId");
   const secret = params.get("secret");
 
+  // const hasVerified = useRef(false);
+
   // Auto-verify from link
   useEffect(() => {
     if (!userId || !secret) return;
+
+    // Prevent duplicate verification calls
+    // if (hasVerified.current) return;
+
+    // hasVerified.current = true;
 
     const verify = async () => {
       try {
@@ -48,7 +55,7 @@ export default function VerifyForm() {
     };
 
     verify();
-  }, [userId, secret, router]);
+  }, [userId, secret]);
 
   const resendEmail = async () => {
     setResending(true);
