@@ -69,7 +69,9 @@ export default async function VerifyPage({ searchParams }: SearchParamProps) {
       <section className="remove-scrollbar container mx-auto flex items-center">
         <div className="sub-container min-h-screen max-w-2xl">
           <div className="mx-auto mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <div className="mb-8">

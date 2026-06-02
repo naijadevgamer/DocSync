@@ -54,7 +54,6 @@ export default function RegisterForm() {
 
     toast.success("Account created successfully!");
     router.push("/verify");
-    setIsLoading(false);
   };
 
   return (

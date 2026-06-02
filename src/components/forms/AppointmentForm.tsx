@@ -90,11 +90,6 @@ export const AppointmentForm = ({
       );
 
       if (!newAppointment.success) {
-        // console.error(
-        //   "Error creating appointment:",
-        //   newAppointment.error?.details || newAppointment.error,
-        // );
-
         handleActionError(newAppointment.error);
 
         setIsLoading(false);
@@ -133,9 +128,8 @@ export const AppointmentForm = ({
       toast.success(
         `Appointment ${type === "schedule" ? "scheduled" : "cancelled"} successfully!`,
       );
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   let buttonLabel;

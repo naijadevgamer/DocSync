@@ -82,7 +82,6 @@ export default function LoginForm({
           : `/patients/${loggedInUser.$id}/personal-info`);
     router.push(redirectTo);
 
-    setIsLoading(false);
   };
 
   return (

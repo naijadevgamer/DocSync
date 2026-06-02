@@ -115,10 +115,9 @@ export default function SettingsTab({ user, patient }: any) {
       router.push("/login");
     } else {
       toast.error(result.error?.message || "Failed to delete account");
+      setIsLoading(false);
+      setShowDeleteModal(false);
     }
-
-    setIsLoading(false);
-    setShowDeleteModal(false);
   };
 
   const {

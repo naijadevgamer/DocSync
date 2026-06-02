@@ -3,6 +3,7 @@ import FullLogo from "@/components/utils/FullLogo";
 import { requireOwnership } from "@/lib/appwrite/auth/guards";
 import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = createMetadata({
   title: "Complete Your Profile",
@@ -20,7 +21,9 @@ export default async function PersonalInfo({ params }: SearchParamProps) {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-215 flex-1 flex-col py-10">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <PatientForm user={user} />

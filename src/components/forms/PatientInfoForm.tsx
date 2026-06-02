@@ -135,7 +135,6 @@ export default function PatientForm({ user }: { user: User }) {
 
     toast.success("Patient information saved successfully!");
     router.push(`/patients/${user.$id}/new-appointment`);
-    setIsLoading(false);
   };
 
   return (

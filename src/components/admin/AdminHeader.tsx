@@ -11,11 +11,6 @@ import { LogOutIcon } from "lucide-react";
 import LogoutModal from "../modals/LogoutModal";
 
 export default function AdminHeader() {
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const router = useRouter();
-
   const {
     isLoading,
     showModal,

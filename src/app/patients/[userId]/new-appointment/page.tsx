@@ -9,6 +9,7 @@ import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { ErrorCode } from "@/lib/errors";
 import { createMetadata } from "@/lib/utils/metadata";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export async function generateMetadata({
   params,
@@ -51,7 +52,9 @@ export default async function Appointment({ params }: SearchParamProps) {
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-215 flex-1 flex-col py-10">
           <div className="mb-12">
-            <FullLogo />
+            <Link href="/">
+              <FullLogo />
+            </Link>
           </div>
 
           <AppointmentForm
