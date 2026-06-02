@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { resendVerificationEmail } from "@/lib/appwrite/actions/auth.actions";
 import { handleActionError } from "@/lib/errors/handle-action-error";
 
-export default function VerifyForm() {
+export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -27,7 +27,17 @@ export default function VerifyForm() {
 
   // Auto-verify from link
   useEffect(() => {
-    if (!userId || !secret) return;
+    if (!userId || !secret) {
+      setStatus("error");
+      return;
+    }
+    if (isVerified) {
+      setStatus("success");
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
 
     // Prevent duplicate verification calls
     if (hasVerified.current) return;
