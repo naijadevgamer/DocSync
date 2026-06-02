@@ -24,6 +24,7 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   const secret = params.get("secret");
 
   const hasVerified = useRef(false);
+  console.log("VerifyForm rendered with:", { userId, secret, isVerified });
 
   // Auto-verify from link
   useEffect(() => {
