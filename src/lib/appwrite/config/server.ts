@@ -13,9 +13,7 @@ import {
 
 import { createBaseClient } from "./base";
 
-import { AppError } from "../../errors";
-import { ErrorCode } from "../../errors";
-import { parseCookieHeader } from "../../utils/utils";
+import { AppError, ErrorCode } from "../../errors";
 
 export async function createSessionClient() {
   const cookieStore = await cookies();
@@ -56,25 +54,3 @@ export function createServerClient() {
     permissions: Permission.read(Role.any()),
   };
 }
-
-export const createSessionClientFromMiddleware = (cookieHeader: string) => {
-  const client = createBaseClient();
-
-  const cookies = parseCookieHeader(cookieHeader);
-
-  const session = cookies["my-custom-session"];
-
-  if (!session) {
-    throw new AppError({
-      code: ErrorCode.AUTH_REQUIRED,
-      message: "Authentication required",
-      statusCode: 401,
-    });
-  }
-
-  client.setSession(session);
-
-  return {
-    account: new Account(client),
-  };
-};

@@ -3,7 +3,6 @@
 import { cookies } from "next/headers";
 import { ID, Query } from "node-appwrite";
 import { successResponse } from "../../errors";
-import { parseStringify } from "../../utils/utils";
 import { requireAuth } from "../auth/require-auth";
 import { createServerClient, createSessionClient } from "../config/server";
 import { createToken } from "../helper/jwt";
@@ -34,13 +33,14 @@ export const createUser = withServerAction(async (user: CreateUserParams) => {
     maxAge: 60 * 60 * 24 * 30,
   });
 
-  const { account } = await createSessionClient();
+  if (!newUser.emailVerification) {
+    const { account } = await createSessionClient();
+    await account.createEmailVerification({
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
+    });
+  }
 
-  await account.createEmailVerification({
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/verify`,
-  });
-
-  return successResponse({ newUser: parseStringify(newUser) });
+  return successResponse({ newUser });
 });
 
 export const loginUser = withServerAction(
@@ -173,13 +173,12 @@ export const updatePassword = withServerAction(
 // Delete account
 export const deleteAccount = withServerAction(async (userId) => {
   const { users } = createServerClient();
-
-  await users.delete({ userId });
-
-  // Also delete session cookies
+  // Delete session cookies
   const cookieStore = await cookies();
   cookieStore.delete("my-custom-session");
   cookieStore.delete("auth_token");
+
+  await users.delete({ userId });
 
   return successResponse(null);
 });
