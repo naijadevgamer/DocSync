@@ -97,12 +97,12 @@ export function mapAppwriteError(error: AppwriteException) {
       return errorResponse({
         code: ErrorCode.UNKNOWN,
         message:
-          process.env.NODE_ENV === "production"
+          process.env.NODE_ENV === "development"
             ? error.message
             : ERROR_MESSAGES.UNKNOWN,
         statusCode: error.code || 500,
         details:
-          process.env.NODE_ENV === "production" ? error.response : undefined,
+          process.env.NODE_ENV === "development" ? error.response : undefined,
       });
   }
 }

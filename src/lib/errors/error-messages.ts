@@ -1,7 +1,7 @@
 import { ErrorCode } from "./error-codes";
 
 export const ERROR_MESSAGES: Record<ErrorCode, string> = {
-  UNKNOWN: "Something went wrong",
+  UNKNOWN: "An unexpected error occurred. Please try again later.",
   INTERNAL_SERVER_ERROR: "Internal server error",
 
   VALIDATION_ERROR: "Invalid form data",

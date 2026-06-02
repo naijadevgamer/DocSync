@@ -34,7 +34,6 @@ export default function ForgotPassword() {
   ) => {
     setIsLoading(true);
     const res = await sendPasswordRecovery(data.email);
-    console.log("Forgot password response:", res);
     if (!res.success) {
       if (res.error.code === ErrorCode.NOT_FOUND)
         handleActionError({
