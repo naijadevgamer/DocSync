@@ -25,23 +25,10 @@ export const createUser = withServerAction(async (user: CreateUserParams) => {
 
   const cookieStore = await cookies();
 
-  const token = await createToken({
-    userId: newUser.$id,
-    role: "user",
-  });
-
   cookieStore.set("my-custom-session", session.secret, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
-
-  cookieStore.set("auth_token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });

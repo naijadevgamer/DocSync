@@ -44,9 +44,7 @@ export async function middleware(request: NextRequest) {
 
   if (
     !isLoggedIn &&
-    (pathname.startsWith("/patients") ||
-      pathname.startsWith("/admin") ||
-      pathname.startsWith("/verify"))
+    (pathname.startsWith("/patients") || pathname.startsWith("/admin"))
   ) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
