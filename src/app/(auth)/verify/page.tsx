@@ -88,7 +88,7 @@ export default async function VerifyPage({ searchParams }: SearchParamProps) {
           </div>
 
           <Suspense fallback={<VerifySkeleton />}>
-            <VerifyForm isVerified={isVerified} />
+            <VerifyForm />
           </Suspense>
 
           <div className="mt-auto text-center">
