@@ -204,7 +204,7 @@ export default function VerifyForm() {
             Email verified successfully!
           </p>
           <p className="text-14-regular text-dark-600 mt-2">
-            Redirecting you to complete your profile...
+            Redirecting you to login...
           </p>
         </div>
       </div>

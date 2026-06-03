@@ -91,7 +91,7 @@ export default async function VerifyPage({ searchParams }: SearchParamProps) {
             <VerifyForm />
           </Suspense>
 
-          <div className="mt-auto text-center">
+          <div className="mt-auto pt-5 text-center">
             <p className="text-14-regular text-dark-600">
               © {new Date().getFullYear()} DocSync
             </p>

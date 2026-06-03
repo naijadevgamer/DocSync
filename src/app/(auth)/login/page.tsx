@@ -28,7 +28,7 @@ export default async function LoginPage({ searchParams }: SearchParamProps) {
             callbackUrl={callbackUrl as string}
           />
 
-          <div className="text-14-regular flex justify-between py-12">
+          <div className="text-14-regular flex justify-between py-5 md:py-10">
             <p className="text-dark-600 justify-items-end xl:text-left">
               © {new Date().getFullYear()} DocSync
             </p>

@@ -6,6 +6,7 @@ import { unwrapAction } from "@/lib/appwrite/helper/unwrap-action";
 import { createMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
 import Link from "next/link";
+import { ErrorCode } from "@/lib/errors";
 
 export const metadata = createMetadata({
   title: "Complete Your Profile",
@@ -18,7 +19,10 @@ export default async function PersonalInfo({ params }: SearchParamProps) {
 
   const [user, getPatientResult] = await Promise.all([
     requireOwnership(userId),
-    unwrapAction(() => getPatient(userId)),
+    unwrapAction(() => getPatient(userId), {
+      onError: { [ErrorCode.NOT_FOUND]: "ignore" },
+      defaultValue: { patient: null },
+    }),
   ]);
 
   if (getPatientResult.patient)
