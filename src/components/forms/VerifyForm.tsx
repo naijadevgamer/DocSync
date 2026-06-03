@@ -29,6 +29,8 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
   const userId = params.get("userId");
   const secret = params.get("secret");
 
+  console.log("Extracted query params:", { userId, secret });
+
   useEffect(() => {
     if (!userId || !secret) return;
     if (hasVerified.current) return;
