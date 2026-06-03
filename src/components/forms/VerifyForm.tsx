@@ -47,7 +47,10 @@ export default function VerifyForm({ isVerified }: { isVerified: boolean }) {
 
         setStatus("success");
 
-        setTimeout(() => router.push("/login"), 3000);
+        setTimeout(
+          () => router.push(`/patients/${userId}/personal-info`),
+          3000,
+        );
       } catch (err) {
         console.error(err);
         setStatus("error");
